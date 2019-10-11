@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="TaskbarBalloon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:weatherfrog"
+             DataContext="{x:Static Application.Current}"
+             d:DataContext="{d:DesignInstance {x:Type local:TaskbarBalloonDesignViewModel}}"
+             Width="450"
+             Height="290"
+             FontFamily="/Resources/Roboto-Regular.ttf#Roboto"
+             Foreground="white"
+             mc:Ignorable="d"
+             Background="#FF53a7d0">
+    <Grid>
+        <Image />
+        <StackPanel DataContext="{Binding CurrentWeatherConditions}"
+                    Margin="20">
+            <TextBlock Margin="0,0,0,14"
+                       FontSize="16">
+                <Run Text="{Binding CityName, StringFormat={}{0}\,}" />
+                <Run Text="{Binding StateCode}" />
+            </TextBlock>
+            <DockPanel>
+                <TextBlock Text="{Binding Temperature}"
+                           FontSize="50" />
+                <Grid>
+                    <TextBlock Text="°"
+                               FontSize="50" />
+                    <TextBlock Text="F"
+                               DataContext="{x:Static Application.Current}"
+                               FontSize="20"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="center"
+                               Margin="0,0,0,7" />
+                </Grid>
+                <StackPanel VerticalAlignment="Center"
+                            Margin="20,0">
+                    <TextBlock Text="{Binding Weather.Description }"
+                               FontSize="18" />
+                    <TextBlock Text="{Binding ApparentTemp, StringFormat={}Feels Like {0}° }"
+                               FontSize="18" />
+                </StackPanel>
+                <Image Source="{Binding WeatherIcon}"
+                       Height="50"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,30,0" />
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
