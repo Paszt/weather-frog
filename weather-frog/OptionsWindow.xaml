@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:weatherfrog"
+        xmlns:viewModels="clr-namespace:weatherfrog.ViewModels"
         mc:Ignorable="d"
         Title="Weather Frog Options"
         Height="400"
@@ -23,6 +23,9 @@
                     Value="Center" />
         </Style>
     </Window.Resources>
+    <Window.DataContext>
+        <viewModels:OptionsViewModel />
+    </Window.DataContext>
     <Grid>
         <ScrollViewer>
             <Grid>
@@ -61,7 +64,7 @@
                                Grid.Column="0"
                                VerticalAlignment="Center" />
                         <TextBox Grid.Column="1"
-                                 Text="{Binding WeatherbitApiKey, Source={x:Static local:MySettings.Default}}" />
+                                 Text="{Binding WeatherbitApiKey, UpdateSourceTrigger=PropertyChanged}" />
                         <!-- City -->
                         <Label Content="City:"
                                Grid.Column="0"
@@ -69,26 +72,31 @@
                                VerticalAlignment="Center" />
                         <TextBox Grid.Column="1"
                                  Grid.Row="1"
-                                 Text="{Binding City, Source={x:Static local:MySettings.Default}}" />
+                                 Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" />
                         <!-- Units -->
                         <Label Content="Units:"
                                Grid.Column="0"
                                Grid.Row="2" />
-                        <ComboBox ItemsSource="{Binding UnitChoices, Source={x:Static local:MySettings.Default}}"
-                                  SelectedValue="{Binding Units, Source={x:Static local:MySettings.Default}}"
+                        <ComboBox ItemsSource="{Binding UnitChoices}"
+                                  SelectedValue="{Binding Units}"
                                   SelectedValuePath="Key"
                                   DisplayMemberPath="Value"
                                   Height="30"
                                   Grid.Column="1"
                                   Grid.Row="2" />
                     </Grid>
-
-                    <Button Content="OK"
+                    <StackPanel Orientation="Horizontal"
+                                Height="32"
+                                HorizontalAlignment="Right">
+                        <Button Content="Cancel"
                             Width="90"
-                            Height="32"
-                            HorizontalAlignment="Right"
+                            Margin="15 0"
+                            Command="{Binding CancelCommand}"/>
+                        <Button Content="Update"
+                            Width="90"
                             Margin="0"
-                            Command="{Binding CloseOptionsCommand, Source={x:Static Application.Current}}" />
+                            Command="{Binding UpdateOptionsCommand}" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

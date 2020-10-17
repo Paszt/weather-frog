@@ -41,7 +41,11 @@ Public Class TaskbarIconHelper
     Public Shared Function CreateIcon3() As Icon
         Dim dv As New DrawingVisual()
         Using dc As DrawingContext = dv.RenderOpen()
-            Dim temperatureText = New FormattedText(My.Application.CurrentWeatherConditions.TemperatureRounded & "°",
+            Dim tempText As String = "0°"
+            If My.Application.CurrentWeatherConditions IsNot Nothing Then
+                tempText = My.Application.CurrentWeatherConditions.TemperatureRounded & "°"
+            End If
+            Dim temperatureText = New FormattedText(tempText,
                                                     New Globalization.CultureInfo("en-us"),
                                                     FlowDirection.LeftToRight,
                                                     Fonts.GetTypefaces(New Uri("pack://application:,,,/"), "./resources/").First(),

@@ -84,7 +84,7 @@
     <Compile Include="Infrastructure\WebResources.vb" />
     <Compile Include="Infrastructure\WinApi.vb" />
     <Compile Include="Infrastructure\WindowExtensions.vb" />
-    <Compile Include="MySettings.vb" />
+    <Compile Include="OptionsViewModel.vb" />
     <Compile Include="Resources\TaskbarBalloon.xaml.vb">
       <DependentUpon>TaskbarBalloon.xaml</DependentUpon>
     </Compile>

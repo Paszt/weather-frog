@@ -1,0 +1,25 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 176 176">
+  <defs>
+    <circle id="a" cx="88" cy="88" r="80"/>
+  </defs>
+  <use xlink:href="#a" overflow="visible" fill="#fdd93c"/>
+  <clipPath id="b">
+    <use xlink:href="#a" overflow="visible"/>
+  </clipPath>
+  <radialGradient id="c" cx="56" cy="136" r="19" gradientUnits="userSpaceOnUse">
+    <stop offset=".7105" stop-color="#fcc01e"/>
+    <stop offset="1" stop-color="#fdd93c"/>
+  </radialGradient>
+  <circle cx="56" cy="136" r="19" clip-path="url(#b)" fill="url(#c)"/>
+  <radialGradient id="d" cx="28" cy="128" r="27" gradientUnits="userSpaceOnUse">
+    <stop offset=".7685" stop-color="#fcc01e"/>
+    <stop offset="1" stop-color="#fcc01e" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="28" cy="128" r="27" clip-path="url(#b)" fill="url(#d)"/>
+  <linearGradient id="e" gradientUnits="userSpaceOnUse" x1="53.5265" y1="136.5499" x2="90.6013" y2="177.2814">
+    <stop offset="0" stop-color="#fcc01e" stop-opacity=".5"/>
+    <stop offset="1" stop-color="#fcc01e" stop-opacity=".2"/>
+  </linearGradient>
+  <path clip-path="url(#b)" fill="url(#e)" d="M111.6 168.4H55.5L36 149.1l31.9-23.8z"/>
+  <path d="M56 120h-5.4c-3.3-9.3-12.2-16-22.6-16-13.3 0-24 10.7-24 24s10.7 24 24 24h28c8.8 0 16-7.2 16-16s-7.2-16-16-16z" fill="#fff"/>
+</svg>

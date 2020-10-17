@@ -6,8 +6,8 @@ Public Class Weather
     Const currentWeatherUrlFormat = "http://api.weatherbit.io/v2.0/current?city={0}&units={1}&key={2}"
     Const minimumMinutesToUpdate = 5
 
-    Public Shared Sub UpdateCurrentWeather()
-        If (Date.Now - My.Settings.LatestWeatherApiRequestDate).TotalMinutes < minimumMinutesToUpdate Then
+    Public Shared Sub UpdateCurrentWeather(Optional ForceUpdate As Boolean = False)
+        If Not ForceUpdate AndAlso (Date.Now - My.Settings.LatestWeatherApiRequestDate).TotalMinutes < minimumMinutesToUpdate Then
             Exit Sub
         End If
         My.Settings.LatestWeatherApiRequestDate = Date.Now

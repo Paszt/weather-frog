@@ -32,7 +32,7 @@ Public NotInheritable Class Wallpaper
     Public Shared Sub DrawAndApply()
         weatherData = My.Application.CurrentWeatherConditions
         'https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/how-to-encode-a-visual-to-an-image-file
-        Dim dv As DrawingVisual = Draw(weatherData)
+        Dim dv As DrawingVisual = Draw()
         Dim rbmp = New RenderTargetBitmap(CInt(SystemParameters.PrimaryScreenWidth),
                                           CInt(SystemParameters.PrimaryScreenHeight),
                                           96.0, 96.0, PixelFormats.Pbgra32)
@@ -51,7 +51,7 @@ Public NotInheritable Class Wallpaper
         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, tempPath, SPIF_UPDATEINIFILE Or SPIF_SENDWININICHANGE)
     End Sub
 
-    Private Shared Function Draw(data As CurrentWeather.Datum) As DrawingVisual
+    Private Shared Function Draw() As DrawingVisual
         Dim dv As New DrawingVisual()
         Using dc As DrawingContext = dv.RenderOpen()
             drawContext = dc
@@ -84,7 +84,7 @@ Public NotInheritable Class Wallpaper
     Private Shared Sub DrawText()
         Dim screenWidth = SystemParameters.PrimaryScreenWidth
         Dim screenHeight = SystemParameters.PrimaryScreenHeight
-        Dim leftTextLeft = screenWidth * 0.16
+        Dim leftTextLeft = screenWidth * 0.09
 
         Dim tf As Typeface = Fonts.GetTypefaces(New Uri("pack://application:,,,/"), "./resources/").First()
         Dim ci = New Globalization.CultureInfo("en-us")
@@ -111,14 +111,14 @@ Public NotInheritable Class Wallpaper
                                                  tf, 40, Brushes.White, 1.0)
         drawContext.DrawText(apparentTempText, New Point(leftTextLeft + 10, 300))
         'Weather Description
-        Dim descriptionCenter As Double = (screenWidth * 0.7) + (weatherIconWidth / 2)
+        Dim descriptionCenter As Double = (screenWidth * 0.77) + (weatherIconWidth / 2)
         Dim descriptionText = New FormattedText(weatherData.Weather.Description, ci, FlowDirection.LeftToRight,
                                                 tf, 40, Brushes.White, 1.0) With {.TextAlignment = TextAlignment.Center}
         drawContext.DrawText(descriptionText, New Point(descriptionCenter, 300))
     End Sub
 
     Private Shared Sub DrawWeatherIcon()
-        Dim WeatherIconRect = New Rect(New Point(SystemParameters.PrimaryScreenWidth * 0.7, 97.0),
+        Dim WeatherIconRect = New Rect(New Point(SystemParameters.PrimaryScreenWidth * 0.77, 97.0),
                                        New Size(weatherIconWidth, weatherIconWidth))
         drawContext.DrawImage(weatherData.WeatherIcon, WeatherIconRect)
     End Sub

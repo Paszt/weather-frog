@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DrawingBrush x:Key="Layer_1" Stretch="Uniform">
+		<DrawingBrush.Drawing>
+			<DrawingGroup>
+				<DrawingGroup.Children>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 0,234.667L 234.667,234.667L 234.667,-6.10352e-005L 0,-6.10352e-005"/>
+					<DrawingGroup ClipGeometry="F1 M 0,-6.10352e-005L 234.667,-6.10352e-005L 234.667,234.667L 0,234.667L 0,-6.10352e-005 Z ">
+						<DrawingGroup.Children>
+							<GeometryDrawing Brush="#FFFDDA3F" Geometry="F1 M 101,80.111C 101,109.566 124.879,133.444 154.333,133.444C 183.788,133.444 207.667,109.566 207.667,80.111C 207.667,50.6564 183.788,26.7777 154.333,26.7777C 124.879,26.7777 101,50.6564 101,80.111 Z "/>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+					<GeometryDrawing Geometry="F1 M 128.585,126.828C 136.219,131.045 144.996,133.444 154.333,133.444L 154.333,133.444C 177.863,133.444 197.835,118.205 204.917,97.0599L 204.917,97.0599C 197.724,93.8093 189.74,91.9999 181.333,91.9999L 181.333,91.9999C 157.656,91.9999 137.333,106.349 128.585,126.828 Z ">
+						<GeometryDrawing.Brush>
+							<RadialGradientBrush RadiusX="0.751105" RadiusY="1.38339" Center="0.691034,1.38339" GradientOrigin="0.691034,1.38339">
+								<RadialGradientBrush.GradientStops>
+									<GradientStop Color="#FFFBBF1E" Offset="0"/>
+									<GradientStop Color="#FFFBBF1E" Offset="0.875"/>
+									<GradientStop Color="#FFFDD83C" Offset="1"/>
+								</RadialGradientBrush.GradientStops>
+								<RadialGradientBrush.RelativeTransform>
+									<TransformGroup/>
+								</RadialGradientBrush.RelativeTransform>
+							</RadialGradientBrush>
+						</GeometryDrawing.Brush>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 101,80.1119C 101,109.567 124.879,133.444 154.333,133.444L 154.333,133.444C 157.909,133.444 161.404,133.092 164.783,132.421L 164.783,132.421C 165.147,129.22 165.333,125.967 165.333,122.667L 165.333,122.667C 165.333,87.8293 144.456,57.868 114.532,44.6093L 114.532,44.6093C 106.117,54.0386 101,66.4786 101,80.1119 Z ">
+						<GeometryDrawing.Brush>
+							<RadialGradientBrush RadiusX="1.32643" RadiusY="0.960586" Center="-0.326425,0.878681" GradientOrigin="-0.326425,0.878681">
+								<RadialGradientBrush.GradientStops>
+									<GradientStop Color="#FFFBBF1E" Offset="0"/>
+									<GradientStop Color="#FFFBBF1E" Offset="0.884766"/>
+									<GradientStop Color="#FFFDD83C" Offset="1"/>
+								</RadialGradientBrush.GradientStops>
+								<RadialGradientBrush.RelativeTransform>
+									<TransformGroup/>
+								</RadialGradientBrush.RelativeTransform>
+							</RadialGradientBrush>
+						</GeometryDrawing.Brush>
+					</GeometryDrawing>
+					<DrawingGroup ClipGeometry="F1 M 0,-6.10352e-005L 234.667,-6.10352e-005L 234.667,234.667L 0,234.667L 0,-6.10352e-005 Z ">
+						<DrawingGroup.Children>
+							<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 181.333,95.9999L 80,95.9999C 50.5453,95.9999 26.6667,119.879 26.6667,149.333C 26.6667,178.788 50.5453,202.667 80,202.667L 181.333,202.667C 210.788,202.667 234.667,178.788 234.667,149.333C 234.667,119.879 210.788,95.9999 181.333,95.9999 Z "/>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+					<DrawingGroup ClipGeometry="F1 M 80,95.9999C 50.5453,95.9999 26.6667,119.879 26.6667,149.333L 26.6667,149.333C 26.6667,178.788 50.5453,202.667 80,202.667L 80,202.667L 181.333,202.667C 210.788,202.667 234.667,178.788 234.667,149.333L 234.667,149.333C 234.667,119.879 210.788,95.9999 181.333,95.9999L 181.333,95.9999L 80,95.9999 Z ">
+						<DrawingGroup.Children>
+							<GeometryDrawing Brush="#FFE5E5E5" Geometry="F1 M 164.655,122.702C 164.655,151.052 141.672,174.035 113.322,174.035C 84.9709,174.035 61.9883,151.052 61.9883,122.702C 61.9883,94.351 84.9709,71.3683 113.322,71.3683C 141.672,71.3683 164.655,94.351 164.655,122.702 Z "/>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 160,122.667C 160,166.849 124.183,202.667 80,202.667C 35.8173,202.667 0,166.849 0,122.667C 0,78.4839 35.8173,42.6666 80,42.6666C 124.183,42.6666 160,78.4839 160,122.667 Z "/>
+				</DrawingGroup.Children>
+			</DrawingGroup>
+		</DrawingBrush.Drawing>
+	</DrawingBrush>
+</ResourceDictionary>
