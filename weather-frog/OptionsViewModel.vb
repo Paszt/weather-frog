@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Runtime.CompilerServices
 Imports weatherfrog.Infrastructure
 
 Namespace ViewModels
@@ -10,6 +11,7 @@ Namespace ViewModels
             City = My.Settings.City
             Units = My.Settings.Units
             WeatherbitApiKey = My.Settings.WeatherbitApiKey
+            TaskbarIconStyle = CType(My.Settings.TaskbarIconStyle, TaskbarIconStyle)
         End Sub
 
 #Region " Properties "
@@ -62,6 +64,17 @@ Namespace ViewModels
             End Set
         End Property
 
+        Private _taskbarIconStyle As TaskbarIconStyle
+        Public Property TaskbarIconStyle As TaskbarIconStyle
+            Get
+                Return _taskbarIconStyle
+            End Get
+            Set(value As TaskbarIconStyle)
+                SetProperty(_taskbarIconStyle, value)
+            End Set
+        End Property
+
+
         Public Property UnitChoices As New Dictionary(Of String, String) From {
             {"M", "Metric     (Celcius, m/s, mm)"},
             {"S", "Scientific (Kelvin, m/s, mm)"},
@@ -72,16 +85,18 @@ Namespace ViewModels
 
         Public ReadOnly Property UpdateOptionsCommand As ICommand
             Get
-                Return New RelayCommand(Sub()
-                                            My.Settings.City = City
-                                            My.Settings.Units = Units
-                                            My.Settings.WeatherbitApiKey = WeatherbitApiKey
-                                            My.Settings.Save()
-                                            My.Application.CloseOptions(True)
-                                        End Sub,
-                                        Function() As Boolean
-                                            Return IsDirty
-                                        End Function)
+                Return New RelayCommand(
+                    Sub()
+                        My.Settings.City = City
+                        My.Settings.Units = Units
+                        My.Settings.WeatherbitApiKey = WeatherbitApiKey
+                        My.Settings.TaskbarIconStyle = TaskbarIconStyle
+                        My.Settings.Save()
+                        My.Application.CloseOptions(True)
+                    End Sub,
+                    Function() As Boolean
+                        Return IsDirty
+                    End Function)
             End Get
         End Property
 
@@ -98,7 +113,7 @@ Namespace ViewModels
         Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
 
         Protected Function SetProperty(Of T)(ByRef storage As T, value As T,
-                                     <Runtime.CompilerServices.CallerMemberName> Optional propertyName As String = Nothing) As Boolean
+                                     <CallerMemberName> Optional propertyName As String = Nothing) As Boolean
             If Equals(storage, value) Then
                 Return False
             End If
@@ -107,7 +122,7 @@ Namespace ViewModels
             Return True
         End Function
 
-        Protected Sub OnPropertyChanged(<Runtime.CompilerServices.CallerMemberName> Optional propertyName As String = Nothing)
+        Protected Sub OnPropertyChanged(<CallerMemberName> Optional propertyName As String = Nothing)
             Dim propertyChanged As PropertyChangedEventHandler = PropertyChangedEvent
             If propertyChanged IsNot Nothing Then
                 propertyChanged(Me, New PropertyChangedEventArgs(propertyName))
@@ -116,7 +131,8 @@ Namespace ViewModels
             If propertyName IsNot "IsDirty" Then
                 IsDirty = Not (My.Settings.City = City AndAlso
                                My.Settings.Units = Units AndAlso
-                               My.Settings.WeatherbitApiKey = WeatherbitApiKey)
+                               My.Settings.WeatherbitApiKey = WeatherbitApiKey AndAlso
+                               My.Settings.TaskbarIconStyle = TaskbarIconStyle)
             End If
         End Sub
 

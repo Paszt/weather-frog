@@ -3,8 +3,8 @@ Imports weatherfrog.Infrastructure
 
 Public Class Weather
 
-    Const currentWeatherUrlFormat = "http://api.weatherbit.io/v2.0/current?city={0}&units={1}&key={2}"
-    Const minimumMinutesToUpdate = 5
+    Private Const currentWeatherUrlFormat = "http://api.weatherbit.io/v2.0/current?city={0}&units={1}&key={2}"
+    Private Const minimumMinutesToUpdate = 5
 
     Public Shared Sub UpdateCurrentWeather(Optional ForceUpdate As Boolean = False)
         If Not ForceUpdate AndAlso (Date.Now - My.Settings.LatestWeatherApiRequestDate).TotalMinutes < minimumMinutesToUpdate Then
@@ -15,11 +15,19 @@ Public Class Weather
                                                                        My.Settings.City, My.Settings.Units,
                                                                        My.Settings.WeatherbitApiKey))
         Dim cw = json.FromJSON(Of CurrentWeather)
-        If cw.Data IsNot Nothing AndAlso cw.Data.Count > 0 Then
+        If cw?.Data IsNot Nothing AndAlso cw?.Data?.Count > 0 Then
             My.Application.CurrentWeatherConditions = cw.Data(0)
-            My.Settings.WeatherData = json
+        Else
+            My.Application.CurrentWeatherConditions = EmptyWeather()
         End If
+        My.Settings.WeatherData = json
         My.Settings.Save()
     End Sub
+
+    Private Shared ReadOnly Property EmptyWeather() As CurrentWeather.Datum
+        Get
+            Return New CurrentWeather.Datum() With {.Weather = New CurrentWeather.Weather}
+        End Get
+    End Property
 
 End Class

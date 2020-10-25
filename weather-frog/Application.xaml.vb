@@ -1,26 +1,36 @@
-﻿Imports Hardcodet.Wpf.TaskbarNotification
+﻿Imports System.ComponentModel
+Imports Hardcodet.Wpf.TaskbarNotification
 Imports weatherfrog.Extensions
 Imports weatherfrog.Infrastructure
 
 Class Application
+    Implements INotifyPropertyChanged
 
 #Region " Class Variables "
 
     Private NotifyIcon As TaskbarIcon
     Private WithEvents OptionsWin As OptionsWindow
     Private tmr As Timers.Timer
+    Private _CurrentWeatherConditions As CurrentWeather.Datum
 
 #End Region
 
     Public Property CurrentWeatherConditions As CurrentWeather.Datum
+        Get
+            Return _CurrentWeatherConditions
+        End Get
+        Set
+            SetProperty(_CurrentWeatherConditions, Value)
+        End Set
+    End Property
+
     Public Property MinutesSinceLastUpdate As Integer
 
     Private Sub Application_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
         If Not String.IsNullOrEmpty(My.Settings.WeatherData) Then
             CurrentWeatherConditions = My.Settings.WeatherData.FromJSON(Of CurrentWeather).Data(0)
-            Weather.UpdateCurrentWeather()
-
         End If
+        Weather.UpdateCurrentWeather()
 
         NotifyIcon = New TaskbarIcon With {
                     .Icon = TaskbarIconHelper.CreateIcon3(),
@@ -98,5 +108,25 @@ Class Application
         OptionsWin.Close()
         GetCurrentWeatherUpdateDisplay(ForceUpdate)
     End Sub
+
+#Region " INotifyPropertyChanged "
+
+    Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+
+    Protected Function SetProperty(Of T)(ByRef storage As T, value As T,
+                                         <Runtime.CompilerServices.CallerMemberName> Optional propertyName As String = Nothing) As Boolean
+        If Equals(storage, value) Then
+            Return False
+        End If
+        storage = value
+        OnPropertyChanged(propertyName)
+        Return True
+    End Function
+
+    Protected Sub OnPropertyChanged(<Runtime.CompilerServices.CallerMemberName> Optional propertyName As String = Nothing)
+        PropertyChangedEvent?(Me, New PropertyChangedEventArgs(propertyName))
+    End Sub
+
+#End Region
 
 End Class

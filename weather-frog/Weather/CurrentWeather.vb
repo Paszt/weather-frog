@@ -16,7 +16,7 @@ Public Class CurrentWeather
         Public Property WindDirectionAbbreviated As String
 
         <DataMember(Name:="rh")>
-        Public Property RelativeHumidity As Integer
+        Public Property RelativeHumidity As Double
 
         ''' <summary>
         ''' The current part of the day. (d = day / n = night)
@@ -226,10 +226,10 @@ Public Class CurrentWeather
         Public Property Icon As String
 
         <DataMember(Name:="code")>
-        Public Property Code As String
+        Public Property Code As String = String.Empty
 
         <DataMember(Name:="description")>
-        Public Property Description As String
+        Public Property Description As String = String.Empty
 
     End Class
 
