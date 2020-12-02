@@ -1,0 +1,25 @@
+{
+	"id": "https://api.weather.gov/stations/KOCW",
+	"type": "Feature",
+	"geometry": {
+		"type": "Point",
+		"coordinates": [
+			-77.049719899999999,
+			35.57056
+		]
+	},
+	"properties": {
+		"@id": "https://api.weather.gov/stations/KOCW",
+		"@type": "wx:ObservationStation",
+		"elevation": {
+			"value": 11.8872,
+			"unitCode": "unit:m"
+		},
+		"stationIdentifier": "KOCW",
+		"name": "Washington, Warren Field Airport",
+		"timeZone": "America/New_York",
+		"forecast": "https://api.weather.gov/zones/forecast/NCZ080",
+		"county": "https://api.weather.gov/zones/county/NCC013",
+		"fireWeatherZone": "https://api.weather.gov/zones/fire/NCZ080"
+	}
+}

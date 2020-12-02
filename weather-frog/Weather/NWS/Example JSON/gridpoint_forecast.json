@@ -1,0 +1,264 @@
+{
+	"@context": [
+		"https://geojson.org/geojson-ld/geojson-context.jsonld",
+		{
+			"@version": "1.1",
+			"wx": "https://api.weather.gov/ontology#",
+			"geo": "http://www.opengis.net/ont/geosparql#",
+			"unit": "http://codes.wmo.int/common/unit/",
+			"@vocab": "https://api.weather.gov/ontology#"
+		}
+	],
+	"type": "Feature",
+	"geometry": {
+		"type": "Polygon",
+		"coordinates": [
+			[
+				[
+					-77.064107800000002,
+					35.529116000000002
+				],
+				[
+					-77.0677448,
+					35.506868600000004
+				],
+				[
+					-77.040422899999996,
+					35.503907200000008
+				],
+				[
+					-77.036780499999992,
+					35.526154200000008
+				],
+				[
+					-77.064107800000002,
+					35.529116000000002
+				]
+			]
+		]
+	},
+	"properties": {
+		"updated": "2020-12-01T03:09:52+00:00",
+		"units": "us",
+		"forecastGenerator": "BaselineForecastGenerator",
+		"generatedAt": "2020-12-01T06:10:15+00:00",
+		"updateTime": "2020-12-01T03:09:52+00:00",
+		"validTimes": "2020-11-30T21:00:00+00:00/P7DT4H",
+		"elevation": {
+			"value": 0.91439999999999999,
+			"unitCode": "unit:m"
+		},
+		"periods": [
+			{
+				"number": 1,
+				"name": "Overnight",
+				"startTime": "2020-12-01T01:00:00-05:00",
+				"endTime": "2020-12-01T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 41,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "12 mph",
+				"windDirection": "SW",
+				"icon": "https://api.weather.gov/icons/land/night/rain_showers,20?size=medium",
+				"shortForecast": "Slight Chance Rain Showers",
+				"detailedForecast": "A slight chance of rain showers. Mostly cloudy, with a low around 41. Southwest wind around 12 mph, with gusts as high as 16 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+			},
+			{
+				"number": 2,
+				"name": "Tuesday",
+				"startTime": "2020-12-01T06:00:00-05:00",
+				"endTime": "2020-12-01T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 50,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "10 to 15 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/day/rain_showers,20/sct?size=medium",
+				"shortForecast": "Slight Chance Rain Showers then Mostly Sunny",
+				"detailedForecast": "A slight chance of rain showers before 8am. Mostly sunny, with a high near 50. West wind 10 to 15 mph, with gusts as high as 24 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+			},
+			{
+				"number": 3,
+				"name": "Tuesday Night",
+				"startTime": "2020-12-01T18:00:00-05:00",
+				"endTime": "2020-12-02T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 31,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "6 to 9 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/night/skc?size=medium",
+				"shortForecast": "Clear",
+				"detailedForecast": "Clear, with a low around 31. West wind 6 to 9 mph."
+			},
+			{
+				"number": 4,
+				"name": "Wednesday",
+				"startTime": "2020-12-02T06:00:00-05:00",
+				"endTime": "2020-12-02T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 50,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "5 to 12 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/day/skc?size=medium",
+				"shortForecast": "Sunny",
+				"detailedForecast": "Sunny, with a high near 50. West wind 5 to 12 mph, with gusts as high as 17 mph."
+			},
+			{
+				"number": 5,
+				"name": "Wednesday Night",
+				"startTime": "2020-12-02T18:00:00-05:00",
+				"endTime": "2020-12-03T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 30,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "2 to 6 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/night/skc?size=medium",
+				"shortForecast": "Clear",
+				"detailedForecast": "Clear, with a low around 30. West wind 2 to 6 mph."
+			},
+			{
+				"number": 6,
+				"name": "Thursday",
+				"startTime": "2020-12-03T06:00:00-05:00",
+				"endTime": "2020-12-03T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 56,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "5 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/day/few?size=medium",
+				"shortForecast": "Sunny",
+				"detailedForecast": "Sunny, with a high near 56."
+			},
+			{
+				"number": 7,
+				"name": "Thursday Night",
+				"startTime": "2020-12-03T18:00:00-05:00",
+				"endTime": "2020-12-04T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 37,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "5 mph",
+				"windDirection": "S",
+				"icon": "https://api.weather.gov/icons/land/night/sct?size=medium",
+				"shortForecast": "Partly Cloudy",
+				"detailedForecast": "Partly cloudy, with a low around 37."
+			},
+			{
+				"number": 8,
+				"name": "Friday",
+				"startTime": "2020-12-04T06:00:00-05:00",
+				"endTime": "2020-12-04T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 62,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "3 to 7 mph",
+				"windDirection": "S",
+				"icon": "https://api.weather.gov/icons/land/day/rain_showers?size=medium",
+				"shortForecast": "Slight Chance Rain Showers",
+				"detailedForecast": "A slight chance of rain showers after 7am. Partly sunny, with a high near 62."
+			},
+			{
+				"number": 9,
+				"name": "Friday Night",
+				"startTime": "2020-12-04T18:00:00-05:00",
+				"endTime": "2020-12-05T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 44,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "6 mph",
+				"windDirection": "S",
+				"icon": "https://api.weather.gov/icons/land/night/rain_showers,50?size=medium",
+				"shortForecast": "Chance Rain Showers",
+				"detailedForecast": "A chance of rain showers. Mostly cloudy, with a low around 44. Chance of precipitation is 50%."
+			},
+			{
+				"number": 10,
+				"name": "Saturday",
+				"startTime": "2020-12-05T06:00:00-05:00",
+				"endTime": "2020-12-05T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 60,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "7 to 13 mph",
+				"windDirection": "SW",
+				"icon": "https://api.weather.gov/icons/land/day/rain_showers,50?size=medium",
+				"shortForecast": "Chance Rain Showers",
+				"detailedForecast": "A chance of rain showers. Partly sunny, with a high near 60. Chance of precipitation is 50%."
+			},
+			{
+				"number": 11,
+				"name": "Saturday Night",
+				"startTime": "2020-12-05T18:00:00-05:00",
+				"endTime": "2020-12-06T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 38,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "8 to 13 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/night/rain_showers,50/rain_showers,30?size=medium",
+				"shortForecast": "Chance Rain Showers",
+				"detailedForecast": "A chance of rain showers. Partly cloudy, with a low around 38. Chance of precipitation is 50%."
+			},
+			{
+				"number": 12,
+				"name": "Sunday",
+				"startTime": "2020-12-06T06:00:00-05:00",
+				"endTime": "2020-12-06T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 53,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "8 to 12 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/day/rain_showers,30/sct?size=medium",
+				"shortForecast": "Chance Rain Showers then Mostly Sunny",
+				"detailedForecast": "A chance of rain showers before 7am. Mostly sunny, with a high near 53. Chance of precipitation is 30%."
+			},
+			{
+				"number": 13,
+				"name": "Sunday Night",
+				"startTime": "2020-12-06T18:00:00-05:00",
+				"endTime": "2020-12-07T06:00:00-05:00",
+				"isDaytime": false,
+				"temperature": 36,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "10 mph",
+				"windDirection": "W",
+				"icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+				"shortForecast": "Mostly Clear",
+				"detailedForecast": "Mostly clear, with a low around 36."
+			},
+			{
+				"number": 14,
+				"name": "Monday",
+				"startTime": "2020-12-07T06:00:00-05:00",
+				"endTime": "2020-12-07T18:00:00-05:00",
+				"isDaytime": true,
+				"temperature": 50,
+				"temperatureUnit": "F",
+				"temperatureTrend": null,
+				"windSpeed": "10 to 17 mph",
+				"windDirection": "NW",
+				"icon": "https://api.weather.gov/icons/land/day/few?size=medium",
+				"shortForecast": "Sunny",
+				"detailedForecast": "Sunny, with a high near 50."
+			}
+		]
+	}
+}

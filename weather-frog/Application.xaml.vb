@@ -101,7 +101,7 @@ Class Application
                 My.Settings.OptionsWindowPosition = OptionsWin.GetPlacement()
                 My.Settings.Save()
             End Sub
-        OptionsWin.Show()
+        OptionsWin.ShowDialog()
     End Sub
 
     Friend Sub CloseOptions(Optional ForceUpdate As Boolean = False)

@@ -28,6 +28,20 @@ Namespace Extensions
             End Try
         End Function
 
+        <System.Runtime.CompilerServices.Extension>
+        Public Function FromJSONDotNet(Of T)(json As String) As T
+            If String.IsNullOrEmpty(json) Then
+                Return Nothing
+            End If
+
+            Dim options As New Json.JsonSerializerOptions With {.PropertyNameCaseInsensitive = True}
+            Try
+                Return Text.Json.JsonSerializer.Deserialize(Of T)(json, options)
+            Catch ex As Exception
+                Return Nothing
+            End Try
+        End Function
+
     End Module
 
 End Namespace

@@ -108,6 +108,15 @@ Namespace ViewModels
             End Get
         End Property
 
+        Public ReadOnly Property SelectStation As ICommand
+            Get
+                Return New RelayCommand(Sub()
+                                            Dim ss As New StationSelector
+                                            ss.ShowDialog()
+                                        End Sub)
+            End Get
+        End Property
+
 #Region " INotifyPropertyChanged "
 
         Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged

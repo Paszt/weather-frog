@@ -107,10 +107,25 @@
                 </StackPanel>
             </Grid>
         </ScrollViewer>
+        <Button Grid.Row="1"
+                Margin="20"
+                Width="120"
+                HorizontalAlignment="Left"
+                Command="{Binding SelectStation}">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{DynamicResource MyLocationDrawingImage}"
+                           Width="20"
+                           Margin="0,0,5,0" />
+                    <TextBlock Text="Select Station" Margin="0,0,5,0"/>
+                </StackPanel>
+            </Button.Content>
+        </Button>
         <StackPanel Orientation="Horizontal"
                     Height="32"
                     HorizontalAlignment="Right"
-                    Grid.Row="1" Margin="20">
+                    Grid.Row="1"
+                    Margin="20">
             <Button Content="Cancel"
                     Width="90"
                     Margin="15 0"
