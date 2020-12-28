@@ -1,4 +1,14 @@
 Trace Frogs in Illustrator at regular size.
 
-Import into Photoshop. Increase size 500% to paint textures.
-Paint using Mixer Brush with Airbrush-Grainy Opaque tool preset, 300 size
+Increase size 500% in Illustrator. Use Distort>Roughen filter to roughen edges.  
+Import into Photoshop.  
+Paint using Mixer Brush with Airbrush-Grainy Opaque tool preset, 300 size 
+
+Save as:
+  PNG-8
+  Selective (Color reduction algorithm)
+  No Dither
+  32 Colors
+  Matte: None
+  No Transparency Dither
+

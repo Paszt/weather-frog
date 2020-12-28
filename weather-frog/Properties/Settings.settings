@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="weatherfrog.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WeatherApiKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Location" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UnitSystem" Type="weatherfrog.WeatherApi.Models.UnitSystem" Scope="User">
+      <Value Profile="(Default)">Imperial</Value>
+    </Setting>
+    <Setting Name="TaskbarIconStyle" Type="weatherfrog.Infrastructure.TaskbarIconStyle" Scope="User">
+      <Value Profile="(Default)">Temperature</Value>
+    </Setting>
+    <Setting Name="ApiKeyValidated" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ChangeDesktopBackground" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

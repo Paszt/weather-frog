@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="weatherfrog.WeatherApi.Models.CurrentWeather">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAACAAAAABAAAAAQAAAAAAA=</HashCode>
+      <FileName>WeatherApi\Models\CurrentWeather.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Location" />
+      <Property Name="Data" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="weatherfrog.WeatherApi.Models.Current">
+    <Position X="4" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABAAMIAQICKgQKBCZmSAWkQEAAiACIAKoCBAAgAAwA=</HashCode>
+      <FileName>WeatherApi\Models\Current.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="weatherfrog.WeatherApi.Models.Location">
+    <Position X="1.5" Y="2" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AACAUAAAgEAAAAAAAIAIAQSACAcEAAAGAAAAAAAAAAA=</HashCode>
+      <FileName>WeatherApi\Models\Location.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

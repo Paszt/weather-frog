@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="weatherfrog.WeatherApi.Models.IpLookup">
+    <Position X="0.75" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ICCAICAggCAAAAALAAABCwAAAQ0hgAAFAYAgAAAAIAA=</HashCode>
+      <FileName>WeatherApi\Models\IpLookup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="weatherfrog.WeatherApi.Models.IPType">
+    <Position X="4.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WeatherApi\Models\IPType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

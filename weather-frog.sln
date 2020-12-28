@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.438
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "weather-frog", "weather-frog\weather-frog.vbproj", "{7173DABD-A57E-4E90-80F0-23F8B0E45A85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "weather-frog", "weather-frog\weather-frog.csproj", "{36CAECBA-E4BA-4458-BB59-C273F88963D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7173DABD-A57E-4E90-80F0-23F8B0E45A85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7173DABD-A57E-4E90-80F0-23F8B0E45A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7173DABD-A57E-4E90-80F0-23F8B0E45A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7173DABD-A57E-4E90-80F0-23F8B0E45A85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CAECBA-E4BA-4458-BB59-C273F88963D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CAECBA-E4BA-4458-BB59-C273F88963D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CAECBA-E4BA-4458-BB59-C273F88963D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CAECBA-E4BA-4458-BB59-C273F88963D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {FA1D3822-A1DB-4449-A6B0-EFA502313FE5}
+		SolutionGuid = {718E0EFB-8AC5-4636-9987-90B625FF426D}
 	EndGlobalSection
 EndGlobal

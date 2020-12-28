@@ -1,34 +1,46 @@
-﻿<UserControl x:Class="TaskbarBalloon"
+﻿<UserControl x:Class="weatherfrog.Resources.TaskbarBalloon"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:weatherfrog"
-             DataContext="{x:Static Application.Current}"
-             d:DataContext="{d:DesignInstance {x:Type local:TaskbarBalloonDesignViewModel}}"
+             mc:Ignorable="d"
+             FontFamily="/Resources/Roboto-Regular.ttf#Roboto"
              Width="450"
              Height="290"
-             FontFamily="/Resources/Roboto-Regular.ttf#Roboto"
-             Foreground="white"
-             mc:Ignorable="d"
-             Background="#FF53a7d0">
+             Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
+             d:DataContext="{x:Static Application.Current}"
+             Foreground="White">
     <Grid>
         <Image />
-        <StackPanel DataContext="{Binding CurrentWeatherConditions}"
-                    Margin="20">
+        <!-- DataContext="{Binding Forecast}" -->
+        <StackPanel Margin="20"
+                    DataContext="{Binding Forecast}">
             <TextBlock Margin="0,0,0,14"
-                       FontSize="16">
-                <Run Text="{Binding CityName, StringFormat={}{0}\,}" />
-                <Run Text="{Binding StateCode}" />
-            </TextBlock>
+                       FontSize="16"
+                       Text="{Binding Location.DisplayName}" />
             <DockPanel>
-                <TextBlock Text="{Binding Temperature}"
+                <TextBlock FontSize="14">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Day {0}°↑ • Night {1}°↓">
+                            <Binding Path="Days.Forecastdays[0].WeatherData.MaxTemp" />
+                            <Binding Path="Days.Forecastdays[0].WeatherData.MinTemp" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Text="{Binding Days.Forecastdays[0].WeatherData.PrecipitationInfo}"
+                           FontSize="14"
+                           Foreground="Cyan"
+                           HorizontalAlignment="Right"
+                           Margin="20,0" />
+            </DockPanel>
+            <DockPanel>
+                <TextBlock Text="{Binding CurrentWeather.Temp}"
                            FontSize="50" />
                 <Grid>
                     <TextBlock Text="°"
                                FontSize="50" />
                     <TextBlock Text="F"
-                               DataContext="{x:Static Application.Current}"
                                FontSize="20"
                                VerticalAlignment="Bottom"
                                HorizontalAlignment="center"
@@ -36,12 +48,13 @@
                 </Grid>
                 <StackPanel VerticalAlignment="Center"
                             Margin="20,0">
-                    <TextBlock Text="{Binding Weather.Description }"
+                    <TextBlock Text="{Binding CurrentWeather.Condition.Text}"
                                FontSize="18" />
-                    <TextBlock Text="{Binding ApparentTemp, StringFormat={}Feels Like {0}° }"
+                    <TextBlock Text="{Binding CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}° }"
                                FontSize="18" />
                 </StackPanel>
-                <Image Source="{Binding WeatherIcon}"
+                <!--Source="{Binding DataContext.WeatherIcon, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"-->
+                <Image Source="{Binding CurrentWeather.WeatherIcon}"
                        Height="50"
                        HorizontalAlignment="Right"
                        Margin="0,0,30,0" />
