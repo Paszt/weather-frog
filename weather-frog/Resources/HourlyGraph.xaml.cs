@@ -59,7 +59,8 @@ namespace weatherfrog.Resources
 
         public static readonly DependencyProperty ForecastProperty =
               DependencyProperty.Register("Forecast", typeof(Forecast),
-                typeof(HourlyGraph), new PropertyMetadata(new Forecast(), new PropertyChangedCallback(OnForecastChanged)));
+                typeof(HourlyGraph), new PropertyMetadata(null, OnForecastChanged));
+        //new PropertyMetadata(new Forecast(), new PropertyChangedCallback(OnForecastChanged))
 
         private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -78,13 +79,7 @@ namespace weatherfrog.Resources
 
         private void Draw()
         {
-            if (null == Forecast?.Days)
-            {
-                //If Forecast is null, fill Rectangle so it's visible in the designer.
-                //Rectangle.Width = 200;
-                Rectangle.Fill = Brushes.LightCoral;
-            }
-            else
+            if (!(null == Forecast?.Days))
             {
                 Rectangle.Fill = Brushes.Transparent;
                 List<Hour> upcomingHours = null;

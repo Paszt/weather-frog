@@ -9,12 +9,20 @@ namespace weatherfrog.Resources
 {
     class ForecastDesignData : WeatherApi.Models.BaseModel
     {
-        public Forecast Forecast;
+        private Forecast forecast;
+        public Forecast Forecast { get => forecast; set => SetProperty(ref forecast, value); }
 
         public ForecastDesignData()
         {
             Forecast = new()
             {
+                CurrentWeather = new()
+                {
+                    TempF = 54,
+                    FeelsLikeF = 52,
+                    IsDay = false,
+                    Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" },
+                },
                 Days = new()
                 {
                     Forecastdays = new()
@@ -23,24 +31,43 @@ namespace weatherfrog.Resources
                         {
                             HourlyWeather = new()
                             {
-                                new Hour() { TempF = 32, Time = DateTime.Now.AddHours(1) },
-                                new Hour() { TempF = 34, Time = DateTime.Now.AddHours(2) },
-                                new Hour() { TempF = 38, Time = DateTime.Now.AddHours(3) },
-                                new Hour() { TempF = 42, Time = DateTime.Now.AddHours(4) },
-                                new Hour() { TempF = 47, Time = DateTime.Now.AddHours(5) },
-                                new Hour() { TempF = 52, Time = DateTime.Now.AddHours(6) },
-                                new Hour() { TempF = 64, Time = DateTime.Now.AddHours(7) },
-                                new Hour() { TempF = 60, Time = DateTime.Now.AddHours(8) },
-                                new Hour() { TempF = 58, Time = DateTime.Now.AddHours(9) },
-                                new Hour() { TempF = 42, Time = DateTime.Now.AddHours(10) },
-                                new Hour() { TempF = 32, Time = DateTime.Now.AddHours(11) },
-                                new Hour() { TempF = 28, Time = DateTime.Now.AddHours(12) },
+                                new Hour() { TempF = 32, Time = DateTime.Now.AddHours(1), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 34, Time = DateTime.Now.AddHours(2), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 38, Time = DateTime.Now.AddHours(3), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 42, Time = DateTime.Now.AddHours(4), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 47, Time = DateTime.Now.AddHours(5), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 52, Time = DateTime.Now.AddHours(6), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 64, Time = DateTime.Now.AddHours(7), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 60, Time = DateTime.Now.AddHours(8), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 58, Time = DateTime.Now.AddHours(9), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 42, Time = DateTime.Now.AddHours(10), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 32, Time = DateTime.Now.AddHours(11), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 28, Time = DateTime.Now.AddHours(12), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                            },
+                            WeatherData = new() { DailyWillItSnow = false, DailyWillItRain = true, DailyChanceOfRain = 98, MaxTempF = 64, MinTempF = 42 }
+                        },
+                        new Forecastday()
+                        {
+                            HourlyWeather = new()
+                            {
+                                new Hour() { TempF = 32, Time = DateTime.Now.AddHours(1 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 34, Time = DateTime.Now.AddHours(2 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 38, Time = DateTime.Now.AddHours(3 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 42, Time = DateTime.Now.AddHours(4 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 47, Time = DateTime.Now.AddHours(5 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 52, Time = DateTime.Now.AddHours(6 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 64, Time = DateTime.Now.AddHours(7 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 60, Time = DateTime.Now.AddHours(8 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 58, Time = DateTime.Now.AddHours(9 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 42, Time = DateTime.Now.AddHours(10 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 32, Time = DateTime.Now.AddHours(11 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
+                                new Hour() { TempF = 28, Time = DateTime.Now.AddHours(12 + 24), Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }, ChanceOfRain = 90, ChanceOfSnow = 0, IsDay = true },
                             }
-                        }
+                        },
                     }
-                }
+                },
+                Location = new() { Name = "Monkey's Eyebrow", Region = "Kentucky" }
             };
-            NotifyPropertyChanged("Forecast");
         }
     }
 }
