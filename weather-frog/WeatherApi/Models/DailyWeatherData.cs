@@ -181,9 +181,7 @@ namespace weatherfrog.WeatherApi.Models
                 {
                     return DailyChanceOfRain.ToString() + "% Precip";
                 }
-                //TODO: DailyWeatherDara.PrecipitationInfo: This temporary text for is for testing, need to removed.
-                return "No Precip";
-                //return string.Empty;
+                return string.Empty;
             }
         }
 

@@ -3,62 +3,105 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:weatherfrog"
+             xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
+             xmlns:resources="clr-namespace:weatherfrog.Resources"
              mc:Ignorable="d"
              FontFamily="/Resources/Roboto-Regular.ttf#Roboto"
              Width="450"
              Height="290"
              Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
-             d:DataContext="{x:Static Application.Current}"
+             d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}"
              Foreground="White">
+    <!--d:DataContext="{d:DesignInstance {x:Type resources:ForecastDesignData }, IsDesignTimeCreatable=True}"-->
+    <UserControl.Resources>
+        <infrastructure:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
+    </UserControl.Resources>
+    <!-- Datacontext is set in App.Begin while instantiating the TaskbarIcon (notifyIcon) -->
     <Grid>
+        <!-- Frog Illustration -->
         <Image />
         <!-- DataContext="{Binding Forecast}" -->
-        <StackPanel Margin="20"
-                    DataContext="{Binding Forecast}">
+        <Grid Margin="20"
+              DataContext="{Binding Forecast}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <!-- Row 1: Location-->
             <TextBlock Margin="0,0,0,14"
                        FontSize="16"
-                       Text="{Binding Location.DisplayName}" />
-            <DockPanel>
-                <TextBlock FontSize="14">
-                    <TextBlock.Text>
-                        <MultiBinding StringFormat="Day {0}°↑ • Night {1}°↓">
-                            <Binding Path="Days.Forecastdays[0].WeatherData.MaxTemp" />
-                            <Binding Path="Days.Forecastdays[0].WeatherData.MinTemp" />
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
+                       Grid.ColumnSpan="4"
+                       Text="{Binding Location.DisplayName}"
+                       Foreground="Black" />
+
+            <!--Row 2: High Low, Precip Info-->
+            <TextBlock FontSize="16"
+                       Grid.Row="1"
+                       Grid.ColumnSpan="3">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Day {0}°↑ • Night {1}°↓">
+                        <Binding Path="Days.Forecastdays[0].WeatherData.MaxTemp" />
+                        <Binding Path="Days.Forecastdays[0].WeatherData.MinTemp" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <!--Umbrella & Precip Info-->
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        HorizontalAlignment="Center">
+                <Image Source="{DynamicResource Umbrella}"
+                       Width="16"
+                       Margin="0,0,3,0"
+                       Visibility="{Binding Days.Forecastdays[0].WeatherData.PrecipitationInfo, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
                 <TextBlock Text="{Binding Days.Forecastdays[0].WeatherData.PrecipitationInfo}"
                            FontSize="14"
-                           Foreground="Cyan"
-                           HorizontalAlignment="Right"
-                           Margin="20,0" />
-            </DockPanel>
-            <DockPanel>
-                <TextBlock Text="{Binding CurrentWeather.Temp}"
+                           Foreground="Cyan" />
+            </StackPanel>
+
+            <!--Row 3: Temp, Condition, Icon, etc-->
+            <!--Temperature-->
+            <TextBlock Text="{Binding CurrentWeather.Temp}"
+                       FontSize="50"
+                       Grid.Row="2" />
+            <!--°F-->
+            <Grid Grid.Row="2"
+                  Grid.Column="1"
+                  HorizontalAlignment="Left">
+                <TextBlock Text="°"
                            FontSize="50" />
-                <Grid>
-                    <TextBlock Text="°"
-                               FontSize="50" />
-                    <TextBlock Text="F"
-                               FontSize="20"
-                               VerticalAlignment="Bottom"
-                               HorizontalAlignment="center"
-                               Margin="0,0,0,7" />
-                </Grid>
-                <StackPanel VerticalAlignment="Center"
-                            Margin="20,0">
-                    <TextBlock Text="{Binding CurrentWeather.Condition.Text}"
-                               FontSize="18" />
-                    <TextBlock Text="{Binding CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}° }"
-                               FontSize="18" />
-                </StackPanel>
-                <!--Source="{Binding DataContext.WeatherIcon, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"-->
-                <Image Source="{Binding CurrentWeather.WeatherIcon}"
-                       Height="50"
-                       HorizontalAlignment="Right"
-                       Margin="0,0,30,0" />
-            </DockPanel>
-        </StackPanel>
+                <TextBlock Text="F"
+                           FontSize="20"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="center"
+                           Margin="0,0,0,7" />
+            </Grid>
+            <!--Condition & Feels Like-->
+            <StackPanel VerticalAlignment="Center"
+                        Grid.Row="2"
+                        Grid.Column="2">
+                <TextBlock Text="{Binding CurrentWeather.Condition.Text}"
+                           FontSize="18" />
+                <TextBlock Text="{Binding CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}° }"
+                           FontSize="18" />
+            </StackPanel>
+            <!--Weather Icon-->
+            <Image Source="{Binding CurrentWeather.WeatherIcon}"
+                   Height="50"
+                   Grid.Row="2"
+                   Grid.Column="3"
+                   HorizontalAlignment="Center" />
+        </Grid>
+        <!--Hourly Graph-->
+        <resources:HourlyGraph Forecast="{Binding Forecast}"
+                               Height="150" />
     </Grid>
 </UserControl>

@@ -8,6 +8,7 @@
     <RootNamespace>weatherfrog</RootNamespace>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/Paszt/weather-frog</RepositoryUrl>
+    <ApplicationIcon>Resources\Weather-Frog.ico</ApplicationIcon>
     <!--<GenerateAssemblyInfo>true</GenerateAssemblyInfo>-->
   </PropertyGroup>
 
@@ -27,9 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Roboto-Regular.ttf">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Resources\Roboto-Regular.ttf" />
     <Resource Include="Resources\weather_conditions.json" />
   </ItemGroup>
 

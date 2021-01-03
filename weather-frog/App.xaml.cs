@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows;
 using weatherfrog.WeatherApi.Models;
 using weatherfrog.Infrastructure;
+using System.Windows.Data;
 
 namespace weatherfrog
 {
@@ -84,8 +85,17 @@ namespace weatherfrog
                 DataContext = Current,
                 ContextMenu = (System.Windows.Controls.ContextMenu)FindResource("NotifyIconMenu"),
                 TrayPopup = new Resources.TaskbarBalloon(),
-                ToolTip = new Resources.TaskbarBalloon(),
+                //ToolTip = new Resources.TaskbarBalloon(),
             };
+            MultiBinding toolTipMultiBinding = new MultiBinding()
+            {
+                StringFormat = "Weather Frog \n{0}° {1}\n{2}",
+                Bindings = {
+                    new Binding("Forecast.CurrentWeather.Temp") { Source = this },
+                    new Binding("Forecast.CurrentWeather.Condition.Text") { Source = this },
+                    new Binding("Forecast.Location.DisplayName") { Source = this },
+                }
+            }; BindingOperations.SetBinding(notifyIcon, TaskbarIcon.ToolTipTextProperty, toolTipMultiBinding);
         }
 
         #region Properties

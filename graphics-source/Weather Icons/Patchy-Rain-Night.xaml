@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DrawingBrush x:Key="Layer_1" Stretch="Uniform"/>
+	<DrawingBrush x:Key="Layer_1_0" Stretch="Uniform"/>
+	<DrawingBrush x:Key="Layer_1_1" Stretch="Uniform">
+		<DrawingBrush.Drawing>
+			<DrawingGroup>
+				<DrawingGroup.Children>
+					<GeometryDrawing Brush="#FFCADAFC" Geometry="F1 M 196.305,1013.33C 174.949,1013.33 157.638,996.021 157.638,974.667C 157.638,971.461 158.035,968.351 158.77,965.372C 138.127,966.179 121.638,983.16 121.638,1004C 121.638,1025.35 138.949,1042.67 160.305,1042.67C 178.454,1042.67 193.677,1030.16 197.839,1013.29C 197.33,1013.31 196.819,1013.33 196.305,1013.33 Z "/>
+					<GeometryDrawing Geometry="F1 M 140.865,1037.43C 146.576,1040.76 153.217,1042.67 160.304,1042.67L 160.304,1042.67C 175.676,1042.67 188.947,1033.7 195.179,1020.7L 195.179,1020.7C 190.092,1018.79 184.58,1017.74 178.824,1017.74L 178.824,1017.74C 163.139,1017.74 149.269,1025.52 140.865,1037.43 Z ">
+						<GeometryDrawing.Brush>
+							<RadialGradientBrush RadiusX="0.854757" RadiusY="1.86255" Center="0.698878,1.86259" GradientOrigin="0.698878,1.86259">
+								<RadialGradientBrush.GradientStops>
+									<GradientStop Color="#FFB1C2EB" Offset="0"/>
+									<GradientStop Color="#FFB1C2EB" Offset="0.938283"/>
+									<GradientStop Color="#FFC8DBFB" Offset="1"/>
+								</RadialGradientBrush.GradientStops>
+								<RadialGradientBrush.RelativeTransform>
+									<TransformGroup/>
+								</RadialGradientBrush.RelativeTransform>
+							</RadialGradientBrush>
+						</GeometryDrawing.Brush>
+					</GeometryDrawing>
+					<GeometryDrawing Geometry="F1 M 142.667,1029.33L 178.667,1029.33L 178.667,1017.33L 142.667,1017.33L 142.667,1029.33 Z ">
+						<GeometryDrawing.Brush>
+							<LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,5.08624e-006">
+								<LinearGradientBrush.GradientStops>
+									<GradientStop Color="#FFB1C2EB" Offset="0"/>
+									<GradientStop Color="#FFB1C2EB" Offset="0.665354"/>
+									<GradientStop Color="#FFC8DBFB" Offset="1"/>
+								</LinearGradientBrush.GradientStops>
+							</LinearGradientBrush>
+						</GeometryDrawing.Brush>
+					</GeometryDrawing>
+					<DrawingGroup ClipGeometry="F1 M 121.639,1004C 121.639,1025.35 138.949,1042.67 160.304,1042.67L 160.304,1042.67C 178.455,1042.67 193.676,1030.16 197.839,1013.29L 197.839,1013.29C 197.329,1013.31 196.819,1013.33 196.304,1013.33L 196.304,1013.33C 174.949,1013.33 157.639,996.021 157.639,974.667L 157.639,974.667C 157.639,971.461 158.035,968.351 158.769,965.372L 158.769,965.372C 138.127,966.179 121.639,983.16 121.639,1004 Z ">
+						<DrawingGroup.Children>
+							<GeometryDrawing Geometry="F1 M 152.423,1042.69C 152.423,1080.85 121.487,1111.78 83.3253,1111.78C 45.164,1111.78 14.228,1080.85 14.228,1042.69C 14.228,1004.53 45.164,973.589 83.3253,973.589C 121.487,973.589 152.423,1004.53 152.423,1042.69 Z ">
+								<GeometryDrawing.Brush>
+									<RadialGradientBrush RadiusX="0.499999" RadiusY="0.500003" Center="0.500001,0.5" GradientOrigin="0.500001,0.5">
+										<RadialGradientBrush.GradientStops>
+											<GradientStop Color="#FFB1C2EB" Offset="0"/>
+											<GradientStop Color="#FFB1C2EB" Offset="0.908947"/>
+											<GradientStop Color="#FFC8DBFB" Offset="1"/>
+										</RadialGradientBrush.GradientStops>
+										<RadialGradientBrush.RelativeTransform>
+											<TransformGroup/>
+										</RadialGradientBrush.RelativeTransform>
+									</RadialGradientBrush>
+								</GeometryDrawing.Brush>
+							</GeometryDrawing>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+					<DrawingGroup ClipGeometry="F1 M 0,965.333L 234.667,965.333L 234.667,1200L 0,1200L 0,965.333 Z ">
+						<DrawingGroup.Children>
+							<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 179.15,1021.31L 83.6517,1021.31C 59.8011,1021.31 40.4664,1040.64 40.4664,1064.5C 40.4664,1088.35 59.8011,1107.68 83.6517,1107.68L 179.15,1107.68C 203.001,1107.68 222.336,1088.35 222.336,1064.5C 222.336,1040.64 203.001,1021.31 179.15,1021.31 Z "/>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+					<DrawingGroup ClipGeometry="F1 M 83.652,1021.31C 59.8013,1021.31 40.4667,1040.65 40.4667,1064.5L 40.4667,1064.5C 40.4667,1088.35 59.8013,1107.68 83.652,1107.68L 83.652,1107.68L 179.151,1107.68C 203,1107.68 222.336,1088.35 222.336,1064.5L 222.336,1064.5C 222.336,1040.65 203,1021.31 179.151,1021.31L 179.151,1021.31L 83.652,1021.31 Z ">
+						<DrawingGroup.Children>
+							<GeometryDrawing Brush="#FFE5E5E5" Geometry="F1 M 150.79,1042.93C 150.79,1070.94 128.086,1093.64 100.079,1093.64C 72.0724,1093.64 49.3684,1070.94 49.3684,1042.93C 49.3684,1014.92 72.0724,992.22 100.079,992.22C 128.086,992.22 150.79,1014.92 150.79,1042.93 Z "/>
+						</DrawingGroup.Children>
+					</DrawingGroup>
+					<GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M 148.318,1043.01C 148.318,1078.73 119.366,1107.68 83.6517,1107.68C 47.9371,1107.68 18.9851,1078.73 18.9851,1043.01C 18.9851,1007.3 47.9371,978.348 83.6517,978.348C 119.366,978.348 148.318,1007.3 148.318,1043.01 Z "/>
+					<GeometryDrawing Brush="#FF1DFFFD" Geometry="F1 M 89.3333,1134.67C 89.3333,1125.83 74.6667,1113.33 73.3333,1113.33C 72,1113.33 57.3333,1125.83 57.3333,1134.67C 57.3333,1143.5 64.4973,1150.67 73.3333,1150.67C 82.1693,1150.67 89.3333,1143.5 89.3333,1134.67 Z "/>
+					<GeometryDrawing Brush="#FF1DFFFD" Geometry="F1 M 185.333,1134.67C 185.333,1125.83 170.667,1113.33 169.333,1113.33C 168,1113.33 153.333,1125.83 153.333,1134.67C 153.333,1143.5 160.497,1150.67 169.333,1150.67C 178.169,1150.67 185.333,1143.5 185.333,1134.67 Z "/>
+					<GeometryDrawing Brush="#FF1DFFFD" Geometry="F1 M 137.333,1184C 137.333,1175.16 122.667,1162.67 121.333,1162.67C 120,1162.67 105.333,1175.16 105.333,1184C 105.333,1192.84 112.497,1200 121.333,1200C 130.169,1200 137.333,1192.84 137.333,1184 Z "/>
+					<GeometryDrawing Brush="#FF000000" Geometry="F1 M 234.667,965.333L 0,965.333L 0,1200L 234.667,1200M 233.333,1198.67L 1.33333,1198.67L 1.33333,966.667L 233.333,966.667L 233.333,1198.67 Z "/>
+				</DrawingGroup.Children>
+			</DrawingGroup>
+		</DrawingBrush.Drawing>
+	</DrawingBrush>
+</ResourceDictionary>

@@ -72,10 +72,10 @@ namespace weatherfrog.Infrastructure
             dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300));
 
             // Weather Description
-            double descriptionCenter = screenWidth * 0.77d + weatherIconWidth / 2;
+            double descriptionCenter = screenWidth * 0.77d + (weatherIconWidth / 2) - 150.0d;
             FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, ci, FlowDirection.LeftToRight,
                 tf, 40, Brushes.White, 1.0d)
-            { TextAlignment = TextAlignment.Center };
+            { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
             dc.DrawText(descriptionText, new Point(descriptionCenter, 300));
             dc.Close();
             return dv;
@@ -114,6 +114,11 @@ namespace weatherfrog.Infrastructure
             key.SetValue("TileWallpaper", "0");
 
             return returnValue;
+        }
+
+        internal static void Offline(string message = "Weather Frog Is Offline")
+        {
+
         }
 
         #region Win32

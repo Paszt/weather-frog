@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:resources="clr-namespace:weatherfrog.Resources"
         mc:Ignorable="d"
-        Title="Popupwindow" Height="450" Width="800"
+        Title="Popupwindow"
+        Height="346"
+        Width="476"
         Style="{DynamicResource CustomWindowStyle}">
     <Grid>
         <resources:TaskbarBalloon />

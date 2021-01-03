@@ -2,7 +2,7 @@
 
 namespace weatherfrog.WeatherApi.Models
 {
-    public class Forecast : BaseModel
+    public partial class Forecast : BaseModel
     {
         private Location location;
         private Current current;

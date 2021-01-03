@@ -22,7 +22,7 @@ namespace weatherfrog.Infrastructure
                      new System.Globalization.CultureInfo("en-us"),
                      FlowDirection.LeftToRight,
                      Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(),
-                     11, 
+                     11,
                      System.Windows.Media.Brushes.White,
                      null,
                      TextFormattingMode.Ideal,
@@ -74,5 +74,20 @@ namespace weatherfrog.Infrastructure
             dc.Close();
             return CreateIcon(pixelWidth, pixelHeight, dv);
         }
+
+        //https://stackoverflow.com/a/2837158
+        public static System.Windows.Input.Cursor CreateCursor(int width, int height, Visual visual, System.Drawing.Point hotSpot)
+        {
+            MemoryStream stream = new();
+            CreateIcon(width, height, visual).Save(stream);
+            stream.Seek(2, SeekOrigin.Begin);
+            stream.WriteByte(2);
+            stream.Seek(10, SeekOrigin.Begin);
+            stream.WriteByte((byte)(hotSpot.X * width));
+            stream.WriteByte((byte)(hotSpot.Y * height));
+            stream.Seek(0, SeekOrigin.Begin);
+            return new System.Windows.Input.Cursor(stream);
+        }
+
     }
 }

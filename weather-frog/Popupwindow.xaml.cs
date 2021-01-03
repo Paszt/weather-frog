@@ -11,6 +11,7 @@ namespace weatherfrog
         {
             InitializeComponent();
             DataContext = Application.Current;
+            Icon = (System.Windows.Media.ImageSource)Application.Current.FindResource("FrogHeadDrawingImage");
         }
     }
 }

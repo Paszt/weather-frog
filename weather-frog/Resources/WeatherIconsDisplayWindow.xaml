@@ -42,7 +42,7 @@
                             <Setter Property="Height"
                                     Value="90" />
                             <Setter Property="Margin"
-                                    Value="5" />
+                                    Value="5,15,5,5" />
                             <Setter Property="MinWidth"
                                     Value="190" />
                         </Style>
