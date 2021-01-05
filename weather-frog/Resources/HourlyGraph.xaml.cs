@@ -101,6 +101,7 @@ namespace weatherfrog.Resources
                 double leftPoint = 0.0;
 
                 // Create the Graph
+                Graph.Points.Clear();
                 Graph.Points.Add(new Point(0, 150));
                 Graph.Points.Add(new Point(0, CalculateYValue(upcomingHours[0].Temp)));
 
@@ -148,8 +149,13 @@ namespace weatherfrog.Resources
         {
             double minMaxDiff = maxTemp - minTemp;
             double tempDiffFromMin = minTemp - temp;
-            // 38 = the height of the graph from min to max
-            double proportional = (38 / minMaxDiff) * tempDiffFromMin;
+            // 38 = maximum height of the graph from min to max
+            double graphHeightDelta = 38.0;
+            if (minMaxDiff < 5)
+            {
+                graphHeightDelta = 10;
+            }
+            double proportional = (graphHeightDelta / minMaxDiff) * tempDiffFromMin;
             // Y = 64 is minimum, just aboe the precip info location
             return proportional + 64;
         }
