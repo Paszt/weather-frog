@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:weatherfrog"
              xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
              xmlns:resources="clr-namespace:weatherfrog.Resources"
              mc:Ignorable="d"
@@ -12,7 +13,6 @@
              Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
              d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}"
              Foreground="White">
-    <!--d:DataContext="{d:DesignInstance {x:Type resources:ForecastDesignData }, IsDesignTimeCreatable=True}"-->
     <UserControl.Resources>
         <infrastructure:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
     </UserControl.Resources>
@@ -20,7 +20,10 @@
     <Grid ClipToBounds="True">
         <!-- Frog Illustration -->
         <Image />
-        <Grid Margin="10">
+        <!--Current Weather Info-->
+        <Grid Margin="10"
+              MouseLeftButtonUp="RootGrid_MouseLeftButtonUp"
+              Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -60,7 +63,7 @@
                        Margin="0,0,3,0"
                        Visibility="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
                 <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo}"
-                           FontSize="14"
+                           FontSize="16"
                            Foreground="Cyan" />
             </StackPanel>
 
@@ -97,14 +100,11 @@
                    Grid.Column="3"
                    HorizontalAlignment="Center" />
         </Grid>
-        <!--Hourly Graph-->
         <resources:HourlyGraph Forecast="{Binding Forecast}"
                                x:Name="HourlyGraph"
-                               Height="150" />
-        <!--Invisible control, clicking on it opens and closes the graph-->
-        <Border Height="140"
-                MouseLeftButtonUp="RootGrid_MouseLeftButtonUp"
-                VerticalAlignment="Top"
-                Background="Transparent" />
+                               Height="150"
+                               MouseLeftButtonDown="HourlyGraph_MouseLeftButtonDown"
+                               MouseLeftButtonUp="HourlyGraph_MouseLeftButtonUp"
+                               MouseMove="HourlyGraph_MouseMove" />
     </Grid>
 </UserControl>

@@ -58,20 +58,27 @@ namespace weatherfrog
 
             //Resources.WeatherIconsDisplayWindow widw = new();
             //widw.Show();
-            Popupwindow pu = new();
-            pu.Show();
 
-            ForecastWindow fs = new();
-            fs.Show();
+            //Popupwindow pu = new();
+            //pu.Show();
+
+            //ForecastWindow fs = new();
+            //fs.Show();
 
             if (My.Settings.ApiKeyValidated)
-            { Begin(); }
+            {
+                Begin();
+            }
             else
             {
                 if (OptionsWindowInstance.ShowDialog() == false)
-                { Current?.Shutdown(); }
+                {
+                    Current?.Shutdown();
+                }
                 else
-                { Begin(); }
+                {
+                    Begin();
+                }
             }
         }
 

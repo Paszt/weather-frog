@@ -11,16 +11,30 @@
              d:DesignWidth="450">
     <Grid ClipToBounds="True"
           x:Name="RootGrid">
-        <!--<Border x:Name="Border">-->
-        <Rectangle x:Name="Rectangle"
-                   Width="700"
-                   Fill="Transparent"
-                   HorizontalAlignment="Left"
-                   MouseLeftButtonDown="Rectangle_MouseLeftButtonDown"
-                   MouseLeftButtonUp="Rectangle_MouseLeftButtonUp"
-                   MouseMove="Rectangle_MouseMove"
-                   Cursor="ScrollWE"
-                   Margin="0,0,-1000,0" />
-        <!--</Border>-->
+        <Border x:Name="Border"
+                Width="700"
+                HorizontalAlignment="Left"
+                MouseLeftButtonDown="Border_MouseLeftButtonDown"
+                MouseLeftButtonUp="Border_MouseLeftButtonUp"
+                MouseMove="Border_MouseMove"
+                Cursor="ScrollWE"
+                Margin="0,0,-1000,0">
+            <Grid>
+                <Polygon x:Name="Graph"
+                         Opacity="0.1"
+                         Stroke="White"
+                         StrokeThickness="1">
+                    <Polygon.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1"
+                                             StartPoint="0.5,0">
+                            <GradientStop Color="White" />
+                            <GradientStop Color="Transparent"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Polygon.Fill>
+                </Polygon>
+                <Rectangle x:Name="AdornerRectangle" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

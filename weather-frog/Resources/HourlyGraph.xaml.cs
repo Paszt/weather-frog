@@ -21,9 +21,9 @@ namespace weatherfrog.Resources
         private readonly Typeface tf;
         private int maxTemp;
         private int minTemp;
-        readonly TranslateTransform rectTranslateTransform;
-        Point origin;
-        Point start;
+        private readonly TranslateTransform rectTranslateTransform;
+        private Point origin;
+        private Point start;
         //readonly private Cursor scrollWEDarkCursor;
         //readonly private Cursor scrollWELightCursor;
 
@@ -31,7 +31,7 @@ namespace weatherfrog.Resources
         {
             InitializeComponent();
             rectTranslateTransform = new();
-            Rectangle.RenderTransform = rectTranslateTransform;
+            Border.RenderTransform = rectTranslateTransform;
             //Rectangle.RenderTransformOrigin = new Point(0.0, 0.0);
             //scrollWEDarkCursor = DrawScrollWECursor(Brushes.Black);
             //scrollWELightCursor = DrawScrollWECursor(Brushes.White);
@@ -45,7 +45,6 @@ namespace weatherfrog.Resources
             {
                 tf = Fonts.SystemTypefaces.First();
             }
-
             Draw();
         }
 
@@ -60,7 +59,6 @@ namespace weatherfrog.Resources
         public static readonly DependencyProperty ForecastProperty =
               DependencyProperty.Register("Forecast", typeof(Forecast),
                 typeof(HourlyGraph), new PropertyMetadata(null, OnForecastChanged));
-        //new PropertyMetadata(new Forecast(), new PropertyChangedCallback(OnForecastChanged))
 
         private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -81,16 +79,17 @@ namespace weatherfrog.Resources
         {
             if (!(null == Forecast?.Days))
             {
-                Rectangle.Fill = Brushes.Transparent;
+                //Rectangle.Fill = Brushes.Transparent;
                 List<Hour> upcomingHours = null;
                 // Get hourly data from the first day, today, starting with and including the current hour.
-                upcomingHours = Forecast.Days?.Forecastdays[0]?.HourlyWeather?.Where(h => h.Time.Hour > DateTime.Now.Hour - 1).ToList();
+                int localTimeHour = DateTime.Parse(Forecast?.Location?.Localtime).Hour;
+                upcomingHours = Forecast.Days?.Forecastdays[0]?.HourlyWeather?.Where(h => h.Time.Hour > localTimeHour - 1).ToList();
                 // Get the hourly data from the next day, tomorrow, up to 6 AM.
                 upcomingHours.AddRange(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour <= 6).ToList());
-                Rectangle.Width = Math.Max((double)(upcomingHours.Count * HourWidth), 200);
-                Rectangle.UpdateLayout();
-                if (Rectangle.ActualWidth <= RootGrid.ActualWidth) { Rectangle.Cursor = Cursors.Arrow; }
-                else { Rectangle.Cursor = Cursors.ScrollWE; }
+                Border.Width = Math.Max((double)(upcomingHours.Count * HourWidth), 200);
+                Border.UpdateLayout();
+                if (Border.ActualWidth <= RootGrid.ActualWidth) { Border.Cursor = Cursors.Arrow; }
+                else { Border.Cursor = Cursors.ScrollWE; }
 
                 DrawingVisual dv = new();
                 using DrawingContext dc = dv.RenderOpen();
@@ -100,9 +99,10 @@ namespace weatherfrog.Resources
                 minTemp = upcomingHours.Min(h => h.Temp);
 
                 double leftPoint = 0.0;
+
                 // Create the Graph
-                PathFigure graphPathFigure = new PathFigure { StartPoint = new Point(0, 150) };
-                graphPathFigure.Segments.Add(new LineSegment(new Point(0, GetYValue(upcomingHours[0].Temp)), true));
+                Graph.Points.Add(new Point(0, 150));
+                Graph.Points.Add(new Point(0, CalculateYValue(upcomingHours[0].Temp)));
 
                 //leftPoint = 0.0;
                 if (!(null == upcomingHours))
@@ -110,7 +110,7 @@ namespace weatherfrog.Resources
                     foreach (Hour hour in upcomingHours)
                     {
                         // Temperature
-                        DrawTextCentered(dc, hour.Temp.ToString() + "°", Brushes.White, leftPoint, 4);
+                        DrawTextCentered(dc, hour.Temp.ToString() + "°", Brushes.White, leftPoint, CalculateYValue(hour.Temp) - 24);
                         // Chance of Precip
                         if (hour.ChanceOfSnow > 0)
                         { DrawTextCentered(dc, hour.ChanceOfSnow.ToString() + '%', Brushes.Cyan, leftPoint, 62); }
@@ -123,24 +123,18 @@ namespace weatherfrog.Resources
                         dc.DrawImage(hour.WeatherIcon, new Rect(leftPoint + 4, 80, HourWidth - 8, HourWidth - 8));
                         // Time
                         DrawTextCentered(dc, hour.Time.ToString("h tt"), Brushes.Black, leftPoint, 80 + HourWidth + 6);
-                        //Draw line at top & bottom for padding
-                        dc.DrawLine(new Pen(Forecast.CurrentWeather.BackgroundBrush, 0.1),
-                                    new Point(leftPoint, 0), new Point(leftPoint + HourWidth, 0));
-                        dc.DrawLine(new Pen(Forecast.CurrentWeather.BackgroundBrush, 0.1),
-                                    new Point(leftPoint, 150), new Point(leftPoint + HourWidth, 150));
                         // Draw Graph
-                        graphPathFigure.Segments.Add(new LineSegment(new Point(leftPoint + (HourWidth / 2),
-                                                     GetYValue(hour.Temp)), true));
+                        Graph.Points.Add(new Point(leftPoint + (HourWidth / 2), CalculateYValue(hour.Temp)));
+
                         leftPoint += HourWidth;
                     }
                 }
                 dc.Close();
                 // Close graph
-                graphPathFigure.Segments.Add(new LineSegment(new Point(leftPoint, GetYValue(upcomingHours.Last().Temp)), true));
-                graphPathFigure.Segments.Add(new LineSegment(new Point(leftPoint, 150), true));
-                Path graphPath = new Path { Fill = Brushes.Gray, Data = new PathGeometry() { Figures = { graphPathFigure } } };
+                Graph.Points.Add(new Point(leftPoint, CalculateYValue(upcomingHours.Last().Temp)));
+                Graph.Points.Add(new Point(leftPoint, 150));
 
-                Rectangle.Fill = new VisualBrush(new ContainerVisual() { Children = { graphPath, dv } });
+                AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
             }
         }
 
@@ -150,11 +144,14 @@ namespace weatherfrog.Resources
             dc.DrawText(formattedText, new Point(left + ((HourWidth - formattedText.Width) / 2), y));
         }
 
-        private int GetYValue(int temp)
+        private double CalculateYValue(int temp)
         {
-            int val = minTemp - maxTemp;
-            Console.WriteLine(val);
-            return temp;
+            double minMaxDiff = maxTemp - minTemp;
+            double tempDiffFromMin = minTemp - temp;
+            // 38 = the height of the graph from min to max
+            double proportional = (38 / minMaxDiff) * tempDiffFromMin;
+            // Y = 64 is minimum, just aboe the precip info location
+            return proportional + 64;
         }
 
         //private static Cursor DrawScrollWECursor(Brush brush)
@@ -168,34 +165,34 @@ namespace weatherfrog.Resources
 
         #endregion
 
-        #region Rectangle Slider
+        #region Rectangle Mouse Event Handlers
 
-        private void Rectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Rectangle.ActualWidth > RootGrid.ActualWidth)
+            if (Border.ActualWidth > RootGrid.ActualWidth)
             {
                 start = e.GetPosition(this);
                 origin = new Point(rectTranslateTransform.X, rectTranslateTransform.Y);
-                Rectangle.Cursor = Cursors.SizeWE;
-                Rectangle.CaptureMouse();
+                Border.Cursor = Cursors.SizeWE;
+                Border.CaptureMouse();
             }
         }
-        private void Rectangle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (Rectangle.ActualWidth > RootGrid.ActualWidth)
+            if (Border.ActualWidth > RootGrid.ActualWidth)
             {
-                Rectangle.ReleaseMouseCapture();
-                Rectangle.Cursor = Cursors.ScrollWE;
+                Border.ReleaseMouseCapture();
+                Border.Cursor = Cursors.ScrollWE;
             }
         }
 
-        private void Rectangle_MouseMove(object sender, MouseEventArgs e)
+        private void Border_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Rectangle.IsMouseCaptured)
+            if (Border.IsMouseCaptured)
             {
                 Vector v = start - e.GetPosition(this);
                 double newXValue = Math.Min(origin.X - v.X, 0);
-                double minXValue = Math.Min(RootGrid.ActualWidth - Rectangle.ActualWidth, 0);
+                double minXValue = Math.Min(RootGrid.ActualWidth - Border.ActualWidth, 0);
                 if (newXValue < minXValue) { newXValue = minXValue; }
                 rectTranslateTransform.X = newXValue;
             }
