@@ -1,0 +1,5 @@
+﻿Handle multiple monitors. (Which desktop will get drawn on? etc).
+
+Combine Infrascturcture.DisplayEvents & Infrastructure.DesktopWallpaper classes. 
+
+Add feature to save & load Locations

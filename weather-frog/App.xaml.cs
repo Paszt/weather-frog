@@ -40,6 +40,11 @@ namespace weatherfrog
             }
         }
 
+        private static void OptionsWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         void App_Startup(object sender, StartupEventArgs e)
         {
             // Singleton check
@@ -103,12 +108,29 @@ namespace weatherfrog
                     new Binding("Forecast.Location.DisplayName") { Source = this },
                 }
             }; BindingOperations.SetBinding(notifyIcon, TaskbarIcon.ToolTipTextProperty, toolTipMultiBinding);
+
+            SystemEvents sysEvents = new();
+            sysEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+            sysEvents.ResumedFromSuspension += SystemEvents_ResumedFromSuspension;
+        }
+
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
+        }
+
+        private void SystemEvents_ResumedFromSuspension(object sender, EventArgs e)
+        {
+            // update weather immediately upon waking up from suspension
+            updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
         }
 
         #region Properties
 
         private Forecast forecast;
         public Forecast Forecast { get => forecast; set => SetProperty(ref forecast, value); }
+
+        //public static Resources.TaskbarBalloon TaskbarBalloon => (Resources.TaskbarBalloon)(notifyIcon?.TrayPopup);
 
         #endregion
 

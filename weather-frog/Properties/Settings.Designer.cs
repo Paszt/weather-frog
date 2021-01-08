@@ -94,5 +94,17 @@ namespace weatherfrog.Properties {
                 this["ChangeDesktopBackground"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OptionsWindowPlacement {
+            get {
+                return ((string)(this["OptionsWindowPlacement"]));
+            }
+            set {
+                this["OptionsWindowPlacement"] = value;
+            }
+        }
     }
 }

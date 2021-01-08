@@ -49,8 +49,8 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            double screenWidth = SystemParameters.PrimaryScreenWidth;
-            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double screenWidth = SystemParameters.WorkArea.Width;
+            double screenHeight = SystemParameters.WorkArea.Height;
             double leftTextLeft = screenWidth * 0.09;
 
             Typeface tf = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
@@ -92,7 +92,7 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            Rect WeatherIconRect = new(new Point(SystemParameters.PrimaryScreenWidth * 0.77, 97.0),
+            Rect WeatherIconRect = new(new Point(SystemParameters.WorkArea.Width * 0.77, 97.0),
                                        new Size(weatherIconWidth, weatherIconWidth));
             dc.DrawImage(forecast.CurrentWeather.WeatherIcon, WeatherIconRect);
             dc.Close();

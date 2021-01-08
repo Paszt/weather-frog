@@ -32,7 +32,6 @@ namespace weatherfrog.Resources
             InitializeComponent();
             rectTranslateTransform = new();
             Border.RenderTransform = rectTranslateTransform;
-            //Rectangle.RenderTransformOrigin = new Point(0.0, 0.0);
             //scrollWEDarkCursor = DrawScrollWECursor(Brushes.Black);
             //scrollWELightCursor = DrawScrollWECursor(Brushes.White);
 
@@ -84,12 +83,8 @@ namespace weatherfrog.Resources
                 // Get hourly data from the first day, today, starting with and including the current hour.
                 int localTimeHour = DateTime.Parse(Forecast?.Location?.Localtime).Hour;
                 upcomingHours = Forecast.Days?.Forecastdays[0]?.HourlyWeather?.Where(h => h.Time.Hour > localTimeHour - 1).ToList();
-                // Get the hourly data from the next day, tomorrow, up to 6 AM.
-                upcomingHours.AddRange(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour <= 6).ToList());
-                Border.Width = Math.Max((double)(upcomingHours.Count * HourWidth), 200);
-                Border.UpdateLayout();
-                if (Border.ActualWidth <= RootGrid.ActualWidth) { Border.Cursor = Cursors.Arrow; }
-                else { Border.Cursor = Cursors.ScrollWE; }
+                // Get the hourly data from the next day, tomorrow, up to 10 AM.
+                upcomingHours.AddRange(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour <= 10).ToList());
 
                 DrawingVisual dv = new();
                 using DrawingContext dc = dv.RenderOpen();
@@ -132,10 +127,22 @@ namespace weatherfrog.Resources
                 }
                 dc.Close();
                 // Close graph
-                Graph.Points.Add(new Point(leftPoint, CalculateYValue(upcomingHours.Last().Temp)));
+                Graph.Points.Add(new Point(leftPoint, 
+                    CalculateYValue((int)(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour == 11).First().Temp))));
                 Graph.Points.Add(new Point(leftPoint, 150));
 
                 AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
+
+                Border.Width = Math.Max((double)(upcomingHours.Count * HourWidth), 200);
+                if (Border.Width <= RootGrid.ActualWidth)
+                {
+                    Border.Cursor = Cursors.Arrow;
+                    rectTranslateTransform.X = 0;
+                }
+                else
+                {
+                    Border.Cursor = Cursors.ScrollWE;
+                }
             }
         }
 
