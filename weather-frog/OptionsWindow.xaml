@@ -8,8 +8,10 @@
         xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
         mc:Ignorable="d"
         Title="Weather Frog Options"
-        Height="430"
-        Width="600"
+        Height="500"
+        MinHeight="500"
+        Width="640"
+        MinWidth="640"
         Style="{DynamicResource CustomToolWindowStyle}"
         ResizeMode="NoResize"
         Icon="{Binding Icon}"
@@ -21,8 +23,8 @@
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <infrastructure:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
-        <infrastructure:InverseStringNullOrEmptyToVisibilityConverter x:Key="InverseStringToVisibilityConverter" />
+        <infrastructure:NullStringToVisibilityConverter x:Key="NullStringToVisibilityConverter" />
+        <infrastructure:InverseNullStringToVisibilityConverter x:Key="InverseNullStringToVisibilityConverter" />
         <ObjectDataProvider x:Key="TaskbarIconStyles"
                             MethodName="GetValues"
                             ObjectType="{x:Type System:Enum}">
@@ -65,78 +67,160 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Center"
-              Margin="0,20,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Label Content="WeatherApi Key: " />
-            <TextBox Text="{Binding WeatherApiKey, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Column="1" />
+        <TabControl Margin="0,10,0,0">
+            <!-- General Options -->
+            <TabItem Header="General">
+                <Grid HorizontalAlignment="Center"
+                      Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Content="WeatherApi Key: " />
+                    <TextBox Text="{Binding WeatherApiKey, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Column="1" />
 
-            <TextBlock  Text="Click the Weather API icon in the bottom left corner to open your default web browser and sign up for a free API key."
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        TextWrapping="WrapWithOverflow"
-                        Margin="0,4,0,8"
-                        Foreground="Aqua"
-                        Width="360"
-                        Visibility="{Binding WeatherApiKey, Converter={StaticResource InverseStringToVisibilityConverter}}" />
+                    <TextBlock  Text="Click the Weather API icon in the bottom left corner to open your default web browser and sign up for a free API key."
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                TextWrapping="WrapWithOverflow"
+                                Margin="0,4,0,8"
+                                Foreground="Aqua"
+                                Width="360"
+                                Visibility="{Binding WeatherApiKey, Converter={StaticResource InverseNullStringToVisibilityConverter}}" />
 
-            <Label Content="Location: "
-                   Grid.Row="2" />
-            <TextBox Text="{Binding Location, UpdateSourceTrigger=PropertyChanged}"
-                     Grid.Row="2"
-                     Grid.Column="1"
-                     ToolTip="City name, US Zipcode, UK Postcode, Canada Postalcode, IP address, or Latitude/Longitude (decimal degree)." />
+                    <Label Content="Location: "
+                           Grid.Row="2" />
+                    <TextBox Text="{Binding Location, UpdateSourceTrigger=PropertyChanged}"
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             ToolTip="City name, US Zipcode, UK Postcode, Canada Postalcode, IP address, or Latitude/Longitude (decimal degree)." />
 
-            <TextBlock Text="{Binding LocationSearchMsg}"
-                       Visibility="{Binding LocationSearchMsg, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}"
-                       Grid.Row="3"
-                       Grid.ColumnSpan="2"
-                       Margin="0,10"
-                       Foreground="LightCoral"
-                       TextWrapping="WrapWithOverflow"
-                       HorizontalAlignment="Left" />
-            <Button Grid.Row="3"
-                    Grid.Column="1"
-                    Margin="10,10,0,10"
-                    HorizontalAlignment="Right"
-                    Content="_Verify Location &amp; API Key"
-                    Width="160"
-                    Command="{Binding TestCommand}"
-                    Visibility="{Binding TestNotPassed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <TextBlock Text="{Binding LocationSearchMsg}"
+                               Visibility="{Binding LocationSearchMsg, Converter={StaticResource NullStringToVisibilityConverter}}"
+                               Grid.Row="3"
+                               Grid.ColumnSpan="2"
+                               Margin="0,10"
+                               Foreground="LightCoral"
+                               TextWrapping="WrapWithOverflow"
+                               HorizontalAlignment="Left" />
+                    <Button Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="10,10,0,10"
+                            HorizontalAlignment="Right"
+                            Content="_Verify Location &amp; API Key"
+                            Width="160"
+                            Command="{Binding TestCommand}"
+                            Visibility="{Binding TestNotPassed, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-            <Label Content="Units: "
-                   Grid.Row="4" />
-            <ComboBox ItemsSource="{Binding UnitChoices}"
-                      SelectedValue="{Binding UnitSystem}"
-                      SelectedValuePath="Key"
-                      DisplayMemberPath="Value"
-                      Grid.Row="4"
-                      Grid.Column="1" />
+                    <Label Content="Units: "
+                           Grid.Row="4" />
+                    <ComboBox ItemsSource="{Binding UnitChoices}"
+                              SelectedValue="{Binding UnitSystem}"
+                              SelectedValuePath="Key"
+                              DisplayMemberPath="Value"
+                              Grid.Row="4"
+                              Grid.Column="1" />
 
-            <Label Content="Taskbar Icon Style: "
-                   Grid.Row="5" />
-            <ComboBox ItemsSource="{Binding Source={StaticResource TaskbarIconStyles}}"
-                      SelectedValue="{Binding TaskbarIconStyle}"
-                      Grid.Row="5"
-                      Grid.Column="1" />
-        </Grid>
+                    <Label Content="Taskbar Icon Style: "
+                           Grid.Row="5" />
+                    <ComboBox ItemsSource="{Binding Source={StaticResource TaskbarIconStyles}}"
+                              SelectedValue="{Binding TaskbarIconStyle}"
+                              Grid.Row="5"
+                              Grid.Column="1" />
+                </Grid>
+            </TabItem>
+            <!-- Desktop Wallpaper Options -->
+            <TabItem Header="Desktop Wallpaper">
+                <StackPanel>
+                    <CheckBox Content="Update Desktop Wallpaper"
+                              Margin="10"
+                              IsChecked="{Binding UpdateDesktop}" />
+                    <Grid Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
+                          IsEnabled="{Binding UpdateDesktop}"
+                          Height="280"
+                          Margin="10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="58" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="180" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <CheckBox Content="Show Location"
+                                  IsChecked="{Binding DesktopShowLocation}"
+                                  Margin="0,0,0,10"
+                                  Grid.Column="1"
+                                  Grid.Row="1"
+                                  Foreground="Black"
+                                  FontSize="16" />
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="2"
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Center">
+                            <Image Source="{DynamicResource Umbrella}"
+                                   Width="16"
+                                   VerticalAlignment="Top"
+                                   Margin="2,2,4,0" />
+                            <TextBlock Text="% Precip"
+                                       FontSize="16"
+                                       Foreground="Cyan" />
+                        </StackPanel>
+                        <!--Temp-->
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="1"
+                                    Grid.Row="2">
+                            <TextBlock Text="{Binding Forecast.CurrentWeather.Temp}"
+                                       FontSize="65"
+                                       Height="65" />
+                            <TextBlock Text="{Binding Forecast.TempUnitAbbreviated, StringFormat=°{0}}"
+                                       FontSize="30"
+                                       Foreground="{StaticResource ControlDefaultForeground}" />
+                        </StackPanel>
+                        <!--WeatherIcon-->
+                        <Image Source="{Binding Forecast.CurrentWeather.WeatherIcon}"
+                               Grid.Column="2"
+                               Grid.Row="2"
+                               HorizontalAlignment="Center"
+                               Width="65" />
+                        <!--Feels Like-->
+                        <CheckBox Content="{Binding Forecast.CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}°}"
+                                  Foreground="{StaticResource ControlDefaultForeground}"
+                                  FontSize="22"
+                                  Grid.Column="1"
+                                  Grid.Row="3" />
+                        <TextBlock Text="{Binding Forecast.CurrentWeather.Condition.Text}"
+                                   Foreground="{StaticResource ControlDefaultForeground}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="22"
+                                   Grid.Column="2"
+                                   Grid.Row="3" />
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+
+        <!--Bottom - Weather API Logo and Buttons-->
         <StackPanel Orientation="Horizontal"
                     Grid.Row="1"
                     HorizontalAlignment="Right"
                     Margin="0,20">
             <Button Content="_Cancel"
+                    Command="{Binding CancelCommand}"
                     Margin="0,0,20,0"
                     IsCancel="True" />
             <Button Content="_Save"

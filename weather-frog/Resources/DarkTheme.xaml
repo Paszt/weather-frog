@@ -37,6 +37,12 @@
                      Color="#FF343434" />
     <SolidColorBrush x:Key="ScrollBarPageButtonBackgroundHighlighted"
                      Color="#05FFFFFF" />
+    <SolidColorBrush x:Key="CheckBoxInvalidUnfocusedBorderBrush"
+                     Color="#FFF55E7F" />
+    <SolidColorBrush x:Key="CheckBoxInvalidFocusedBorderBrush"
+                     Color="#FFD0284C" />
+    <SolidColorBrush x:Key="CheckBoxCheckBackgroundBrush"
+                     Color="#FF00AADE" />
 
     <system:Double x:Key="ControlHeight">32</system:Double>
 
@@ -135,6 +141,185 @@
                                     Value="{StaticResource ControlDisabledGlythColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CheckBox-->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground"
+                Value="{StaticResource ControlDefaultForeground}" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Left" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Padding"
+                Value="3,0,0,0" />
+        <Setter Property="MinHeight"
+                Value="30" />
+        <Setter Property="MinWidth"
+                Value="30" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid Background="Transparent">
+                        <Grid.Resources>
+                            <Style x:Key="StandardRectangle"
+                                   TargetType="{x:Type Rectangle}">
+                                <Setter Property="StrokeThickness"
+                                        Value="1" />
+                                <Setter Property="Width"
+                                        Value="18" />
+                                <Setter Property="Height"
+                                        Value="18" />
+                            </Style>
+                        </Grid.Resources>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To=".7"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="hover" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="pressed" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <!--<DoubleAnimation Duration="0" To=".55" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter" />-->
+                                        <DoubleAnimation Duration="0"
+                                                         To=".25"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="disabled" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="checkBox" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Indeterminate">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="IndeterminateCheck" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="focused" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid" />
+                                <VisualState x:Name="InvalidUnfocused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="invalidUnfocused" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="InvalidFocused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0"
+                                                         To="1"
+                                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                         Storyboard.TargetName="invalidFocused" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Fill="Transparent" />
+                        <Rectangle x:Name="normal"
+                                   Opacity="1"
+                                   Stroke="{StaticResource ControlDefaultBorderBrush}"
+                                   Fill="{StaticResource ControlBrightDefaultBackground}"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <Rectangle x:Name="pressed"
+                                   Opacity="0"
+                                   Stroke="{StaticResource ControlSelectedBorderBrush}"
+                                   Fill="{StaticResource ControlSelectedBackground}"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <Rectangle x:Name="focused"
+                                   Opacity="0"
+                                   Stroke="{StaticResource ControlSelectedBorderBrush}"
+                                   Fill="{StaticResource ControlSelectedBackground}"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <Rectangle x:Name="hover"
+                                   Opacity="0"
+                                   Stroke="{StaticResource ControlMouseOverBorderBrush}"
+                                   Fill="{StaticResource ControlMouseOverBackground}"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <Rectangle x:Name="invalidUnfocused"
+                                   Opacity="0"
+                                   Stroke="{StaticResource CheckBoxInvalidUnfocusedBorderBrush}"
+                                   Fill="{StaticResource ControlGlythColor}"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <Rectangle x:Name="invalidFocused"
+                                   Opacity="0"
+                                   Stroke="{StaticResource CheckBoxInvalidFocusedBorderBrush}"
+                                   Fill="{StaticResource ControlGlythColor}"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <Path x:Name="checkBox"
+                              Height="10"
+                              Width="12"
+                              Stretch="Fill"
+                              Opacity="0"
+                              Fill="{StaticResource CheckBoxCheckBackgroundBrush}"
+                              UseLayoutRounding="False"
+                              Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 
+                              1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,
+                              433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,
+                              438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 
+                              1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
+                        <Rectangle x:Name="IndeterminateCheck"
+                                   Fill="{StaticResource ControlDisabledGlythColor}"
+                                   Height="3"
+                                   Width="8"
+                                   Opacity="0" />
+                        <Rectangle x:Name="disabled"
+                                   Opacity="0"
+                                   Fill="Black"
+                                   Style="{StaticResource StandardRectangle}" />
+                        <ContentPresenter x:Name="contentPresenter"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}"
+                                          Grid.Column="1"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -572,6 +757,231 @@
                         Value="{StaticResource HorizontalScrollBar}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <!--TabControl-->
+    <Style TargetType="{x:Type TabControl}">
+        <Style.Resources>
+            <Style TargetType="{x:Type TabItem}">
+                <Setter Property="FocusVisualStyle"
+                        Value="{x:Null}" />
+                <Setter Property="Background"
+                        Value="Transparent" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource ControlDefaultForeground}" />
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Margin"
+                        Value="-1,0,0,0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabItem}">
+                            <Border x:Name="PART_Border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter ContentSource="Header"
+                                                  Margin="10,5" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!--<MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="TabItem.TabStripPlacement" Value="Top"/>
+                                        <Condition Property="IsSelected" Value="false" />
+                                    </MultiTrigger.Conditions>
+                                </MultiTrigger>-->
+
+                                <Trigger Property="IsSelected"
+                                         Value="false">
+                                    <Setter Property="Background"
+                                            Value="Transparent" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="true">
+                                    <Setter Property="Background"
+                                            Value="{DynamicResource ControlSelectedBorderBrush}" />
+                                    <Setter Property="BorderBrush"
+                                            Value="{DynamicResource ControlSelectedBorderBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected"
+                                         Value="true">
+                                    <Setter Property="Background"
+                                            Value="{DynamicResource ControlSelectedBackground}" />
+                                </Trigger>
+                                <Trigger Property="TabItem.TabStripPlacement"
+                                         Value="Top">
+                                    <Setter Property="BorderThickness"
+                                            Value="1,1,1,0" />
+                                    <Setter Property="BorderBrush"
+                                            Value="{DynamicResource ControlSelectedBackground}" />
+                                </Trigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="TabItem.TabStripPlacement"
+                                                   Value="Top" />
+                                        <Condition Property="IsSelected"
+                                                   Value="true" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="BorderBrush"
+                                            Value="{StaticResource ControlSelectedBackground}" />
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid ClipToBounds="True"
+                          SnapsToDevicePixels="True"
+                          KeyboardNavigation.TabNavigation="Local">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Name="ColumnDefinition0" />
+                            <ColumnDefinition Width="0"
+                                              Name="ColumnDefinition1" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"
+                                           Name="RowDefinition0" />
+                            <RowDefinition Height="*"
+                                           Name="RowDefinition1" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <Border x:Name="HeaderBorder"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{DynamicResource ControlSelectedBackground}">
+                                <TabPanel IsItemsHost="True"
+                                          Name="HeaderPanel"
+                                          Panel.ZIndex="1"
+                                          Margin="5,0,4,-1"
+                                          KeyboardNavigation.TabIndex="1"
+                                          Grid.Column="0"
+                                          Grid.Row="0" />
+                            </Border>
+                        </ScrollViewer>
+
+                        <Grid Name="ContentPanel"
+                              KeyboardNavigation.TabIndex="2"
+                              KeyboardNavigation.TabNavigation="Local"
+                              KeyboardNavigation.DirectionalNavigation="Contained"
+                              Grid.Column="0"
+                              Grid.Row="1">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter Content="{TemplateBinding SelectedContent}"
+                                                  ContentTemplate="{TemplateBinding SelectedContentTemplate}"
+                                                  ContentStringFormat="{TemplateBinding SelectedContentStringFormat}"
+                                                  ContentSource="SelectedContent"
+                                                  Name="PART_SelectedContentHost"
+                                                  Margin="5"
+                                                  SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TabControl.TabStripPlacement"
+                                 Value="Bottom">
+                            <Setter TargetName="HeaderPanel"
+                                    Property="Grid.Row"
+                                    Value="1" />
+                            <Setter TargetName="ContentPanel"
+                                    Property="Grid.Row"
+                                    Value="0" />
+                            <Setter TargetName="RowDefinition0"
+                                    Property="RowDefinition.Height"
+                                    Value="*" />
+                            <Setter TargetName="RowDefinition1"
+                                    Property="RowDefinition.Height"
+                                    Value="Auto" />
+                            <Setter TargetName="HeaderPanel"
+                                    Property="FrameworkElement.Margin"
+                                    Value="0,-1,4,0" />
+                            <Setter TargetName="HeaderBorder"
+                                    Property="Border.BorderThickness"
+                                    Value="0,1,0,0" />
+                        </Trigger>
+                        <Trigger Property="TabControl.TabStripPlacement"
+                                 Value="Left">
+                            <Setter TargetName="HeaderPanel"
+                                    Property="Grid.Row"
+                                    Value="0" />
+                            <Setter TargetName="ContentPanel"
+                                    Property="Grid.Row"
+                                    Value="0" />
+                            <Setter TargetName="HeaderPanel"
+                                    Property="Grid.Column"
+                                    Value="0" />
+                            <Setter TargetName="ContentPanel"
+                                    Property="Grid.Column"
+                                    Value="1" />
+                            <Setter TargetName="ColumnDefinition0"
+                                    Property="ColumnDefinition.Width"
+                                    Value="Auto" />
+                            <Setter TargetName="ColumnDefinition1"
+                                    Property="ColumnDefinition.Width"
+                                    Value="*" />
+                            <Setter TargetName="RowDefinition0"
+                                    Property="RowDefinition.Height"
+                                    Value="*" />
+                            <Setter TargetName="RowDefinition1"
+                                    Property="RowDefinition.Height"
+                                    Value="0" />
+                            <Setter TargetName="HeaderPanel"
+                                    Property="FrameworkElement.Margin"
+                                    Value="0,20,-1,4" />
+                            <Setter TargetName="HeaderBorder"
+                                    Property="Border.BorderThickness"
+                                    Value="0,0,1,0" />
+                        </Trigger>
+                        <Trigger Property="TabControl.TabStripPlacement"
+                                 Value="Right">
+                            <Setter TargetName="HeaderPanel"
+                                    Property="Grid.Row"
+                                    Value="0" />
+                            <Setter TargetName="ContentPanel"
+                                    Property="Grid.Row"
+                                    Value="0" />
+                            <Setter TargetName="HeaderPanel"
+                                    Property="Grid.Column"
+                                    Value="1" />
+                            <Setter TargetName="ContentPanel"
+                                    Property="Grid.Column"
+                                    Value="0" />
+                            <Setter TargetName="ColumnDefinition0"
+                                    Property="ColumnDefinition.Width"
+                                    Value="*" />
+                            <Setter TargetName="ColumnDefinition1"
+                                    Property="ColumnDefinition.Width"
+                                    Value="Auto" />
+                            <Setter TargetName="RowDefinition0"
+                                    Property="RowDefinition.Height"
+                                    Value="*" />
+                            <Setter TargetName="RowDefinition1"
+                                    Property="RowDefinition.Height"
+                                    Value="0" />
+                            <Setter TargetName="HeaderPanel"
+                                    Property="FrameworkElement.Margin"
+                                    Value="-1,0,0,4" />
+                            <Setter TargetName="HeaderBorder"
+                                    Property="Border.BorderThickness"
+                                    Value="1,0,0,0" />
+                        </Trigger>
+                        <Trigger Property="UIElement.IsEnabled"
+                                 Value="False">
+                            <Setter Property="TextElement.Foreground"
+                                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background"
+                Value="{StaticResource BackgroundColor}" />
     </Style>
 
     <!-- Textbox -->

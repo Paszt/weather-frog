@@ -43,7 +43,7 @@ namespace weatherfrog.WeatherApi
         /// <returns></returns>
         public static async Task<Models.CurrentWeather> GetCurrentWeatherAsync(string q)
         {
-            using HttpClient httpClient = new(new SocketsHttpHandler(), false);
+            //using HttpClient httpClient = new(new SocketsHttpHandler(), false);
             return await ClientInstance.GetFromJsonAsync<Models.CurrentWeather>(string.Format(Urls.Current(q)));
         }
 

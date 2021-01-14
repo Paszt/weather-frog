@@ -17,13 +17,13 @@ namespace weatherfrog.Resources
     public partial class HourlyGraph : UserControl
     {
         private const int HourWidth = 42;
-        private readonly CultureInfo ci = new("en-us");
-        private readonly Typeface tf;
+        private readonly CultureInfo cultureInfo = new("en-us");
+        private readonly Typeface typeFace;
         private int maxTemp;
         private int minTemp;
         private readonly TranslateTransform rectTranslateTransform;
-        private Point origin;
-        private Point start;
+        private Point dragOrigin;
+        private Point dragStart;
         //readonly private Cursor scrollWEDarkCursor;
         //readonly private Cursor scrollWELightCursor;
 
@@ -38,11 +38,11 @@ namespace weatherfrog.Resources
             // Design time can't reference the font...
             try
             {
-                tf = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
+                typeFace = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
             }
             catch (Exception)
             {
-                tf = Fonts.SystemTypefaces.First();
+                typeFace = Fonts.SystemTypefaces.First();
             }
             Draw();
         }
@@ -78,13 +78,14 @@ namespace weatherfrog.Resources
         {
             if (!(null == Forecast?.Days))
             {
+                const int lastHourToShow = 10;
                 //Rectangle.Fill = Brushes.Transparent;
                 List<Hour> upcomingHours = null;
                 // Get hourly data from the first day, today, starting with and including the current hour.
                 int localTimeHour = DateTime.Parse(Forecast?.Location?.Localtime).Hour;
                 upcomingHours = Forecast.Days?.Forecastdays[0]?.HourlyWeather?.Where(h => h.Time.Hour > localTimeHour - 1).ToList();
                 // Get the hourly data from the next day, tomorrow, up to 10 AM.
-                upcomingHours.AddRange(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour <= 10).ToList());
+                upcomingHours.AddRange(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour <= lastHourToShow).ToList());
 
                 DrawingVisual dv = new();
                 using DrawingContext dc = dv.RenderOpen();
@@ -127,8 +128,11 @@ namespace weatherfrog.Resources
                 }
                 dc.Close();
                 // Close graph
-                Graph.Points.Add(new Point(leftPoint, 
-                    CalculateYValue((int)(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour == 11).First().Temp))));
+                // final graph point is half way between lastHourToShow.Temp & (lastHourToShow + 1).Temp
+                int lastHourTemp = Forecast.Days.Forecastdays[1].HourlyWeather[lastHourToShow].Temp;
+                int afterLastHourTemp = Forecast.Days.Forecastdays[1].HourlyWeather[lastHourToShow + 1].Temp;
+                int finalTemp = lastHourTemp + ((afterLastHourTemp - lastHourTemp) / 2);
+                Graph.Points.Add(new Point(leftPoint, CalculateYValue(finalTemp)));
                 Graph.Points.Add(new Point(leftPoint, 150));
 
                 AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
@@ -148,7 +152,7 @@ namespace weatherfrog.Resources
 
         private void DrawTextCentered(DrawingContext dc, string TextToDraw, Brush brush, double left, double y)
         {
-            FormattedText formattedText = new(TextToDraw, ci, FlowDirection.LeftToRight, tf, 12, brush, 1.0d);
+            FormattedText formattedText = new(TextToDraw, cultureInfo, FlowDirection.LeftToRight, typeFace, 12, brush, 1.0d);
             dc.DrawText(formattedText, new Point(left + ((HourWidth - formattedText.Width) / 2), y));
         }
 
@@ -178,14 +182,14 @@ namespace weatherfrog.Resources
 
         #endregion
 
-        #region Rectangle Mouse Event Handlers
+        #region Border Mouse Event Handlers
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (Border.ActualWidth > RootGrid.ActualWidth)
             {
-                start = e.GetPosition(this);
-                origin = new Point(rectTranslateTransform.X, rectTranslateTransform.Y);
+                dragStart = e.GetPosition(this);
+                dragOrigin = new Point(rectTranslateTransform.X, rectTranslateTransform.Y);
                 Border.Cursor = Cursors.SizeWE;
                 Border.CaptureMouse();
             }
@@ -203,8 +207,8 @@ namespace weatherfrog.Resources
         {
             if (Border.IsMouseCaptured)
             {
-                Vector v = start - e.GetPosition(this);
-                double newXValue = Math.Min(origin.X - v.X, 0);
+                Vector v = dragStart - e.GetPosition(this);
+                double newXValue = Math.Min(dragOrigin.X - v.X, 0);
                 double minXValue = Math.Min(RootGrid.ActualWidth - Border.ActualWidth, 0);
                 if (newXValue < minXValue) { newXValue = minXValue; }
                 rectTranslateTransform.X = newXValue;

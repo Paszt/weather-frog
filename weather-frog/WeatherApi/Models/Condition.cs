@@ -93,7 +93,7 @@ namespace weatherfrog.WeatherApi.Models
             { 1003, new Props { BackgroundColorDay = "#68AEDB", BackgroundColorNight = "#918EE5", IconName = "PartlyCloudy" } },
             { 1006, new Props { BackgroundColorDay = "#99B3D7", BackgroundColorNight = "#99B3D7", IconName = "Cloudy" } },
             { 1009, new Props { BackgroundColorDay = "#78ACD8", BackgroundColorNight = "#98A0E0", IconName = "MostlyCloudy" } },
-            { 1030, new Props { BackgroundColorDay = "#BEB1AE", BackgroundColorNight = "#BEB1AE", IconName = "Mist" } },
+            { 1030, new Props { BackgroundColorDay = "#BEB1AE", BackgroundColorNight = "#BEB1AE", IconName = "Haze" } },
             { 1063, new Props { BackgroundColorDay = "#2D88E7", BackgroundColorNight = "#86B3E2", IconName = "PatchyRain" } },
             { 1066, new Props { BackgroundColorDay = "#", BackgroundColorNight = "#", IconName = "" } },
             { 1069, new Props { BackgroundColorDay = "#", BackgroundColorNight = "#", IconName = "" } },

@@ -10,36 +10,28 @@ namespace weatherfrog.Extensions
 {
     public static class Windows
     {
-
-        public static void SetPlacement(this Window window, string placementJson) =>
-            SetPlacement(new WindowInteropHelper(window).Handle, placementJson);
-
-        private static void SetPlacement(IntPtr windowHandle, string placementJson)
+        public static void SetPlacement(this Window window, string placementJson)
         {
             if (string.IsNullOrEmpty(placementJson)) { return; }
             try
             {
-                JsonSerializerOptions options = new() { Converters = { new JsonStringEnumConverter() } };
-                WINDOWPLACEMENT placement = JsonSerializer.Deserialize<WINDOWPLACEMENT>(placementJson, options);
+                WINDOWPLACEMENT placement = JsonSerializer.Deserialize<WINDOWPLACEMENT>(placementJson,
+                    new JsonSerializerOptions() { Converters = { new JsonStringEnumConverter() } });
                 placement.Length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
                 placement.Flags = 0;
                 if (placement.ShowCmd == ShowWindowCommands.ShowMinimized) placement.ShowCmd = ShowWindowCommands.Normal;
-                WinAPI.SetWindowPlacement(windowHandle, ref placement);
+                WinAPI.SetWindowPlacement(new WindowInteropHelper(window).Handle, ref placement);
             }
             // Fail silently on serialization failure
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception) { }
         }
 
-        public static string GetPlacement(this Window window) => GetPlacement(new WindowInteropHelper(window).Handle);
-
-        public static string GetPlacement(IntPtr windowHandle)
+        public static string GetPlacement(this Window window)
         {
             WINDOWPLACEMENT placement = WINDOWPLACEMENT.Default;
-            WinAPI.GetWindowPlacement(windowHandle, ref placement);
+            WinAPI.GetWindowPlacement(new WindowInteropHelper(window).Handle, ref placement);
             JsonSerializerOptions options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
-            string returnValue = JsonSerializer.Serialize<WINDOWPLACEMENT>(placement, options);
-            return JsonSerializer.Serialize<WINDOWPLACEMENT>(placement, options);
+            return JsonSerializer.Serialize(placement, options);
         }
-
     }
 }

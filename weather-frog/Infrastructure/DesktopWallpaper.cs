@@ -14,17 +14,22 @@ namespace weatherfrog.Infrastructure
     {
         private const int weatherIconWidth = 176;
 
-        internal static void Update(WeatherApi.Models.Forecast fc)
+        internal static void Update(WeatherApi.Models.Forecast forecast)
         {
             ContainerVisual container = new()
             {
                 Children = {
-                    DrawBackground(fc),
-                    DrawFrogIllustration(fc),
-                    DrawText(fc),
-                    DrawWeatherIcon(fc)}
+                    DrawBackground(forecast),
+                    DrawFrogIllustration(forecast),
+                    DrawText(forecast),
+                    DrawWeatherIcon(forecast)}
             };
-            _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, SaveBitmap(container), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+            SetDesktopWallpaper(container);
+        }
+
+        private static void SetDesktopWallpaper(Visual visual)
+        {
+            _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, SaveBitmap(visual), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
         }
 
         private static DrawingVisual DrawBackground(WeatherApi.Models.Forecast forecast)
@@ -60,7 +65,7 @@ namespace weatherfrog.Infrastructure
             string temperature = forecast.CurrentWeather.Temp.ToString();
             FormattedText temperatureText = new(temperature, ci, FlowDirection.LeftToRight, tf, 120, Brushes.White, 1.0d);
             dc.DrawText(temperatureText, new Point(leftTextLeft, 120));
-            string temperatureUnitsString = "°" + ((My.Settings.UnitSystem == WeatherApi.Models.UnitSystem.Imperial) ? "F" : "C");
+            string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
             FormattedText temperatureUnitsText = new(temperatureUnitsString, ci, FlowDirection.LeftToRight,
                 tf, 80, Brushes.White, 1.0d);
             dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 5, 130));
@@ -99,11 +104,11 @@ namespace weatherfrog.Infrastructure
             return dv;
         }
 
-        private static string SaveBitmap(ContainerVisual container)
+        private static string SaveBitmap(Visual visual)
         {
             RenderTargetBitmap rtbmp = new((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight,
                 96.0, 96.0, PixelFormats.Pbgra32);
-            rtbmp.Render(container);
+            rtbmp.Render(visual);
             BmpBitmapEncoder enc = new();
             enc.Frames.Add(BitmapFrame.Create(rtbmp));
             string returnValue = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wallpaper.bmp");
@@ -118,7 +123,29 @@ namespace weatherfrog.Infrastructure
 
         internal static void Offline(string message = "Weather Frog Is Offline")
         {
+            const double maxTextWidth = 600.0d;
+            DrawingVisual dv = new();
+            using DrawingContext dc = dv.RenderOpen();
+            dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2")), null, SystemParameters.WorkArea);
+            FormattedText msgText = new(message, new CultureInfo("en-us"), FlowDirection.LeftToRight,
+                Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(), 40, Brushes.White, 1.0d)
+            { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
+            dc.DrawText(msgText, new Point((SystemParameters.WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
+            BitmapFrame bitmapFrame = BitmapFrame.Create(
+                new Uri("pack://application:,,,/weather-frog;component/Resources/FrogIllustrations/SomethingWrong.png"));
+            dc.DrawImage(bitmapFrame, GetFrogRectangle(bitmapFrame));
+            dc.Close();
+            SetDesktopWallpaper(dv);
+        }
 
+        private static Rect GetFrogRectangle(ImageSource imageSource)
+        {
+            double y = SystemParameters.WorkArea.Height / 3.0d;
+            double height = SystemParameters.WorkArea.Height * (2.0d / 3.0d);
+            double scale = height / imageSource.Height;
+            double width = imageSource.Width * scale;
+            double x = (SystemParameters.WorkArea.Width - width) / 2.0d;
+            return new Rect(x, y, width, height);
         }
 
         #region Win32

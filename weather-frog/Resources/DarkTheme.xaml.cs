@@ -22,9 +22,9 @@ namespace weatherfrog.Themes
                 try { MinimizeWind(Window.GetWindow((FrameworkElement)e.Source)); } catch { }
         }
 
-        public void CloseWind(Window window) => window.Close();
+        public static void CloseWind(Window window) => window.Close();
 
-        public void MaximizeRestore(Window window)
+        public static void MaximizeRestore(Window window)
         {
             if (window.WindowState == WindowState.Maximized)
                 window.WindowState = WindowState.Normal;
@@ -32,6 +32,6 @@ namespace weatherfrog.Themes
                 window.WindowState = WindowState.Maximized;
         }
 
-        public void MinimizeWind(Window window) => window.WindowState = WindowState.Minimized;
+        public static void MinimizeWind(Window window) => window.WindowState = WindowState.Minimized;
     }
 }

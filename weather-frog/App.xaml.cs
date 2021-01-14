@@ -168,6 +168,7 @@ namespace weatherfrog
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             updateWeatherTimer?.Dispose();
+            DesktopWallpaper.Offline();
             //TODO: Change desktop background to SomethingWrong.png image with message that Weather Frog is not running. 
             //      Add option to let user select if they want to see somethingwrong.png or revert back to desktop state 
             //      before Weather Frog was run. Will need to figure out how to read, save, and re-apply that state; 

@@ -9,6 +9,8 @@ Save as:
   Selective (Color reduction algorithm)
   No Dither
   32 Colors
-  Matte: None
+  Matte: White
   No Transparency Dither
+  (max width of 3840)
 
+The file "PNG-8 Weather-Frog.irs" (which should be in the same folder as this file) is a File Format preset for Photoshop Save For Web containing the above settings (sans the width which has to be set manually).

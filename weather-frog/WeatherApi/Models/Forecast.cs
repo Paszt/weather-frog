@@ -20,5 +20,8 @@ namespace weatherfrog.WeatherApi.Models
 
         [JsonPropertyName("alert")]
         public Alert Alert { get => alert; set => SetProperty(ref alert, value); }
+
+        [JsonIgnore]
+        public static string TempUnitAbbreviated => (My.Settings.UnitSystem == UnitSystem.Imperial) ? "F" : "C";
     }
 }

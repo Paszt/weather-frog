@@ -45,7 +45,7 @@ namespace weatherfrog.Interop
         ///     To get extended error information, call GetLastError.
         ///     </para>
         /// </returns>
-        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
         public static extern int RegisterWindowMessage(string msg);
 
         /// <summary>
@@ -114,6 +114,16 @@ namespace weatherfrog.Interop
         public int uEdge;
         public RECT rc;
         public IntPtr lParam;
+
+        public static APPBARDATA Default
+        {
+            get
+            {
+                APPBARDATA result = new();
+                result.cbSize = Marshal.SizeOf(result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -219,10 +229,10 @@ namespace weatherfrog.Interop
 
         public override bool Equals(object obj)
         {
-            if (obj is RECT)
-                return Equals((RECT)obj);
-            else if (obj is System.Drawing.Rectangle)
-                return Equals(new RECT((System.Drawing.Rectangle)obj));
+            if (obj is RECT rECT)
+                return Equals(rECT);
+            else if (obj is System.Drawing.Rectangle rectangle)
+                return Equals(new RECT(rectangle));
             return false;
         }
 
@@ -361,7 +371,7 @@ namespace weatherfrog.Interop
         {
             get
             {
-                WINDOWPLACEMENT result = new WINDOWPLACEMENT();
+                WINDOWPLACEMENT result = new();
                 result.Length = Marshal.SizeOf(result);
                 return result;
             }

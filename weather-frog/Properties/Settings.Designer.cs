@@ -106,5 +106,17 @@ namespace weatherfrog.Properties {
                 this["OptionsWindowPlacement"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UpdateDesktop {
+            get {
+                return ((bool)(this["UpdateDesktop"]));
+            }
+            set {
+                this["UpdateDesktop"] = value;
+            }
+        }
     }
 }

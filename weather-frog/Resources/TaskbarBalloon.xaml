@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:weatherfrog"
              xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
              xmlns:resources="clr-namespace:weatherfrog.Resources"
              mc:Ignorable="d"
@@ -14,7 +13,7 @@
              d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}"
              Foreground="White">
     <UserControl.Resources>
-        <infrastructure:StringNullOrEmptyToVisibilityConverter x:Key="StringNullOrEmptyToVisibilityConverter" />
+        <infrastructure:NullStringToVisibilityConverter x:Key="NullStringToVisibilityConverter" />
     </UserControl.Resources>
     <!-- Datacontext is set in App.Begin while instantiating the TaskbarIcon (notifyIcon) -->
     <Grid ClipToBounds="True">
@@ -61,7 +60,7 @@
                 <Image Source="{DynamicResource Umbrella}"
                        Width="16"
                        Margin="0,0,3,0"
-                       Visibility="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo, Converter={StaticResource StringNullOrEmptyToVisibilityConverter}}" />
+                       Visibility="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo, Converter={StaticResource NullStringToVisibilityConverter}}" />
                 <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo}"
                            FontSize="16"
                            Foreground="Cyan" />
@@ -90,7 +89,7 @@
                         Grid.Column="2">
                 <TextBlock Text="{Binding Forecast.CurrentWeather.Condition.Text}"
                            FontSize="18" />
-                <TextBlock Text="{Binding Forecast.CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}° }"
+                <TextBlock Text="{Binding Forecast.CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}°}"
                            FontSize="18" />
             </StackPanel>
             <!--Weather Icon-->
