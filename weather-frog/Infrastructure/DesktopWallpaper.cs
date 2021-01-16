@@ -133,18 +133,27 @@ namespace weatherfrog.Infrastructure
             dc.DrawText(msgText, new Point((SystemParameters.WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
             BitmapFrame bitmapFrame = BitmapFrame.Create(
                 new Uri("pack://application:,,,/weather-frog;component/Resources/FrogIllustrations/SomethingWrong.png"));
-            dc.DrawImage(bitmapFrame, GetFrogRectangle(bitmapFrame));
+            dc.DrawImage(bitmapFrame, GetFrogRectangle(bitmapFrame, AlignmentX.Center));
             dc.Close();
             SetDesktopWallpaper(dv);
         }
 
-        private static Rect GetFrogRectangle(ImageSource imageSource)
+        private static Rect GetFrogRectangle(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
         {
             double y = SystemParameters.WorkArea.Height / 3.0d;
             double height = SystemParameters.WorkArea.Height * (2.0d / 3.0d);
             double scale = height / imageSource.Height;
             double width = imageSource.Width * scale;
-            double x = (SystemParameters.WorkArea.Width - width) / 2.0d;
+            double x = 0.0d;
+            switch (alignmentX)
+            {
+                case AlignmentX.Center:
+                    x = (SystemParameters.WorkArea.Width - width) / 2.0d;
+                    break;
+                case AlignmentX.Right:
+                    x = SystemParameters.WorkArea.Width - width;
+                    break;
+            }
             return new Rect(x, y, width, height);
         }
 
