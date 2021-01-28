@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog.Resources
@@ -11,6 +12,16 @@ namespace weatherfrog.Resources
     {
         private Forecast forecast;
         public Forecast Forecast { get => forecast; set => SetProperty(ref forecast, value); }
+
+        public Brush BackgroundBrush
+        {
+            get
+            {
+                if (Forecast?.CurrentWeather?.BackgroundBrush is null)
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2"));
+                return Forecast?.CurrentWeather?.BackgroundBrush;
+            }
+        }
 
         public ForecastDesignData()
         {

@@ -12,6 +12,7 @@ using System.Windows;
 using weatherfrog.WeatherApi.Models;
 using weatherfrog.Infrastructure;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace weatherfrog
 {
@@ -24,7 +25,10 @@ namespace weatherfrog
 
         // Used for Singleton check
         private static Mutex mutex = null;
+
         public new static App Current { get { return (App)Application.Current; } }
+        public static Brush DefaultBackgroundBrush =>
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2"));
 
         private static OptionsWindow OptionsWindowInstance
         {
@@ -47,42 +51,51 @@ namespace weatherfrog
 
         void App_Startup(object sender, StartupEventArgs e)
         {
-            // Singleton check
-            const string appName = "paszt:weather-frog";
-            mutex = new Mutex(true, appName, out bool createdNew);
-            if (!createdNew)
+            if (e.Args.Length > 0 && e.Args[0] == "-i")
             {
-                //app is already running! Exiting the application  
-                MessageBox.Show("Weather Frog is already running. Check the system tray in the task bar.",
-                    "Weather Frog Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
+                Illustrations.IllustrationWindow illustrationWindow = new();
+                illustrationWindow.ShowDialog();
                 Current.Shutdown();
-            }
-
-            WeatherApi.Configuration.UserAgent = typeof(App).Assembly.GetName().Name + "/" +
-                typeof(App).Assembly.GetName().Version.ToString() + " (https://github.com/Paszt/weather-frog)";
-
-            //Resources.WeatherIconsDisplayWindow widw = new();
-            //widw.Show();
-
-            //Popupwindow pu = new();
-            //pu.Show();
-
-            //ForecastWindow fs = new();
-            //fs.Show();
-
-            if (My.Settings.ApiKeyValidated)
-            {
-                Begin();
             }
             else
             {
-                if (OptionsWindowInstance.ShowDialog() == false)
+                // Singleton check
+                const string appName = "paszt:weather-frog";
+                mutex = new Mutex(true, appName, out bool createdNew);
+                if (!createdNew)
                 {
-                    Current?.Shutdown();
+                    //app is already running! Exiting the application  
+                    MessageBox.Show("Weather Frog is already running. Check the system tray in the task bar.",
+                        "Weather Frog Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Current.Shutdown();
+                }
+
+                WeatherApi.Configuration.UserAgent = typeof(App).Assembly.GetName().Name + "/" +
+                    typeof(App).Assembly.GetName().Version.ToString() + " (https://github.com/Paszt/weather-frog)";
+
+                //Resources.WeatherIconsDisplayWindow widw = new();
+                //widw.Show();
+
+                //Popupwindow pu = new();
+                //pu.Show();
+
+                //ForecastWindow fs = new();
+                //fs.Show();
+
+                if (My.Settings.ApiKeyValidated)
+                {
+                    Begin();
                 }
                 else
                 {
-                    Begin();
+                    if (OptionsWindowInstance.ShowDialog() == false)
+                    {
+                        Current?.Shutdown();
+                    }
+                    else
+                    {
+                        Begin();
+                    }
                 }
             }
         }
@@ -128,9 +141,21 @@ namespace weatherfrog
         #region Properties
 
         private Forecast forecast;
-        public Forecast Forecast { get => forecast; set => SetProperty(ref forecast, value); }
+        public Forecast Forecast
+        {
+            get => forecast;
+            set { if (SetProperty(ref forecast, value)) NotifyPropertyChanged(nameof(BackgroundBrush)); }
+        }
 
-        //public static Resources.TaskbarBalloon TaskbarBalloon => (Resources.TaskbarBalloon)(notifyIcon?.TrayPopup);
+        public Brush BackgroundBrush
+        {
+            get
+            {
+                if (Forecast?.CurrentWeather?.BackgroundBrush is null)
+                    return DefaultBackgroundBrush;
+                return Forecast?.CurrentWeather?.BackgroundBrush;
+            }
+        }
 
         #endregion
 
@@ -138,9 +163,18 @@ namespace weatherfrog
         {
             if (My.Settings.ApiKeyValidated)
             {
-                Forecast = await WeatherApi.API.GetForecastAsync(My.Settings.Location);
-                if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
-                notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
+                try
+                {
+                    Forecast = await WeatherApi.API.GetForecastAsync(My.Settings.Location);
+                    if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
+                    notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
+                }
+                catch (Exception)
+                {
+                    Forecast = null;
+                    DesktopWallpaper.NetworkError();
+                    updateWeatherTimer.Change(TimeSpan.FromSeconds(30), UpdateWeatherInterval);
+                }
             }
             else
             {

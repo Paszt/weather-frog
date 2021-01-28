@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <None Remove="Resources\FrogIllustrations\SomethingWrong.png" />
     <None Remove="Resources\Roboto-Regular.ttf" />
     <None Remove="Resources\weather_conditions.json" />
@@ -29,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <Resource Include="Resources\FrogIllustrations\SomethingWrong.png" />
     <Resource Include="Resources\Roboto-Regular.ttf" />
     <Resource Include="Resources\weather_conditions.json" />

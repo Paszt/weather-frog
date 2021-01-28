@@ -118,5 +118,28 @@ namespace weatherfrog.Properties {
                 this["UpdateDesktop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Generic.List<System.String> Locations {
+            get {
+                return ((global::System.Collections.Generic.List<System.String>)(this["Locations"]));
+            }
+            set {
+                this["Locations"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IllustrationWindowPlacement {
+            get {
+                return ((string)(this["IllustrationWindowPlacement"]));
+            }
+            set {
+                this["IllustrationWindowPlacement"] = value;
+            }
+        }
     }
 }

@@ -1,0 +1,174 @@
+﻿<Window x:Class="weatherfrog.ForecastWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:weatherfrog.ViewModels"
+        mc:Ignorable="d"
+        Title="ForecastWindow"
+        Height="450"
+        Width="800"
+        Foreground="{StaticResource ControlDefaultForeground}"
+        Style="{DynamicResource CustomWindowStyle}">
+    <Window.DataContext>
+        <viewModels:ForecastViewModel />
+    </Window.DataContext>
+    <Grid>
+        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                 ItemsSource="{Binding Forecast.Days.Forecastdays}"
+                 HorizontalAlignment="Center"
+                 Margin="20">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Border Background="{Binding WeatherData.BackgroundBrush}"
+                                Grid.ColumnSpan="3"
+                                Grid.RowSpan="2"
+                                BorderBrush="Black"
+                                BorderThickness="1" />
+
+                        <StackPanel>
+                            <Grid Height="70"
+                                  Width="500">
+                                <Grid Margin="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding DisplayDate}"
+                                               VerticalAlignment="Bottom"
+                                               Margin="0,0,0,2" />
+                                    <TextBlock Text="{Binding WeatherData.Condition.Text}"
+                                               Grid.Row="1"
+                                               VerticalAlignment="Top"
+                                               Margin="0,2,0,0" />
+
+                                    <Image Source="{Binding WeatherData.WeatherIcon}"
+                                           Grid.Column="1"
+                                           Grid.RowSpan="2"
+                                           Width="70"
+                                           Margin="20,00" />
+
+                                    <TextBlock Text="{Binding WeatherData.MaxTemp, StringFormat={}{0}°}"
+                                               Grid.Column="2"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Bottom"
+                                               Margin="0,0,0,2" />
+                                    <TextBlock Text="{Binding WeatherData.MinTemp, StringFormat={}{0}°}"
+                                               Grid.Column="2"
+                                               Grid.Row="1"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Top"
+                                               Margin="0,2,0,0" />
+
+                                </Grid>
+                            </Grid>
+                            <StackPanel>
+                                <!-- Hourly Data -->
+                                <ListBox ItemsSource="{Binding HourlyWeather}"
+                                         MaxWidth="500">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="2,0"
+                                                        Width="56"
+                                                        Background="{Binding BackgroundBrush}">
+                                                <TextBlock Text="{Binding Temp, StringFormat={}{0}°}"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,4" />
+                                                <Image Source="{Binding WeatherIcon}"
+                                                       Width="24" />
+                                                <TextBlock Text="{Binding Time,StringFormat={}{0:h tt}}"
+                                                           Margin="2,4,2,10"
+                                                           HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel IsItemsHost="True"
+                                                       Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <!-- The below nearly empty ItemContainerStyle does away with the padding of the default style -->
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListBoxItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                        <ContentPresenter Margin="0,0,-4,0" />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                </ListBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <!-- The below nearly empty ItemContainerStyle does away with the padding of the default style -->
+            <!--The purpose of the -1 Margin-Bottom is stop the borderthickness from doubling up -->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <ContentPresenter Margin="0,0,0,-1" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+        <!--Day Layout-->
+
+        <!--<Border Background="{Binding Forecast.Days.Forecastdays[0].WeatherData.BackgroundBrush}"
+                Height="70"
+                Width="500">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].Date }"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,0,2" />
+                <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.Condition.Text}"
+                           Grid.Row="1"
+                           VerticalAlignment="Top"
+                           Margin="0,2,0,0" />
+
+                <Image Source="{Binding Forecast.Days.Forecastdays[0].WeatherData.WeatherIcon}"
+                       Grid.Column="1"
+                       Grid.RowSpan="2"
+                       Width="70"
+                       Margin="20,00" />
+
+                <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.MaxTemp, StringFormat={}{0}°}"
+                           Grid.Column="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,0,2" />
+                <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.MinTemp, StringFormat={}{0}°}"
+                           Grid.Column="2"
+                           Grid.Row="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           Margin="0,2,0,0" />
+
+            </Grid>
+        </Border>-->
+    </Grid>
+</Window>

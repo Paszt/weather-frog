@@ -9,7 +9,7 @@
              FontFamily="/Resources/Roboto-Regular.ttf#Roboto"
              Width="450"
              Height="290"
-             Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
+             Background="{Binding BackgroundBrush}"
              d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}"
              Foreground="White">
     <UserControl.Resources>

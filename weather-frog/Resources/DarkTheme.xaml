@@ -390,7 +390,7 @@
                                     Padding="2"
                                     SnapsToDevicePixels="true"
                                     BorderThickness="1">
-                                <ContentPresenter />
+                                <ContentPresenter HorizontalAlignment="Left" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsHighlighted"

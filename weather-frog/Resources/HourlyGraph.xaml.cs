@@ -141,12 +141,13 @@ namespace weatherfrog.Resources
                 if (Border.Width <= RootGrid.ActualWidth)
                 {
                     Border.Cursor = Cursors.Arrow;
-                    rectTranslateTransform.X = 0;
                 }
                 else
                 {
                     Border.Cursor = Cursors.ScrollWE;
                 }
+                rectTranslateTransform.X = 0;
+                //Y value of Border =   (rectTranslateTransform.X + Border.ActualWidth)
             }
         }
 

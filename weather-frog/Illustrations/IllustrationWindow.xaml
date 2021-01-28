@@ -1,0 +1,113 @@
+﻿<Window x:Class="weatherfrog.Illustrations.IllustrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:weatherfrog.Illustrations"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:illustrations="clr-namespace:weatherfrog.Illustrations"
+        mc:Ignorable="d"
+        Title="IllustrationWindow"
+        Style="{DynamicResource CustomWindowStyle}"
+        Height="380"
+        MinHeight="380"
+        Width="600"
+        MinWidth="600"
+        Closing="Window_Closing"
+        Loaded="Window_Loaded">
+    <Window.DataContext>
+        <illustrations:Illustration />
+    </Window.DataContext>
+    <Window.Resources>
+        <ObjectDataProvider x:Key="AlignmentXValues"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="AlignmentX" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="TimeOfDayValues"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="illustrations:TimeOfDay" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="WeatherConditionValues"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="illustrations:WeatherCondition" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Margin"
+                    Value="0,0,8,0" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Right" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel>
+            <Grid Margin="20"
+                  HorizontalAlignment="Center"
+                  DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="360" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Filename:" />
+                <TextBox Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="1" />
+
+                <TextBlock Text="Alignment:"
+                           Grid.Row="1" />
+                <ComboBox ItemsSource="{Binding Source={StaticResource AlignmentXValues}}"
+                          SelectedItem="{Binding AlignmentX}"
+                          Grid.Row="1"
+                          Grid.Column="1" />
+
+                <TextBlock Text="Time of Day:"
+                           Grid.Row="2" />
+                <ComboBox ItemsSource="{Binding Source={StaticResource TimeOfDayValues}}"
+                          SelectedItem="{Binding TimeOfDay}"
+                          Grid.Row="2"
+                          Grid.Column="1" />
+
+                <TextBlock Text="Weather Condition:"
+                           Grid.Row="3" />
+                <ComboBox ItemsSource="{Binding Source={StaticResource WeatherConditionValues}}"
+                          SelectedItem="{Binding WeatherCondition}"
+                          Grid.Row="3"
+                          Grid.Column="1" />
+            </Grid>
+            <TextBlock Text="{Binding Json}"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center" />
+
+
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Margin="20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
+            <Button Command="{Binding SavetoFileCommand}"
+                    Width="100">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Save File"
+                               Margin="5" />
+                    <Image Source="{DynamicResource SaveDrawingImage}"
+                           Margin="2" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

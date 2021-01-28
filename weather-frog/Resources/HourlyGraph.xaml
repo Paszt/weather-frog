@@ -18,7 +18,7 @@
                 MouseLeftButtonUp="Border_MouseLeftButtonUp"
                 MouseMove="Border_MouseMove"
                 Cursor="ScrollWE"
-                Margin="0,0,-1000,0">
+                Margin="0,0,-1600,0">
             <Grid>
                 <Polygon x:Name="Graph"
                          Opacity="0.2"

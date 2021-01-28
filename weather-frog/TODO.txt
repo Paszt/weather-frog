@@ -3,3 +3,8 @@
 Combine Infrascturcture.DisplayEvents & Infrastructure.DesktopWallpaper classes. 
 
 Add feature to save & load Locations
+
+
+
+
+== Issues ==
