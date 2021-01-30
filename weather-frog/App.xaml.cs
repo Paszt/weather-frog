@@ -13,6 +13,8 @@ using weatherfrog.WeatherApi.Models;
 using weatherfrog.Infrastructure;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.IO;
+using System.Text.Json;
 
 namespace weatherfrog
 {
@@ -166,6 +168,15 @@ namespace weatherfrog
                 try
                 {
                     Forecast = await WeatherApi.API.GetForecastAsync(My.Settings.Location);
+                    // write Forecast json to file (for debug). Not including #if DEBUG directive here so that
+                    // any beta testers can have acces to the file.
+                    string forecastPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "forecast.json");
+                    try
+                    {
+                        File.WriteAllText(forecastPath, JsonSerializer.Serialize(Forecast, new() { WriteIndented = true }));
+                    }
+                    catch (Exception) { }
+
                     if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
                     notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
                 }
@@ -182,7 +193,7 @@ namespace weatherfrog
             }
         }
 
-        #region notify icon commands
+#region notify icon commands
 
         private RelayCommand exitAppCommand;
         public RelayCommand ExitAppCommand => exitAppCommand ??= new RelayCommand(() => { Current.Shutdown(); });
@@ -197,7 +208,7 @@ namespace weatherfrog
             };
         });
 
-        #endregion
+#endregion
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
@@ -209,7 +220,7 @@ namespace weatherfrog
             //      probably reading/writing from/to the registry.
         }
 
-        #region INotifyPropertyChanged
+#region INotifyPropertyChanged
 
         /// <summary>
         /// Property changed event for observer pattern
@@ -234,6 +245,6 @@ namespace weatherfrog
             return true;
         }
 
-        #endregion
+#endregion
     }
 }

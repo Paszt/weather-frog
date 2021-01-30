@@ -37,6 +37,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("maxtemp_f")]
         public double? MaxTempF { get => maxTempF; set => SetProperty(ref maxTempF, value); }
 
+        [JsonIgnore]
         public int MaxTemp => (My.Settings.UnitSystem == UnitSystem.Imperial)
           ? (int)Math.Round(MaxTempF.Value, MidpointRounding.AwayFromZero)
           : (int)Math.Round(MaxTempC.Value, MidpointRounding.AwayFromZero);
@@ -55,6 +56,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("mintemp_f")]
         public double? MinTempF { get => minTempF; set => SetProperty(ref minTempF, value); }
 
+        [JsonIgnore]
         public int MinTemp => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(MinTempF.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(MinTempC.Value, MidpointRounding.AwayFromZero);
@@ -71,6 +73,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("avgtemp_f")]
         public double? AvgTempF { get => avgTempF; set => SetProperty(ref avgTempF, value); }
 
+        [JsonIgnore]
         public int AvgTemp => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(AvgTempF.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(AvgTempC.Value, MidpointRounding.AwayFromZero);
@@ -87,6 +90,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("maxwind_kph")]
         public double? MaxWindKph { get => maxWindKph; set => SetProperty(ref maxWindKph, value); }
 
+        [JsonIgnore]
         public int MaxWind => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(MaxWindMph.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(MaxWindKph.Value, MidpointRounding.AwayFromZero);
@@ -103,6 +107,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("totalprecip_in")]
         public double? TotalPrecipIn { get => totalPrecipIn; set => SetProperty(ref totalPrecipIn, value); }
 
+        [JsonIgnore]
         public int TotalPrecip => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(TotalPrecipIn.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(TotalPrecipMm.Value, MidpointRounding.AwayFromZero);
@@ -119,6 +124,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("avgvis_miles")]
         public double? AvgVisibilityMiles { get => avgVisibilityMiles; set => SetProperty(ref avgVisibilityMiles, value); }
 
+        [JsonIgnore]
         public int AvgVisibility => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(AvgVisibilityMiles.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(AvgVisibilityKm.Value, MidpointRounding.AwayFromZero);
@@ -165,10 +171,13 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("uv")]
         public double? UV { get => uv; set => SetProperty(ref uv, value); }
 
+        [JsonIgnore]
         public System.Windows.Media.ImageSource WeatherIcon => Condition?.GetWeatherIcon(true);
 
+        [JsonIgnore]
         public System.Windows.Media.Brush BackgroundBrush => Condition.GetBackgroundBrush(true);
 
+        [JsonIgnore]
         public string PrecipitationInfo
         {
             get

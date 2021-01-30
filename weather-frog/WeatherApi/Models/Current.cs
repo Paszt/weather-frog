@@ -55,6 +55,7 @@ namespace weatherfrog.WeatherApi.Models
 
         //public double Temp(UnitSystem unitSystem) => (unitSystem == UnitSystem.Imperial) ? TempF.Value : TempC.Value;
 
+        [JsonIgnore]
         public int Temp => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(TempF.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(TempC.Value, MidpointRounding.AwayFromZero);
@@ -77,6 +78,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("wind_kph")]
         public double? WindKph { get => windKph; set => SetProperty(ref windKph, value); }
 
+        [JsonIgnore]
         public int WindSpeed => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(WindMph.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(WindKph.Value, MidpointRounding.AwayFromZero);
@@ -105,6 +107,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("pressure_in")]
         public double? PressureIn { get => pressureIn; set => SetProperty(ref pressureIn, value); }
 
+        [JsonIgnore]
         public int Pressure => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(PressureIn.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(PressureMb.Value, MidpointRounding.AwayFromZero);
@@ -121,6 +124,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("precip_in")]
         public double? PrecipIn { get => precipIn; set => SetProperty(ref precipIn, value); }
 
+        [JsonIgnore]
         public int Precip => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(PrecipIn.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(PrecipMm.Value, MidpointRounding.AwayFromZero);
@@ -151,6 +155,7 @@ namespace weatherfrog.WeatherApi.Models
 
         //public double FeelsLike(UnitSystem unitSystem) => (unitSystem == UnitSystem.Imperial) ? FeelslikeF.Value : FeelslikeC.Value;
 
+        [JsonIgnore]
         public int FeelsLike => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(FeelsLikeF.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(FeelsLikeC.Value, MidpointRounding.AwayFromZero);
@@ -167,6 +172,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("vis_miles")]
         public double? VisibilityMiles { get => visibilityMiles; set => SetProperty(ref visibilityMiles, value); }
 
+        [JsonIgnore]
         public double Visibility => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? VisibilityMiles.Value
             : VisibilityKm.Value;
@@ -189,13 +195,16 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("gust_kph")]
         public double? GustKph { get => gustKph; set => SetProperty(ref gustKph, value); }
 
+        [JsonIgnore]
         public double Gust => (My.Settings.UnitSystem == UnitSystem.Imperial) ? GustMph.Value : GustKph.Value;
 
         [JsonPropertyName("condition")]
         public Condition Condition { get => condition; set => SetProperty(ref condition, value); }
 
+        [JsonIgnore]
         public System.Windows.Media.ImageSource WeatherIcon => Condition.GetWeatherIcon(IsDay.Value);
 
+        [JsonIgnore]
         public System.Windows.Media.Brush BackgroundBrush => Condition.GetBackgroundBrush(IsDay.Value);
     }
 }

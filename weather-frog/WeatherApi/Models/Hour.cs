@@ -65,6 +65,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("temp_f")]
         public double? TempF { get => tempF; set => SetProperty(ref tempF, value); }
 
+        [JsonIgnore]
         public int Temp => (My.Settings.UnitSystem == UnitSystem.Imperial)
             ? (int)Math.Round(TempF.Value, MidpointRounding.AwayFromZero)
             : (int)Math.Round(TempC.Value, MidpointRounding.AwayFromZero);
@@ -234,8 +235,10 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("gust_kph")]
         public double? GustKph { get => gustKph; set => SetProperty(ref gustKph, value); }
 
+        [JsonIgnore]
         public System.Windows.Media.ImageSource WeatherIcon => Condition.GetWeatherIcon(IsDay.Value);
 
+        [JsonIgnore]
         public System.Windows.Media.Brush BackgroundBrush => Condition.GetBackgroundBrush(IsDay.Value);
     }
 }

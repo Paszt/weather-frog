@@ -128,14 +128,14 @@ namespace weatherfrog.Infrastructure
             rtbmp.Render(visual);
             BmpBitmapEncoder enc = new();
             enc.Frames.Add(BitmapFrame.Create(rtbmp));
-            string returnValue = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wallpaper.bmp");
-            using FileStream stm = File.Create(returnValue);
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wallpaper.bmp");
+            using FileStream stm = File.Create(filePath);
             enc.Save(stm);
             using RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
             key.SetValue("WallpaperStyle", "1");
             key.SetValue("TileWallpaper", "0");
 
-            return returnValue;
+            return filePath;
         }
 
         internal static void NetworkError()

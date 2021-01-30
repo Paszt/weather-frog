@@ -15,6 +15,6 @@ namespace weatherfrog.WeatherApi.Utilities
             };
 
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) =>
-            throw new InvalidOperationException("Should not get here.");
+            writer.WriteBooleanValue(value);
     }
 }

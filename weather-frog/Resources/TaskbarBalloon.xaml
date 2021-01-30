@@ -20,7 +20,7 @@
         <!-- Frog Illustration -->
         <Image />
         <!--Current Weather Info-->
-        <Grid Margin="10"
+        <Grid Margin="12"
               MouseLeftButtonUp="RootGrid_MouseLeftButtonUp"
               Background="Transparent">
             <Grid.RowDefinitions>
