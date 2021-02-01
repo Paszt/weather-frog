@@ -163,13 +163,15 @@ namespace weatherfrog.Resources
             double tempDiffFromMin = minTemp - temp;
             // 38 = maximum height of the graph from min to max
             double graphHeightDelta = 38.0;
-            if (minMaxDiff < 5)
+            double lowMinMaxDiffAdjustment = 0.0;
+            if (minMaxDiff < 6)
             {
                 graphHeightDelta = 10;
+                lowMinMaxDiffAdjustment = 14;
             }
-            double proportional = (graphHeightDelta / minMaxDiff) * tempDiffFromMin;
+            double proportionalHeight = (graphHeightDelta / minMaxDiff) * tempDiffFromMin;
             // Y = 64 is minimum, just aboe the precip info location
-            return proportional + 64;
+            return proportionalHeight + 64 - lowMinMaxDiffAdjustment;
         }
 
         //private static Cursor DrawScrollWECursor(Brush brush)
