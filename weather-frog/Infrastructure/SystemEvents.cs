@@ -31,10 +31,8 @@ namespace weatherfrog.Infrastructure
             if (e.Mode == PowerModes.Resume) ResumedFromSuspension?.Invoke(sender, e);
         }
 
-        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
-        {
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) =>
             DisplaySettingsChanged?.Invoke(sender, e);
-        }
 
         private void RegisterAppBar(IntPtr handle)
         {
@@ -47,10 +45,7 @@ namespace weatherfrog.Infrastructure
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == uCallBack)
-            {
-                DisplaySettingsChanged?.Invoke(this, new EventArgs());
-            }
+            if (msg == uCallBack) DisplaySettingsChanged?.Invoke(this, new EventArgs());
             return IntPtr.Zero;
         }
     }

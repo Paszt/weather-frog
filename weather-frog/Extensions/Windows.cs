@@ -12,7 +12,7 @@ namespace weatherfrog.Extensions
     {
         public static void SetPlacement(this Window window, string placementJson)
         {
-            if (string.IsNullOrEmpty(placementJson)) { return; }
+            if (string.IsNullOrEmpty(placementJson)) return;
             try
             {
                 WINDOWPLACEMENT placement = JsonSerializer.Deserialize<WINDOWPLACEMENT>(placementJson,

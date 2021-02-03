@@ -133,14 +133,12 @@ namespace weatherfrog.ViewModels
         #endregion
 
         private bool isDirty = false;
-        private void OnSettingChanged()
-        {
+        private void OnSettingChanged() =>
             isDirty = !(My.Settings.Location == Location &&
                         My.Settings.TaskbarIconStyle == TaskbarIconStyle &&
                         My.Settings.UnitSystem == UnitSystem &&
                         My.Settings.UpdateDesktop == UpdateDesktop &&
                         My.Settings.WeatherApiKey == WeatherApiKey);
-        }
 
         private void SortLocations()
         {
@@ -171,21 +169,14 @@ namespace weatherfrog.ViewModels
             }
             catch (System.Net.Http.HttpRequestException httpReqEx)
             {
-                if (httpReqEx.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    LocationSearchMsg = "The API Key appears to be incorrect. Please verify.";
-                }
-                else
-                {
-                    LocationSearchMsg = httpReqEx.Message;
-                }
+                LocationSearchMsg = (httpReqEx.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    ? "The API Key appears to be incorrect. Please verify."
+                    : httpReqEx.Message;
             }
             catch (System.Exception ex)
             {
                 LocationSearchMsg = ex.Message;
             }
-
-
         }, () => !string.IsNullOrWhiteSpace(WeatherApiKey) && !string.IsNullOrWhiteSpace(Location) && TestNotPassed);
 
         private RelayCommand saveCommand;
@@ -205,9 +196,7 @@ namespace weatherfrog.ViewModels
 
         private RelayCommand cancelCommand;
         public RelayCommand CancelCommand => cancelCommand ??= new RelayCommand(() =>
-        {
-            Configuration.ApiKey = My.Settings.WeatherApiKey;
-        });
+            Configuration.ApiKey = My.Settings.WeatherApiKey);
 
         private RelayCommand addLocationToFavoritesCommand;
         public RelayCommand AddLocationToFavoritesCommand => addLocationToFavoritesCommand ??= new RelayCommand(() =>

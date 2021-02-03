@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace weatherfrog.Interop
 {
@@ -138,15 +134,9 @@ namespace weatherfrog.Interop
             Y = y;
         }
 
-        public static implicit operator System.Drawing.Point(POINT p)
-        {
-            return new System.Drawing.Point(p.X, p.Y);
-        }
+        public static implicit operator System.Drawing.Point(POINT p) => new System.Drawing.Point(p.X, p.Y);
 
-        public static implicit operator POINT(System.Drawing.Point p)
-        {
-            return new POINT(p.X, p.Y);
-        }
+        public static implicit operator POINT(System.Drawing.Point p) => new POINT(p.X, p.Y);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -166,66 +156,52 @@ namespace weatherfrog.Interop
 
         public int X
         {
-            get { return Left; }
+            get => Left;
             set { Right -= (Left - value); Left = value; }
         }
 
         public int Y
         {
-            get { return Top; }
+            get => Top;
             set { Bottom -= (Top - value); Top = value; }
         }
 
         public int Height
         {
-            get { return Bottom - Top; }
-            set { Bottom = value + Top; }
+            get => Bottom - Top;
+            set => Bottom = value + Top;
         }
 
         public int Width
         {
-            get { return Right - Left; }
-            set { Right = value + Left; }
+            get => Right - Left;
+            set => Right = value + Left;
         }
 
         [JsonIgnore]
         public System.Drawing.Point Location
         {
-            get { return new System.Drawing.Point(Left, Top); }
+            get => new System.Drawing.Point(Left, Top);
             set { X = value.X; Y = value.Y; }
         }
 
         [JsonIgnore]
         public System.Drawing.Size Size
         {
-            get { return new System.Drawing.Size(Width, Height); }
+            get => new System.Drawing.Size(Width, Height);
             set { Width = value.Width; Height = value.Height; }
         }
 
-        public static implicit operator System.Drawing.Rectangle(RECT r)
-        {
-            return new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
-        }
+        public static implicit operator System.Drawing.Rectangle(RECT r) => 
+            new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
 
-        public static implicit operator RECT(System.Drawing.Rectangle r)
-        {
-            return new RECT(r);
-        }
+        public static implicit operator RECT(System.Drawing.Rectangle r) => new RECT(r);
 
-        public static bool operator ==(RECT r1, RECT r2)
-        {
-            return r1.Equals(r2);
-        }
+        public static bool operator ==(RECT r1, RECT r2) => r1.Equals(r2);
 
-        public static bool operator !=(RECT r1, RECT r2)
-        {
-            return !r1.Equals(r2);
-        }
+        public static bool operator !=(RECT r1, RECT r2) => !r1.Equals(r2);
 
-        public bool Equals(RECT r)
-        {
-            return r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
-        }
+        public bool Equals(RECT r) => r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
 
         public override bool Equals(object obj)
         {
@@ -236,15 +212,10 @@ namespace weatherfrog.Interop
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            return ((System.Drawing.Rectangle)this).GetHashCode();
-        }
+        public override int GetHashCode() => ((System.Drawing.Rectangle)this).GetHashCode();
 
-        public override string ToString()
-        {
-            return string.Format(System.Globalization.CultureInfo.CurrentCulture, "{{Left={0},Top={1},Right={2},Bottom={3}}}", Left, Top, Right, Bottom);
-        }
+        public override string ToString() => 
+            string.Format(System.Globalization.CultureInfo.CurrentCulture, "{{Left={0},Top={1},Right={2},Bottom={3}}}", Left, Top, Right, Bottom);
     }
 
     public enum ShowWindowCommands

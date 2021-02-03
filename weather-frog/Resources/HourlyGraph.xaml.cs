@@ -59,16 +59,12 @@ namespace weatherfrog.Resources
               DependencyProperty.Register("Forecast", typeof(Forecast),
                 typeof(HourlyGraph), new PropertyMetadata(null, OnForecastChanged));
 
-        private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            HourlyGraph hourlyGraph = d as HourlyGraph;
-            hourlyGraph.OnForecastChanged();
-        }
+        private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            ((HourlyGraph)d).OnForecastChanged();
+        //HourlyGraph hourlyGraph = d as HourlyGraph;
+        //hourlyGraph.OnForecastChanged();
 
-        private void OnForecastChanged()
-        {
-            Draw();
-        }
+        private void OnForecastChanged() => Draw();
 
         #endregion
 
@@ -138,14 +134,7 @@ namespace weatherfrog.Resources
                 AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
 
                 Border.Width = Math.Max((double)(upcomingHours.Count * HourWidth), 200);
-                if (Border.Width <= RootGrid.ActualWidth)
-                {
-                    Border.Cursor = Cursors.Arrow;
-                }
-                else
-                {
-                    Border.Cursor = Cursors.ScrollWE;
-                }
+                Border.Cursor = (Border.Width <= RootGrid.ActualWidth) ? Cursors.Arrow : Cursors.ScrollWE;
                 rectTranslateTransform.X = 0;
                 //Y value of Border =   (rectTranslateTransform.X + Border.ActualWidth)
             }

@@ -17,12 +17,10 @@ namespace weatherfrog.Infrastructure
         /// <summary>
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
         /// </summary>
-        /// <param name="execute">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
+        /// <param name="execute">Delegate to execute when Execute is called on the command.  
+        /// This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
-        public RelayCommand(Action<T> execute)
-            : this(execute, null)
-        {
-        }
+        public RelayCommand(Action<T> execute) : this(execute, null) { }
 
         /// <summary>
         /// Creates a new command.
@@ -46,10 +44,7 @@ namespace weatherfrog.Infrastructure
         ///<returns>
         ///true if this command can be executed; otherwise, false.
         ///</returns>
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute == null || _canExecute((T)parameter);
-        }
+        public bool CanExecute(object parameter) => _canExecute == null || _canExecute((T)parameter);
 
         ///<summary>
         ///Occurs when changes occur that affect whether or not the command should execute.
@@ -64,10 +59,7 @@ namespace weatherfrog.Infrastructure
         ///Defines the method to be called when the command is invoked.
         ///</summary>
         ///<param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        public void Execute(object parameter)
-        {
-            _execute((T)parameter);
-        }
+        public void Execute(object parameter) => _execute((T)parameter);
 
         #endregion
     }
@@ -85,9 +77,7 @@ namespace weatherfrog.Infrastructure
         /// Initializes a new instance of the <see cref="RelayCommand"/> class and the command can always be executed.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Action execute) : this(execute, null)
-        {
-        }
+        public RelayCommand(Action execute) : this(execute, null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand"/> class.
@@ -96,10 +86,7 @@ namespace weatherfrog.Infrastructure
         /// <param name="canExecute">The execution status logic.</param>
         public RelayCommand(Action execute, Func<bool> canExecute)
         {
-            if (execute is null)
-            {
-                throw new ArgumentNullException(nameof(execute));
-            }
+            if (execute is null) throw new ArgumentNullException(nameof(execute));
             _execute = execute;
             _canExecute = canExecute;
         }
@@ -107,39 +94,17 @@ namespace weatherfrog.Infrastructure
         public event EventHandler CanExecuteChanged
         {
             add
-            {
-                if (_canExecute is object)
-                {
-                    CommandManager.RequerySuggested += value;
-                }
-            }
-
+            { if (_canExecute is object) CommandManager.RequerySuggested += value; }
             remove
-            {
-                if (_canExecute is object)
-                {
-                    CommandManager.RequerySuggested -= value;
-                }
-            }
+            { if (_canExecute is object) CommandManager.RequerySuggested -= value; }
         }
 
         void OnCanExecuteChanged(object sender, EventArgs e)
-        {
-            if (_canExecute is object)
-            {
-                CommandManager.InvalidateRequerySuggested();
-            }
-        }
+        { if (_canExecute is object) CommandManager.InvalidateRequerySuggested(); }
 
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute is null || _canExecute();
-        }
+        public bool CanExecute(object parameter) => _canExecute is null || _canExecute();
 
-        public void Execute(object parameter)
-        {
-            _execute();
-        }
+        public void Execute(object parameter) => _execute();
 
     }
 

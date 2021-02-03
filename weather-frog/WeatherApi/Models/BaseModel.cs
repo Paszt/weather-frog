@@ -14,10 +14,8 @@ namespace weatherfrog.WeatherApi.Models
         /// Raises event when a property is changed
         /// </summary>
         /// <param name="propertyName">Name of the changed property</param>
-        public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
+        public void NotifyPropertyChanged([CallerMemberName] string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {

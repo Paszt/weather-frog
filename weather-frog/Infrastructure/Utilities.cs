@@ -76,7 +76,8 @@ namespace weatherfrog.Infrastructure
         }
 
         //https://stackoverflow.com/a/2837158
-        public static System.Windows.Input.Cursor CreateCursor(int width, int height, Visual visual, System.Drawing.Point hotSpot)
+        public static System.Windows.Input.Cursor CreateCursor(int width, int height, Visual visual, 
+            System.Drawing.Point hotSpot)
         {
             MemoryStream stream = new();
             CreateIcon(width, height, visual).Save(stream);

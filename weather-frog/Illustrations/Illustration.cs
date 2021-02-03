@@ -13,6 +13,7 @@ namespace weatherfrog.Illustrations
     {
         private string fileName;
         private AlignmentX alignmentX;
+        private bool isBelow45;
         private TimeOfDay timeOfDay;
         private WeatherCondition weatherCondition;
 
@@ -21,6 +22,13 @@ namespace weatherfrog.Illustrations
 
         [JsonPropertyName("alignment"), JsonConverter(typeof(JsonStringEnumConverter))]
         public AlignmentX AlignmentX { get => alignmentX; set => SetProperty(ref alignmentX, value); }
+
+        /// <summary>
+        /// Boolean value indicating weather the illustration is meant to be for temperatures below 45°F. Maybe
+        /// the frog is wearing a knit hat and sweater, for example.
+        /// </summary>
+        [JsonPropertyName("below_45")]
+        public bool IsBelow45 { get => isBelow45; set => SetProperty(ref isBelow45, value); }
 
         [JsonPropertyName("time_of_day"), JsonConverter(typeof(JsonStringEnumConverter))]
         public TimeOfDay TimeOfDay { get => timeOfDay; set => SetProperty(ref timeOfDay, value); }
@@ -40,6 +48,7 @@ namespace weatherfrog.Illustrations
             if (result == true) await SaveToFile(Path.GetDirectoryName(dlg.FileName));
         }, () => !string.IsNullOrEmpty(FileName));
 
+
         public async System.Threading.Tasks.Task SaveToFile(string path)
         {
             using FileStream createStream = File.Create(Path.Combine(path, fileName + ".json"));
@@ -50,10 +59,8 @@ namespace weatherfrog.Illustrations
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
+        public void NotifyPropertyChanged([CallerMemberName] string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {

@@ -57,10 +57,7 @@ namespace weatherfrog.Resources
             IsTrackingYDelta = true;
         }
 
-        private void HourlyGraph_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            IsTrackingYDelta = false;
-        }
+        private void HourlyGraph_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) => IsTrackingYDelta = false;
 
         private void HourlyGraph_MouseMove(object sender, MouseEventArgs e)
         {
@@ -69,7 +66,8 @@ namespace weatherfrog.Resources
                 Vector v = startDrag - e.GetPosition(this);
                 // If the user drags the graph more than 20 down, but not more than 20 left or right, close the graph.
                 if (Math.Abs(v.X) < 20 && v.Y < -20) { RootGrid_MouseLeftButtonUp(null, null); IsTrackingYDelta = false; }
-                // A drag to the left or right more than 20 means the user is sliding the graph left/right, so stop tracking Y change.
+                // A drag to the left or right more than 20 means the user is sliding the graph left/right, 
+                // so stop tracking Y change.
                 if (Math.Abs(v.X) > 20) { IsTrackingYDelta = false; }
             }
         }

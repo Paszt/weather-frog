@@ -27,10 +27,9 @@ namespace weatherfrog.Infrastructure
             SetDesktopWallpaper(container);
         }
 
-        private static void SetDesktopWallpaper(Visual visual)
-        {
-            _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, SaveBitmap(visual), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
-        }
+        private static void SetDesktopWallpaper(Visual visual) =>
+            _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, SaveBitmap(visual),
+                                     SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
 
         private static DrawingVisual DrawBackground(WeatherApi.Models.Forecast forecast)
         {
@@ -84,7 +83,7 @@ namespace weatherfrog.Infrastructure
             dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300));
 
             //Right Side Text
-            double rightTextCenter = screenWidth * 0.77d + (weatherIconWidth / 2) - 150.0d;
+            double rightTextCenter = (screenWidth * 0.77d) + (weatherIconWidth / 2) - 150.0d;
 
             // Chance of precipitation (rain or snow)
             string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;

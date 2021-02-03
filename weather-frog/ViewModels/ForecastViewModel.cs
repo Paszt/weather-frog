@@ -25,10 +25,7 @@ namespace weatherfrog.ViewModels
             }
             else
             {
-                //JsonSerializerOptions options = new(JsonSerializerDefaults.Web);
-                //Forecast = JsonSerializer.Deserialize<Forecast>(json, options);
                 Forecast = App.Current.Forecast;
-                //string test = string.Empty;
             }
 
         }
