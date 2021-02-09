@@ -1,7 +1,5 @@
 ﻿// notifyicon for .Net Core 3.1 and .Net 5 WPF: https://github.com/HavenDV/Hardcodet.NotifyIcon.Wpf.NetCore
 
-// restclient: https://github.com/NimaAra/Easy.Common/blob/master/Easy.Common/RestClient.cs  
-
 using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.ComponentModel;
@@ -26,9 +24,11 @@ namespace weatherfrog
         private Timer updateWeatherTimer;
 
         // Used for Singleton check
+#pragma warning disable IDE0052 // Remove unread private members
         private static Mutex mutex = null;
+#pragma warning restore IDE0052 // Remove unread private members
 
-        public new static App Current { get { return (App)Application.Current; } }
+        public new static App Current => (App)Application.Current;
         public static Brush DefaultBackgroundBrush =>
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2"));
 
@@ -39,16 +39,8 @@ namespace weatherfrog
                 if (null == optionsWindow ||
                     (bool)typeof(Window).GetProperty("IsDisposed", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(optionsWindow))
                 { optionsWindow = new(); }
-                if (optionsWindow.IsLoaded)
-                { return null; }
-                else
-                { return optionsWindow; }
+                return optionsWindow.IsLoaded ? null : optionsWindow;
             }
-        }
-
-        private static void OptionsWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         void App_Startup(object sender, StartupEventArgs e)
@@ -108,7 +100,7 @@ namespace weatherfrog
             updateWeatherTimer = new((e) => UpdateWeather(), null, TimeSpan.Zero, UpdateWeatherInterval);
             notifyIcon = new()
             {
-                Icon = Utilities.CreateIcon(16, 16, (System.Windows.Media.ImageSource)FindResource("FrogHeadDrawingImage")),
+                Icon = Utilities.CreateIcon(16, 16, (ImageSource)FindResource("FrogHeadDrawingImage")),
                 DataContext = Current,
                 ContextMenu = (System.Windows.Controls.ContextMenu)FindResource("NotifyIconMenu"),
                 TrayPopup = new Resources.TaskbarBalloon(),
@@ -122,7 +114,8 @@ namespace weatherfrog
                     new Binding("Forecast.CurrentWeather.Condition.Text") { Source = this },
                     new Binding("Forecast.Location.DisplayName") { Source = this },
                 }
-            }; BindingOperations.SetBinding(notifyIcon, TaskbarIcon.ToolTipTextProperty, toolTipMultiBinding);
+            };
+            BindingOperations.SetBinding(notifyIcon, TaskbarIcon.ToolTipTextProperty, toolTipMultiBinding);
 
             SystemEvents sysEvents = new();
             sysEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
@@ -134,11 +127,9 @@ namespace weatherfrog
             if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
         }
 
-        private void SystemEvents_ResumedFromSuspension(object sender, EventArgs e)
-        {
-            // update weather immediately upon waking up from suspension
+        // update weather immediately upon waking up from suspension
+        private void SystemEvents_ResumedFromSuspension(object sender, EventArgs e) =>
             updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
-        }
 
         #region Properties
 
@@ -149,15 +140,9 @@ namespace weatherfrog
             set { if (SetProperty(ref forecast, value)) NotifyPropertyChanged(nameof(BackgroundBrush)); }
         }
 
-        public Brush BackgroundBrush
-        {
-            get
-            {
-                if (Forecast?.CurrentWeather?.BackgroundBrush is null)
-                    return DefaultBackgroundBrush;
-                return Forecast?.CurrentWeather?.BackgroundBrush;
-            }
-        }
+        public Brush BackgroundBrush => Forecast?.CurrentWeather?.BackgroundBrush is null
+                    ? DefaultBackgroundBrush
+                    : (Forecast?.CurrentWeather?.BackgroundBrush);
 
         #endregion
 
@@ -184,7 +169,7 @@ namespace weatherfrog
                 {
                     Forecast = null;
                     DesktopWallpaper.NetworkError();
-                    updateWeatherTimer.Change(TimeSpan.FromSeconds(30), UpdateWeatherInterval);
+                    updateWeatherTimer.Change(TimeSpan.FromSeconds(5), UpdateWeatherInterval);
                 }
             }
             else
@@ -193,22 +178,21 @@ namespace weatherfrog
             }
         }
 
-#region notify icon commands
+        #region notify icon commands
 
         private RelayCommand exitAppCommand;
-        public RelayCommand ExitAppCommand => exitAppCommand ??= new RelayCommand(() => { Current.Shutdown(); });
+        public RelayCommand ExitAppCommand => exitAppCommand ??= new RelayCommand(() => Current.Shutdown());
+
 
         private RelayCommand showOptionsCommand;
         public RelayCommand ShowOptionsCommand => showOptionsCommand ??= new RelayCommand(() =>
         {
             OptionsWindow ow = OptionsWindowInstance;
             if (ow != null && ow.ShowDialog().Value)
-            {
                 updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
-            };
         });
 
-#endregion
+        #endregion
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
@@ -220,7 +204,7 @@ namespace weatherfrog
             //      probably reading/writing from/to the registry.
         }
 
-#region INotifyPropertyChanged
+        #region INotifyPropertyChanged
 
         /// <summary>
         /// Property changed event for observer pattern
@@ -231,10 +215,8 @@ namespace weatherfrog
         /// Raises event when a property is changed
         /// </summary>
         /// <param name="propertyName">Name of the changed property</param>
-        public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
+        public void NotifyPropertyChanged([CallerMemberName] string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
@@ -245,6 +227,6 @@ namespace weatherfrog
             return true;
         }
 
-#endregion
+        #endregion
     }
 }
