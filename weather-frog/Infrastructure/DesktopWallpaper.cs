@@ -35,7 +35,7 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            dc.DrawRectangle(forecast.CurrentWeather.BackgroundBrush, null, SystemParameters.WorkArea);
+            dc.DrawRectangle(forecast?.CurrentWeather?.BackgroundBrush, null, SystemParameters.WorkArea);
             dc.Close();
             return dv;
         }

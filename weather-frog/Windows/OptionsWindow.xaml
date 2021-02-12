@@ -3,13 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:weatherfrog.ViewModels"
+        xmlns:resources="clr-namespace:weatherfrog.Resources"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:viewModels="clr-namespace:weatherfrog.ViewModels"
         xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
         mc:Ignorable="d"
         Title="Weather Frog Options"
-        Height="500"
-        MinHeight="500"
+        Height="600"
+        MinHeight="600"
         Width="640"
         MinWidth="640"
         Style="{DynamicResource CustomToolWindowStyle}"
@@ -156,36 +157,39 @@
             </TabItem>
             <!-- Desktop Wallpaper Options -->
             <TabItem Header="Desktop Wallpaper">
-                <StackPanel>
+                <StackPanel d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}">
                     <CheckBox Content="Update Desktop Wallpaper"
                               Margin="10"
                               IsChecked="{Binding UpdateDesktop}" />
                     <Grid Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
                           IsEnabled="{Binding UpdateDesktop}"
-                          Height="280"
+                          Height="380"
                           Margin="10,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="58" />
+                            <ColumnDefinition Width="30" />
                             <ColumnDefinition />
                             <ColumnDefinition Width="180" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="80"/>
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <CheckBox Content="Show Location"
+                        <CheckBox Content="{Binding Forecast.Location.DisplayName}"
                                   IsChecked="{Binding DesktopShowLocation}"
                                   Margin="0,0,0,10"
                                   Grid.Column="1"
                                   Grid.Row="1"
                                   Foreground="Black"
-                                  FontSize="16" />
+                                  FontSize="16"
+                                  VerticalAlignment="Top"
+                                  Style="{StaticResource DesktopOptionsCheckBox}" />
                         <StackPanel Orientation="Horizontal"
                                     Grid.Column="2"
                                     Grid.Row="1"
+                                    Margin="0,6,0,0"
                                     HorizontalAlignment="Center">
                             <Image Source="{DynamicResource Umbrella}"
                                    Width="16"
@@ -201,7 +205,8 @@
                                     Grid.Row="2">
                             <TextBlock Text="{Binding Forecast.CurrentWeather.Temp}"
                                        FontSize="65"
-                                       Height="65" />
+                                       Height="75"
+                                       Margin="0,-20,0,10" />
                             <TextBlock Text="{Binding Forecast.TempUnitAbbreviated, StringFormat=°{0}}"
                                        FontSize="30"
                                        Foreground="{StaticResource ControlDefaultForeground}" />
@@ -213,11 +218,15 @@
                                HorizontalAlignment="Center"
                                Width="65" />
                         <!--Feels Like-->
-                        <CheckBox Content="{Binding Forecast.CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}°}"
+                        <CheckBox Content="{Binding Forecast.CurrentWeather.FeelsLike}"
+                                  ContentStringFormat="Feels Like {0}°"
                                   Foreground="{StaticResource ControlDefaultForeground}"
                                   FontSize="22"
                                   Grid.Column="1"
-                                  Grid.Row="3" />
+                                  Grid.Row="3"
+                                  Height="28"
+                                  VerticalAlignment="Top"
+                                  Style="{StaticResource DesktopOptionsCheckBox}" />
                         <TextBlock Text="{Binding Forecast.CurrentWeather.Condition.Text}"
                                    Foreground="{StaticResource ControlDefaultForeground}"
                                    HorizontalAlignment="Center"

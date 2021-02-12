@@ -10,6 +10,7 @@ namespace weatherfrog.Infrastructure
     {
         public event EventHandler DisplaySettingsChanged;
         public event EventHandler ResumedFromSuspension;
+        public event EventHandler AboutToSuspend;
 
         private int uCallBack;
 
@@ -29,6 +30,7 @@ namespace weatherfrog.Infrastructure
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             if (e.Mode == PowerModes.Resume) ResumedFromSuspension?.Invoke(sender, e);
+            if (e.Mode == PowerModes.Suspend) AboutToSuspend?.Invoke(sender, e);
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) =>

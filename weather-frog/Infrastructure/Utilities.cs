@@ -11,31 +11,28 @@ namespace weatherfrog.Infrastructure
 {
     class Utilities
     {
-        public static Icon CreateTaskbarIcon(Current current)
-        {
-            if (My.Settings.TaskbarIconStyle == TaskbarIconStyle.Temperature)
-            {
-                DrawingVisual dv = new();
-                using DrawingContext dc = dv.RenderOpen();
-                FormattedText temperatureFormattedText = new(
-                     current.Temp + "°",
-                     new System.Globalization.CultureInfo("en-us"),
-                     FlowDirection.LeftToRight,
-                     Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(),
-                     11,
-                     System.Windows.Media.Brushes.White,
-                     null,
-                     TextFormattingMode.Ideal,
-                     4.0);
-                dc.DrawText(temperatureFormattedText, new System.Windows.Point(0, 0));
+        public static Icon CreateTaskbarIcon(Current current) =>
+            My.Settings.TaskbarIconStyle == TaskbarIconStyle.Temperature
+                ? CreateTaskbarIcon(current.Temp.ToString())
+                : CreateIcon(16, 16, App.Current.Forecast.CurrentWeather.WeatherIcon);
 
-                dc.Close();
-                return CreateIcon(16, 16, dv);
-            }
-            else
-            {
-                return CreateIcon(16, 16, App.Current.Forecast.CurrentWeather.WeatherIcon);
-            }
+        public static Icon CreateTaskbarIcon(string text)
+        {
+            DrawingVisual dv = new();
+            using DrawingContext dc = dv.RenderOpen();
+            FormattedText temperatureFormattedText = new(
+                 text + "°",
+                 new System.Globalization.CultureInfo("en-us"),
+                 FlowDirection.LeftToRight,
+                 Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(),
+                 11,
+                 System.Windows.Media.Brushes.White,
+                 null,
+                 TextFormattingMode.Ideal,
+                 4.0);
+            dc.DrawText(temperatureFormattedText, new System.Windows.Point(0, 0));
+            dc.Close();
+            return CreateIcon(16, 16, dv);
         }
 
         /// <summary>
@@ -76,7 +73,7 @@ namespace weatherfrog.Infrastructure
         }
 
         //https://stackoverflow.com/a/2837158
-        public static System.Windows.Input.Cursor CreateCursor(int width, int height, Visual visual, 
+        public static System.Windows.Input.Cursor CreateCursor(int width, int height, Visual visual,
             System.Drawing.Point hotSpot)
         {
             MemoryStream stream = new();

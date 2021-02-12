@@ -120,6 +120,7 @@ namespace weatherfrog
             SystemEvents sysEvents = new();
             sysEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             sysEvents.ResumedFromSuspension += SystemEvents_ResumedFromSuspension;
+            sysEvents.AboutToSuspend += SystemEvents_AboutToSuspend;
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
@@ -130,6 +131,12 @@ namespace weatherfrog
         // update weather immediately upon waking up from suspension
         private void SystemEvents_ResumedFromSuspension(object sender, EventArgs e) =>
             updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
+
+        private void SystemEvents_AboutToSuspend(object sender, EventArgs e)
+        {
+            if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Offline();
+            notifyIcon.Icon = Utilities.CreateTaskbarIcon("??");
+        }
 
         #region Properties
 
@@ -153,6 +160,8 @@ namespace weatherfrog
                 try
                 {
                     Forecast = await WeatherApi.API.GetForecastAsync(My.Settings.Location);
+                    // TODO: Find out why Forecast is null after resume from suspension. Remove this DEBUG:
+                    if (Forecast == null) throw new ArgumentException("After calling GetForecastAsync, Forecast is Null!");
                     // write Forecast json to file (for debug). Not including #if DEBUG directive here so that
                     // any beta testers can have acces to the file.
                     string forecastPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "forecast.json");
@@ -162,8 +171,8 @@ namespace weatherfrog
                     }
                     catch (Exception) { }
 
-                    if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
                     notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
+                    if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
                 }
                 catch (Exception)
                 {
