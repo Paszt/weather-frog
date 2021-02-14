@@ -3,136 +3,154 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:weatherfrog.Illustrations"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:illustrations="clr-namespace:weatherfrog.Illustrations"
         mc:Ignorable="d"
-        Title="Weather Frog Illustration Metadata File Creator"
+        Title="{Binding Title}"
         Style="{DynamicResource CustomWindowStyle}"
-        Height="380"
-        MinHeight="380"
-        Width="600"
-        MinWidth="600"
+        Height="680"
+        MinHeight="580"
+        Width="1000"
+        MinWidth="800"
         Closing="Window_Closing"
         Loaded="Window_Loaded">
     <Window.DataContext>
-        <illustrations:Illustration />
+        <illustrations:IllustrationViewModel />
     </Window.DataContext>
     <Window.Resources>
-        <ObjectDataProvider x:Key="AlignmentXValues"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="AlignmentX" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="TimeOfDayValues"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="illustrations:TimeOfDay" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="WeatherConditionValues"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="illustrations:WeatherCondition" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <Style TargetType="TextBlock">
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="Margin"
-                    Value="0,0,8,0" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Right" />
-        </Style>
-        <Style TargetType="Label">
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="Margin"
-                    Value="0,0,8,0" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Right" />
-            <Setter Property="Foreground"
-                    Value="{StaticResource ControlDefaultForeground }" />
-        </Style>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
     </Window.Resources>
     <Grid>
-        <StackPanel>
-            <Grid Margin="20"
-                  HorizontalAlignment="Center"
-                  DockPanel.Dock="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!-- Toolbar -->
+        <DockPanel>
+            <DockPanel.Resources>
+                <Style TargetType="Image">
+                    <Setter Property="Width"
+                            Value="28" />
+                    <Setter Property="Margin"
+                            Value="6" />
+                </Style>
+                <Style TargetType="Button"
+                       BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                    <Setter Property="Focusable"
+                            Value="False" />
+                </Style>
+            </DockPanel.Resources>
+            <Button ToolTip="Open Image"
+                    Command="{Binding LoadImageCommand}">
+                <Image Source="{DynamicResource OpenImage}" />
+            </Button>
+            <Button Command="{Binding SavetoFileCommand}">
+                <Image Source="{DynamicResource Save}" />
+            </Button>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="360" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="50" />
-                    <RowDefinition Height="50" />
-                </Grid.RowDefinitions>
-                <Label Content="Filename:" />
-                <TextBox Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"
-                         Grid.Column="1" />
-
-                <Label Content="Alignment:"
-                       Grid.Row="1" />
-                <ComboBox ItemsSource="{Binding Source={StaticResource AlignmentXValues}}"
-                          SelectedItem="{Binding AlignmentX}"
-                          Grid.Row="1"
-                          Grid.Column="1" />
-
-                <Label Content="Below 45°F:"
-                       Grid.Row="2"
-                       Target="{Binding ElementName=cb}" />
-                <StackPanel Grid.Row="2"
-                            Grid.Column="1"
-                            Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding IsBelow45}"
-                              Name="cb" />
-                    <Image Grid.Row="2"
-                           Grid.Column="1"
-                           ToolTip="Check if the illustration is meant to be for temperatures below 45°F. Maybe the frog is wearing a knit hat and sweater, for example." />
-                </StackPanel>
-
-
-                <Label Content="Time of Day:"
-                       Grid.Row="3" />
-                <ComboBox ItemsSource="{Binding Source={StaticResource TimeOfDayValues}}"
-                          SelectedItem="{Binding TimeOfDay}"
-                          Grid.Row="3"
-                          Grid.Column="1" />
-
-                <Label Content="Weather Condition:"
-                       Grid.Row="4" />
-                <ComboBox ItemsSource="{Binding Source={StaticResource WeatherConditionValues}}"
-                          SelectedItem="{Binding WeatherCondition}"
-                          Grid.Row="4"
-                          Grid.Column="1" />
+                <TextBlock Text="Filename: "
+                           VerticalAlignment="Center"
+                           Margin="20,0,5,0" />
+                <TextBox Text="{Binding FileName}"
+                         Grid.Column="1"
+                         Margin="0,0,50,0" />
+                <Button ToolTip="Open Filename Editor Window"
+                        Grid.Column="2"
+                        Command="{Binding BuildFileNameCommand}">
+                    <Image Source="{DynamicResource BuildStyle}" />
+                </Button>
             </Grid>
-            <TextBlock Text="{Binding Json}"
-                       TextWrapping="Wrap"
-                       HorizontalAlignment="Center" />
+        </DockPanel>
+        <!-- Body -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"
+                                  MinWidth="220"
+                                  MaxWidth="400" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <!--Image MetaData-->
+            <StackPanel>
+                <TextBlock Text="Image MetaData"
+                           HorizontalAlignment="Center"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Margin="0,14,0,0" />
+                <Grid Margin="14">
+                    <Grid.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Right" />
+                            <Setter Property="Foreground"
+                                    Value="{StaticResource ControlDefaultForeground}" />
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                            <Setter Property="Margin"
+                                    Value="0,14,8,14" />
+                            <Setter Property="Padding"
+                                    Value="0" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Alignment:"
+                           Grid.Row="0" />
+                    <ComboBox ItemsSource="{Binding Source={StaticResource AlignmentXValues}}"
+                              SelectedItem="{Binding Illustration.AlignmentX}"
+                              Grid.Row="0"
+                              Grid.Column="1" />
 
+                    <Label Content="Time of Day:"
+                           Grid.Row="1" />
+                    <ComboBox ItemsSource="{Binding Source={StaticResource TimeOfDayValues}}"
+                              SelectedItem="{Binding Illustration.TimeOfDay}"
+                              Grid.Row="1"
+                              Grid.Column="1" />
 
-        </StackPanel>
-        <StackPanel Orientation="Horizontal"
-                    Margin="20"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom">
-            <Button Command="{Binding SavetoFileCommand}"
-                    Width="100">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Save File"
-                               Margin="5" />
-                    <Image Source="{DynamicResource SaveDrawingImage}"
-                           Margin="2" />
-                </StackPanel>
-            </Button>
-        </StackPanel>
+                    <Label Content="Weather Condition:"
+                           Grid.Row="2" />
+                    <ComboBox ItemsSource="{Binding Source={StaticResource WeatherConditionValues}}"
+                              SelectedItem="{Binding Illustration.WeatherCondition}"
+                              Grid.Row="2"
+                              Grid.Column="1" />
+
+                    <Label Content="Below 45°F:"
+                           Grid.Row="3"
+                           Target="{Binding ElementName=cb}" />
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                VerticalAlignment="Center">
+                        <CheckBox IsChecked="{Binding Illustration.IsBelow45}"
+                                  Name="cb" />
+                        <Image ToolTip="Check if the illustration is meant to be for temperatures below 45°F. Maybe the frog is wearing a knit hat and sweater, for example."
+                               Source="{DynamicResource Help}" />
+                    </StackPanel>
+
+                </Grid>
+                <TextBlock Text="{Binding Illustration.Json}"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Center"
+                           Margin="0,6,0,0" />
+            </StackPanel>
+            <GridSplitter Grid.Column="1"
+                          HorizontalAlignment="Stretch" />
+        </Grid>
     </Grid>
 </Window>

@@ -19,7 +19,7 @@ namespace weatherfrog
     public partial class App : Application, INotifyPropertyChanged
     {
         private static TaskbarIcon notifyIcon;
-        private static OptionsWindow optionsWindow = null;
+        //private static OptionsWindow optionsWindow = null;
         private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(10);
         private Timer updateWeatherTimer;
 
@@ -32,23 +32,18 @@ namespace weatherfrog
         public static Brush DefaultBackgroundBrush =>
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2"));
 
-        private static OptionsWindow OptionsWindowInstance
-        {
-            get
-            {
-                if (null == optionsWindow ||
-                    (bool)typeof(Window).GetProperty("IsDisposed", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(optionsWindow))
-                { optionsWindow = new(); }
-                return optionsWindow.IsLoaded ? null : optionsWindow;
-            }
-        }
-
         void App_Startup(object sender, StartupEventArgs e)
         {
             if (e.Args.Length > 0 && e.Args[0] == "-i")
             {
                 Illustrations.IllustrationWindow illustrationWindow = new();
                 illustrationWindow.ShowDialog();
+                Current.Shutdown();
+            }
+            else if (e.Args.Length > 0 && e.Args[0] == "-f")
+            {
+                Illustrations.FilenameEditorWindow filenameEditorWindow = new();
+                filenameEditorWindow.ShowDialog();
                 Current.Shutdown();
             }
             else
@@ -76,20 +71,11 @@ namespace weatherfrog
                 //ForecastWindow fs = new();
                 //fs.Show();
 
-                if (My.Settings.ApiKeyValidated)
-                {
-                    Begin();
-                }
+                if (My.Settings.ApiKeyValidated) Begin();
                 else
                 {
-                    if (OptionsWindowInstance.ShowDialog() == false)
-                    {
-                        Current?.Shutdown();
-                    }
-                    else
-                    {
-                        Begin();
-                    }
+                    if (OptionsWindow.Instance.ShowDialog() == false) Current?.Shutdown();
+                    else Begin();
                 }
             }
         }
@@ -151,6 +137,18 @@ namespace weatherfrog
                     ? DefaultBackgroundBrush
                     : (Forecast?.CurrentWeather?.BackgroundBrush);
 
+        // Used in NotifyIconResources.xaml > NotifyIconMenu
+        public static Visibility IsDebug
+        {
+#if DEBUG
+#pragma warning disable IDE0025 // Use expression body for properties
+            get => Visibility.Visible;
+#pragma warning restore IDE0025 // Use expression body for properties
+#else
+        get => Visibility.Collapsed;
+#endif
+        }
+
         #endregion
 
         private async void UpdateWeather()
@@ -190,16 +188,17 @@ namespace weatherfrog
         #region notify icon commands
 
         private RelayCommand exitAppCommand;
-        public RelayCommand ExitAppCommand => exitAppCommand ??= new RelayCommand(() => Current.Shutdown());
-
+        public RelayCommand ExitAppCommand => exitAppCommand ??= new(() => Current.Shutdown());
 
         private RelayCommand showOptionsCommand;
-        public RelayCommand ShowOptionsCommand => showOptionsCommand ??= new RelayCommand(() =>
+        public RelayCommand ShowOptionsCommand => showOptionsCommand ??= new(() =>
         {
-            OptionsWindow ow = OptionsWindowInstance;
-            if (ow != null && ow.ShowDialog().Value)
+            if (OptionsWindow.Instance != null && OptionsWindow.Instance.ShowDialog().Value)
                 updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
         });
+
+        private RelayCommand showForecastCommand;
+        public RelayCommand ShowForecastCommand => showForecastCommand ??= new(() => ForecastWindow.Instance?.Show());
 
         #endregion
 
@@ -207,8 +206,7 @@ namespace weatherfrog
         {
             updateWeatherTimer?.Dispose();
             DesktopWallpaper.Offline();
-            //TODO: Change desktop background to SomethingWrong.png image with message that Weather Frog is not running. 
-            //      Add option to let user select if they want to see somethingwrong.png or revert back to desktop state 
+            //TODO: Add option to let user select if they want to see somethingwrong.png or revert back to desktop state 
             //      before Weather Frog was run. Will need to figure out how to read, save, and re-apply that state; 
             //      probably reading/writing from/to the registry.
         }

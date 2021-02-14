@@ -12,6 +12,8 @@
                 <ResourceDictionary Source="Resources/NotifyIconResources.xaml" />
                 <ResourceDictionary Source="Resources/WeatherIcons.xaml" />
                 <ResourceDictionary Source="Resources/ControlStyles.xaml" />
+                
+                <ResourceDictionary Source="Illustrations/EnumDataProviders.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

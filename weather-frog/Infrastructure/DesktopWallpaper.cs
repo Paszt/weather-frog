@@ -14,7 +14,7 @@ namespace weatherfrog.Infrastructure
     {
         private const int weatherIconWidth = 176;
 
-        internal static void Update(WeatherApi.Models.Forecast forecast)
+        private static Visual CreateVisual(WeatherApi.Models.Forecast forecast)
         {
             ContainerVisual container = new()
             {
@@ -24,7 +24,13 @@ namespace weatherfrog.Infrastructure
                     DrawText(forecast),
                     DrawWeatherIcon(forecast)}
             };
-            SetDesktopWallpaper(container);
+            return container;
+        }
+
+        internal static void Update(WeatherApi.Models.Forecast forecast)
+        {
+            Visual visual = CreateVisual(forecast);
+            SetDesktopWallpaper(visual);
         }
 
         private static void SetDesktopWallpaper(Visual visual) =>
@@ -44,7 +50,8 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-
+            //TODO: Draw Frog Illustration on Wallpaper.
+            System.Diagnostics.Debug.WriteLine(forecast);
             dc.Close();
             return dv;
         }
@@ -120,11 +127,17 @@ namespace weatherfrog.Infrastructure
             return dv;
         }
 
-        private static string SaveBitmap(Visual visual)
+        private static RenderTargetBitmap CreateBitmap(Visual visual)
         {
             RenderTargetBitmap rtbmp = new((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight,
                 96.0, 96.0, PixelFormats.Pbgra32);
             rtbmp.Render(visual);
+            return rtbmp;
+        }
+
+        private static string SaveBitmap(Visual visual)
+        {
+            RenderTargetBitmap rtbmp = CreateBitmap(visual);
             BmpBitmapEncoder enc = new();
             enc.Frames.Add(BitmapFrame.Create(rtbmp));
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wallpaper.bmp");

@@ -1,5 +1,8 @@
-﻿namespace weatherfrog.Illustrations
+﻿using System.Text.Json.Serialization;
+
+namespace weatherfrog.Illustrations
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum WeatherCondition
     {
         Any,

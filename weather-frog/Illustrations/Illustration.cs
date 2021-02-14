@@ -1,24 +1,26 @@
-﻿using Microsoft.Win32;
-using System.ComponentModel;
-using System.IO;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Media;
-using weatherfrog.Infrastructure;
 
 namespace weatherfrog.Illustrations
 {
     public class Illustration : INotifyPropertyChanged
     {
-        private string fileName;
         private AlignmentX alignmentX;
         private bool isBelow45;
         private TimeOfDay timeOfDay;
         private WeatherCondition weatherCondition;
 
-        [JsonPropertyName("file_name")]
-        public string FileName { get => fileName; set => SetProperty(ref fileName, value); }
+        public Illustration() { }
+        public Illustration(Illustration illustration)
+        {
+            AlignmentX = illustration.AlignmentX;
+            IsBelow45 = illustration.IsBelow45;
+            TimeOfDay = illustration.TimeOfDay;
+            WeatherCondition = illustration.WeatherCondition;
+        }
 
         [JsonPropertyName("alignment"), JsonConverter(typeof(JsonStringEnumConverter))]
         public AlignmentX AlignmentX { get => alignmentX; set => SetProperty(ref alignmentX, value); }
@@ -27,33 +29,26 @@ namespace weatherfrog.Illustrations
         /// Boolean value indicating weather the illustration is meant to be for temperatures below 45°F. Maybe
         /// the frog is wearing a knit hat and sweater, for example.
         /// </summary>
-        [JsonPropertyName("below_45")]
+        [JsonPropertyName("is_below_45")]
         public bool IsBelow45 { get => isBelow45; set => SetProperty(ref isBelow45, value); }
 
-        [JsonPropertyName("time_of_day"), JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("time_of_day")]
         public TimeOfDay TimeOfDay { get => timeOfDay; set => SetProperty(ref timeOfDay, value); }
 
-        [JsonPropertyName("weather_condition"), JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("weather_condition")]
         public WeatherCondition WeatherCondition { get => weatherCondition; set => SetProperty(ref weatherCondition, value); }
 
         [JsonIgnore]
         public string Json => JsonSerializer.Serialize(this, new() { WriteIndented = true });
 
-        private RelayCommand saveToFileCommand;
-        [JsonIgnore]
-        public RelayCommand SavetoFileCommand => saveToFileCommand ??= new RelayCommand(async () =>
-        {
-            SaveFileDialog dlg = new() { DefaultExt = ".json", Filter = "JSON (.json)|*.json", FileName = FileName };
-            bool? result = dlg.ShowDialog();
-            if (result == true) await SaveToFile(Path.GetDirectoryName(dlg.FileName));
-        }, () => !string.IsNullOrEmpty(FileName));
+        public override bool Equals(object obj) => obj is Illustration illustration && Equals(illustration);
 
-
-        public async System.Threading.Tasks.Task SaveToFile(string path)
-        {
-            using FileStream createStream = File.Create(Path.Combine(path, fileName + ".json"));
-            await JsonSerializer.SerializeAsync(createStream, this, new() { WriteIndented = true });
-        }
+        public bool Equals(Illustration other) =>
+            AlignmentX == other?.AlignmentX &&
+            isBelow45 == other?.isBelow45 &&
+            TimeOfDay == other?.TimeOfDay &&
+            WeatherCondition == other?.WeatherCondition;
+        public override int GetHashCode() => base.GetHashCode();
 
         #region INotifyPropertyChanged
 

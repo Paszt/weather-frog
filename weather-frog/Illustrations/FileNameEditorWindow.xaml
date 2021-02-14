@@ -1,0 +1,106 @@
+﻿<Window x:Class="weatherfrog.Illustrations.FilenameEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:illustrations="clr-namespace:weatherfrog.Illustrations"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Weather Frog Illustration FileName Generator"
+        Height="500"
+        Width="800"
+        Style="{DynamicResource CustomWindowStyle}"
+        WindowStartupLocation="CenterScreen"
+        Icon="{Binding Icon}"
+        Closing="Window_Closing"
+        Loaded="Window_Loaded">
+    <Window.DataContext>
+        <illustrations:FileNameEditorViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="Label">
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="0,14,5,14" />
+                <Setter Property="HorizontalAlignment"
+                        Value="right" />
+                <Setter Property="Foreground"
+                        Value="{StaticResource ControlDefaultForeground}" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}"
+                   BasedOn="{StaticResource ComboboxStyle}">
+                <Setter Property="Width"
+                        Value="240" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,16">
+            <Label Content="Filename: " />
+            <TextBox Width="600"
+                     IsReadOnly="True"
+                     Text="{Binding FileName}" />
+        </StackPanel>
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Content="Weather Condition: " />
+            <ComboBox ItemsSource="{Binding Source={StaticResource WeatherConditionValues}}"
+                      SelectedItem="{Binding WeatherCondition}"
+                      Grid.Column="1" />
+
+            <Label Content="Location: "
+                   Grid.Row="1" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource IllustrationLocationValues}}"
+                      IsEditable="True"
+                      Text="{Binding Location}"
+                      Grid.Row="1"
+                      Grid.Column="1" />
+
+            <Label Content="Time of Day: "
+                   Grid.Row="2" />
+            <ComboBox ItemsSource="{Binding Source={StaticResource TimeOfDayValues}}"
+                      SelectedItem="{Binding TimeOfDay}"
+                      Grid.Row="2"
+                      Grid.Column="1" />
+
+            <Label Content="Activity: "
+                   Grid.Row="3" />
+            <TextBox Grid.Row="3"
+                     Grid.Column="1"
+                     Text="{Binding Activity, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Label Content="Below 45°F: "
+                   Grid.Row="4" />
+            <StackPanel Orientation="Horizontal"
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                <CheckBox IsChecked="{Binding IsBelow45}"
+                          Name="cb" />
+                <Image ToolTip="Check if the illustration is meant to be for temperatures below 45°F. Maybe the frog is wearing a knit hat and sweater, for example."
+                       Source="{DynamicResource Help}" />
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</Window>

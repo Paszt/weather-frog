@@ -12,7 +12,6 @@ namespace weatherfrog.ViewModels
     {
         public OptionsViewModel()
         {
-            Icon = (ImageSource)System.Windows.Application.Current.FindResource("FrogHeadDrawingImage");
             Location = My.Settings.Location;
             TaskbarIconStyle = My.Settings.TaskbarIconStyle;
             TestPassed = My.Settings.ApiKeyValidated;
@@ -106,7 +105,7 @@ namespace weatherfrog.ViewModels
         public bool TestNotPassed => !testPassed;
 
         private ImageSource icon;
-        public ImageSource Icon { get => icon; set => SetProperty(ref icon, value); }
+        public ImageSource Icon => icon ??= (ImageSource)System.Windows.Application.Current.FindResource("FrogHeadDrawingImage");
 
         public static Dictionary<WeatherApi.Models.UnitSystem, string> UnitChoices => new()
         {

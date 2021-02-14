@@ -1,15 +1,25 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:weatherfrog">
 
     <ContextMenu x:Key="NotifyIconMenu">
         <MenuItem Header="Exit"
                   Icon="{DynamicResource ExitIconImage}"
                   Command="{Binding ExitAppCommand}">
         </MenuItem>
-        <!--<Separator />-->
+        <Separator />
+        <MenuItem Header="Debug"
+                  Visibility="{x:Static local:App.IsDebug}">
+            <MenuItem Header="Popup Window"
+                      Command="{Binding ShowPopupWindowCommand}" />
+            <MenuItem Header="Weather Icons Window"
+                      Command="{Binding ShowWeatherIconsWindowCommand}" />
+        </MenuItem>
         <MenuItem Header="Options"
                   Icon="{DynamicResource OptionsImage}"
                   Command="{Binding ShowOptionsCommand}" />
+        <MenuItem Header="Forecast"
+                  Command="{Binding ShowForecastCommand}" />
     </ContextMenu>
 
     <DrawingImage x:Key="ExitDrawingImage">
@@ -51,4 +61,3 @@
            Source="{StaticResource OptionsDrawingImage}" />
 
 </ResourceDictionary>
-    

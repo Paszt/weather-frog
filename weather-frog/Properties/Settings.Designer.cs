@@ -141,5 +141,29 @@ namespace weatherfrog.Properties {
                 this["IllustrationWindowPlacement"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ForecastWindowPlacement {
+            get {
+                return ((string)(this["ForecastWindowPlacement"]));
+            }
+            set {
+                this["ForecastWindowPlacement"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FileNameEditorWindowPlacement {
+            get {
+                return ((string)(this["FileNameEditorWindowPlacement"]));
+            }
+            set {
+                this["FileNameEditorWindowPlacement"] = value;
+            }
+        }
     }
 }

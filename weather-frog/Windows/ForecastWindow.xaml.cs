@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using weatherfrog.Extensions;
 
 namespace weatherfrog
 {
@@ -19,9 +9,30 @@ namespace weatherfrog
     /// </summary>
     public partial class ForecastWindow : Window
     {
-        public ForecastWindow()
+        private static ForecastWindow instance;
+        public static ForecastWindow Instance
         {
-            InitializeComponent();
+            get
+            {
+                if (instance == null || (bool)typeof(Window).GetProperty("IsDisposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(instance))
+                    return instance = new();
+                if (instance.IsLoaded)
+                {
+                    instance.Activate();
+                    return null;
+                }
+                return instance;
+            }
+        }
+
+        public ForecastWindow() => InitializeComponent();
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) => this.SetPlacement(My.Settings.ForecastWindowPlacement);
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            My.Settings.ForecastWindowPlacement = this.GetPlacement();
+            My.Settings.Save();
         }
     }
 }

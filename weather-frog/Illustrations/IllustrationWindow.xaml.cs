@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using weatherfrog.Extensions;
 
 namespace weatherfrog.Illustrations
@@ -20,18 +8,16 @@ namespace weatherfrog.Illustrations
     /// </summary>
     public partial class IllustrationWindow : Window
     {
-        public IllustrationWindow()
-        {
-            InitializeComponent();
-        }
+        public IllustrationWindow() => InitializeComponent();
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.SetPlacement(My.Settings.IllustrationWindowPlacement);
-        }
+        private void Window_Loaded(object sender, RoutedEventArgs e) => this.SetPlacement(My.Settings.IllustrationWindowPlacement);
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (DataContext is IllustrationViewModel ivm)
+            {
+                if (!await ivm.HandleIsDirty()) e.Cancel = true;
+            }
             My.Settings.IllustrationWindowPlacement = this.GetPlacement();
             My.Settings.Save();
         }

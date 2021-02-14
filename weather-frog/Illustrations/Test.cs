@@ -9,8 +9,8 @@ namespace weatherfrog.Illustrations
     {
         readonly List<Illustration> illustrations = new()
         {
-            new Illustration() { AlignmentX = AlignmentX.Left, FileName = "1", TimeOfDay = TimeOfDay.Night, WeatherCondition = WeatherCondition.Sleet },
-            new Illustration() { AlignmentX = AlignmentX.Center, FileName = "2", TimeOfDay = TimeOfDay.Day, WeatherCondition = WeatherCondition.Rain },
+            new Illustration() { AlignmentX = AlignmentX.Left, TimeOfDay = TimeOfDay.Night, WeatherCondition = WeatherCondition.Sleet },
+            new Illustration() { AlignmentX = AlignmentX.Center, TimeOfDay = TimeOfDay.Day, WeatherCondition = WeatherCondition.Rain },
         };
 
         public Test() =>  Console.WriteLine(JsonSerializer.Serialize(illustrations, new() { WriteIndented = true }));

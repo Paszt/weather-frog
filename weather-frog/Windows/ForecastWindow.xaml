@@ -9,7 +9,9 @@
         Height="450"
         Width="800"
         Foreground="{StaticResource ControlDefaultForeground}"
-        Style="{DynamicResource CustomWindowStyle}">
+        Style="{DynamicResource CustomWindowStyle}"
+        Closing="Window_Closing"
+        Loaded="Window_Loaded">
     <Window.DataContext>
         <viewModels:ForecastViewModel />
     </Window.DataContext>
