@@ -15,7 +15,9 @@ namespace weatherfrog.Resources
 
         public ForecastDesignData()
         {
+#pragma warning disable IDE0021 // Use expression body for constructors
             Forecast = JsonSerializer.Deserialize<Forecast>(forecastJson1);
+#pragma warning restore IDE0021 // Use expression body for constructors
 
             //Forecast = new()
             //{

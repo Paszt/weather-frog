@@ -1,20 +1,56 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using weatherfrog.Infrastructure;
+using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog.Illustrations
 {
     public class IllustrationViewModel : INotifyPropertyChanged
     {
+        private readonly DesktopWallpaper desktopWallpaper;
+
+        public IllustrationViewModel()
+        {
+            desktopWallpaper = new(Width, Height);
+            Forecast = new()
+            {
+                Location = new()
+                {
+                    Name = "Monkeys Eyebrow",
+                    Region = "Kentucky"
+                },
+                CurrentWeather = new()
+                {
+                    TempF = 67,
+                    TempC = 20,
+                    FeelsLikeF = 65,
+                    FeelsLikeC = 19,
+                    IsDay = true,
+                    Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }
+                },
+                Days = new()
+                {
+                    Forecastdays = new()
+                    {
+                        new()
+                        {
+                            WeatherData = new()
+                            {
+                                DailyWillItSnow = false,
+                                DailyWillItRain = true,
+                                DailyChanceOfRain = 88,
+                            }
+                        }
+                    }
+                },
+            };
+            Wallpaper = desktopWallpaper.CreateBitmap(Forecast);
+        }
 
         private bool isDirty;
         internal bool IsDirty
@@ -35,7 +71,13 @@ namespace weatherfrog.Illustrations
         {
             get => illustration;
             set
-            { if (SetProperty(ref illustration, value)) Illustration.PropertyChanged += Illustration_PropertyChanged; }
+            {
+                if (SetProperty(ref illustration, value))
+                {
+                    Illustration.PropertyChanged += Illustration_PropertyChanged;
+                    UpdateIsDirty();
+                }
+            }
         }
 
         private string imageFilePath;
@@ -47,11 +89,12 @@ namespace weatherfrog.Illustrations
                 SetProperty(ref imageFilePath, value);
                 FileName = Path.GetFileNameWithoutExtension(value);
                 NotifyPropertyChanged(nameof(Title));
+                UpdateIsDirty();
             }
         }
 
         private string fileName;
-        public string FileName { get => fileName; set => SetProperty(ref fileName, value); }
+        public string FileName { get => fileName; set { if (SetProperty(ref fileName, value)) UpdateIsDirty(); } }
 
         public string Title
         {
@@ -64,6 +107,18 @@ namespace weatherfrog.Illustrations
                 return returnValue;
             }
         }
+
+        private System.Windows.Media.ImageSource wallpaper;
+        public System.Windows.Media.ImageSource Wallpaper { get => wallpaper; set => SetProperty(ref wallpaper, value); }
+
+        private double width = 1600.0d;
+        public double Width { get => width; set => SetProperty(ref width, value); }
+
+        private double height = 900.0d;
+        public double Height { get => height; set => SetProperty(ref height, value); }
+
+        private Forecast forecast;
+        public Forecast Forecast { get => forecast; set => SetProperty(ref forecast, value); }
 
         private void Illustration_PropertyChanged(object sender, PropertyChangedEventArgs e) => UpdateIsDirty();
 
@@ -162,7 +217,6 @@ namespace weatherfrog.Illustrations
                 return false;
             storage = value;
             NotifyPropertyChanged(propertyName);
-            UpdateIsDirty();
             return true;
         }
 

@@ -1,26 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace weatherfrog.Resources
 {
     /// <summary>
     /// Interaction logic for TaskbarBalloon.xaml
+    /// Dragging down to hide the HourlyGraph is handled here. 
+    /// Dragging left/right is handled in the HourlyGraph usercontrol code behind.
     /// </summary>
     public partial class TaskbarBalloon : UserControl
     {
+
         private readonly TranslateTransform GraphTranslateTransform;
 
         public TaskbarBalloon()
@@ -68,7 +62,7 @@ namespace weatherfrog.Resources
                 if (Math.Abs(v.X) < 20 && v.Y < -20) { RootGrid_MouseLeftButtonUp(null, null); IsTrackingYDelta = false; }
                 // A drag to the left or right more than 20 means the user is sliding the graph left/right, 
                 // so stop tracking Y change.
-                if (Math.Abs(v.X) > 20) { IsTrackingYDelta = false; }
+                if (Math.Abs(v.X) > 20) IsTrackingYDelta = false;
             }
         }
     }

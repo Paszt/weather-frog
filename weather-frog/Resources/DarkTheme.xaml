@@ -13,6 +13,8 @@
                      Color="#FF54545C" />
     <SolidColorBrush x:Key="ControlDefaultForeground"
                      Color="#FFEBEBEB" />
+    <SolidColorBrush x:Key="ControlDimForeground"
+                     Color="#FFDBDBDB" />
     <SolidColorBrush x:Key="ControlDefaultBackground"
                      Color="#FF2D2D2D" />
     <SolidColorBrush x:Key="ControlDefaultBorderBrush"
@@ -147,7 +149,7 @@
     </Style>
 
     <!--CheckBox-->
-    <Style TargetType="CheckBox">
+    <Style TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground"
                 Value="{StaticResource ControlDefaultForeground}" />
         <Setter Property="HorizontalContentAlignment"
@@ -164,7 +166,7 @@
                 Value="1" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="CheckBox">
+                <ControlTemplate TargetType="{x:Type CheckBox}">
                     <Grid Background="Transparent">
                         <Grid.Resources>
                             <Style x:Key="StandardRectangle"
@@ -432,7 +434,7 @@
                 <ControlTemplate TargetType="{x:Type ComboBox}">
                     <Grid>
                         <Grid.Resources>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Margin"
                                         Value="6" />
                                 <Setter Property="HorizontalAlignment"
@@ -591,7 +593,7 @@
     </Style>-->
 
     <!--GridSplitter-->
-    <Style TargetType="GridSplitter">
+    <Style TargetType="{x:Type GridSplitter}">
         <Setter Property="Background"
                 Value="Transparent"></Setter>
         <Setter Property="Template">
@@ -626,7 +628,7 @@
     </Style>
 
     <!--ListBox-->
-    <Style TargetType="ListBox">
+    <Style TargetType="{x:Type ListBox}">
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
@@ -1144,7 +1146,7 @@
     </Style>
 
     <!--ToolTip-->
-    <Style TargetType="ToolTip">
+    <Style TargetType="{x:Type ToolTip}">
         <Setter Property="Foreground"
                 Value="{StaticResource ControlDefaultForeground}" />
         <Setter Property="Template">
@@ -1543,7 +1545,7 @@
     </ControlTemplate>
 
     <!--********************** Implicit Styles *********************** -->
-    <Style TargetType="ComboBox"
+    <Style TargetType="{x:Type ComboBox}"
            BasedOn="{StaticResource ComboboxStyle}" />
 
 </ResourceDictionary>

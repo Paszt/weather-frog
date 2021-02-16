@@ -71,7 +71,7 @@ namespace weatherfrog.Illustrations
 
         #region INotifyDataErrorInfo
 
-        private Dictionary<string, List<string>> errors = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> errors = new Dictionary<string, List<string>>();
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         public System.Collections.IEnumerable GetErrors(string propertyName) =>

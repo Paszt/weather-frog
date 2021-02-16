@@ -23,5 +23,8 @@ namespace weatherfrog.WeatherApi.Models
 
         [JsonIgnore]
         public static string TempUnitAbbreviated => (My.Settings.UnitSystem == UnitSystem.Imperial) ? "F" : "C";
+
+        [JsonIgnore]
+        public static string WindUnitAbbreviated => (My.Settings.UnitSystem == UnitSystem.Imperial) ? "mph" : "kph";
     }
 }

@@ -33,12 +33,12 @@
                 <x:Type TypeName="infrastructure:TaskbarIconStyle" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <Style TargetType="TextBox"
+        <Style TargetType="{x:Type TextBox}"
                BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="MinWidth"
                     Value="380" />
         </Style>
-        <Style TargetType="Label">
+        <Style TargetType="{x:Type Label}">
             <Setter Property="VerticalAlignment"
                     Value="Center" />
             <Setter Property="Margin"

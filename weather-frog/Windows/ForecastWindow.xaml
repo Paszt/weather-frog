@@ -3,77 +3,177 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:resources="clr-namespace:weatherfrog.Resources"
         xmlns:viewModels="clr-namespace:weatherfrog.ViewModels"
         mc:Ignorable="d"
         Title="ForecastWindow"
         Height="450"
         Width="800"
         Foreground="{StaticResource ControlDefaultForeground}"
+        Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
         Style="{DynamicResource CustomWindowStyle}"
         Closing="Window_Closing"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        d:Width="1600">
     <Window.DataContext>
         <viewModels:ForecastViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
         <ListBox ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                  ItemsSource="{Binding Forecast.Days.Forecastdays}"
-                 HorizontalAlignment="Center"
-                 Margin="20">
+                 ScrollViewer.CanContentScroll="False"
+                 AlternationCount="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Border Background="{Binding WeatherData.BackgroundBrush}"
-                                Grid.ColumnSpan="3"
-                                Grid.RowSpan="2"
-                                BorderBrush="Black"
-                                BorderThickness="1" />
+                    <Grid Background="{Binding WeatherData.BackgroundBrush}">
+                        <!-- MaxWidth = 24 Hrs * 42 (Hour Width) -->
+                        <StackPanel MaxWidth="1008">
+                            <Expander Style="{StaticResource PlainExpander}">
+                                <Expander.Header>
+                                    <Grid Margin="14,20,14,2"
+                                          Height="60">
+                                        <Grid.Resources>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="FontSize"
+                                                        Value="14" />
+                                                <Setter Property="Foreground"
+                                                        Value="{StaticResource ControlDefaultForeground }" />
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="30" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding DisplayDate}"
+                                                   VerticalAlignment="Bottom"
+                                                   Margin="0,0,0,2"
+                                                   FontWeight="DemiBold" />
+                                        <TextBlock Text="{Binding WeatherData.Condition.Text}"
+                                                   Grid.Row="1"
+                                                   VerticalAlignment="Top"
+                                                   Margin="0,2,0,0" />
 
-                        <StackPanel>
-                            <Grid Height="70"
-                                  Width="500">
-                                <Grid Margin="8">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="30" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding DisplayDate}"
-                                               VerticalAlignment="Bottom"
-                                               Margin="0,0,0,2" />
-                                    <TextBlock Text="{Binding WeatherData.Condition.Text}"
-                                               Grid.Row="1"
-                                               VerticalAlignment="Top"
-                                               Margin="0,2,0,0" />
+                                        <Image Source="{Binding WeatherData.WeatherIcon}"
+                                               Grid.Column="1"
+                                               Grid.RowSpan="2"
+                                               Width="70"
+                                               Margin="20,00" />
 
-                                    <Image Source="{Binding WeatherData.WeatherIcon}"
-                                           Grid.Column="1"
-                                           Grid.RowSpan="2"
-                                           Width="70"
-                                           Margin="20,00" />
+                                        <TextBlock Text="{Binding WeatherData.MaxTemp, StringFormat={}{0}°}"
+                                                   Grid.Column="2"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Bottom"
+                                                   Margin="0,0,0,2"
+                                                   FontWeight="DemiBold" />
+                                        <TextBlock Text="{Binding WeatherData.MinTemp, StringFormat={}{0}°}"
+                                                   Grid.Column="2"
+                                                   Grid.Row="1"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Top"
+                                                   Margin="0,2,0,0" />
+                                    </Grid>
+                                </Expander.Header>
+                                <Expander.Content>
+                                    <Grid x:Name="extraInfoContainerGrid">
+                                        <Grid Margin="14,0,14,0"
+                                              MaxWidth="300"
+                                              HorizontalAlignment="Left"
+                                              x:Name="extraInfo">
+                                            <Grid.Resources>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="Margin"
+                                                            Value="0,2" />
+                                                    <Setter Property="Foreground"
+                                                            Value="{StaticResource ControlDefaultForeground }" />
+                                                </Style>
+                                            </Grid.Resources>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="150" />
+                                                <ColumnDefinition Width="200" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Text="Wind"
+                                                       Foreground="{StaticResource ControlDimForeground}" />
+                                            <TextBlock Grid.Column="1"
+                                                       FontWeight="DemiBold">
+                                    <TextBlock Text="{Binding WeatherData.MaxWind}" />
+                                    <TextBlock Text="{Binding Path=DataContext.Forecast.WindUnitAbbreviated, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
+                                </TextBlock>
 
-                                    <TextBlock Text="{Binding WeatherData.MaxTemp, StringFormat={}{0}°}"
-                                               Grid.Column="2"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Bottom"
-                                               Margin="0,0,0,2" />
-                                    <TextBlock Text="{Binding WeatherData.MinTemp, StringFormat={}{0}°}"
-                                               Grid.Column="2"
-                                               Grid.Row="1"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Top"
-                                               Margin="0,2,0,0" />
+                                            <TextBlock Text="Humidity"
+                                                       Grid.Row="1"
+                                                       Foreground="{StaticResource ControlDimForeground}" />
+                                            <TextBlock Text="{Binding WeatherData.AvgHumidity, StringFormat={}{0}%}"
+                                                       Grid.Row="1"
+                                                       Grid.Column="1"
+                                                       FontWeight="DemiBold" />
 
-                                </Grid>
-                            </Grid>
-                            <StackPanel>
-                                <!-- Hourly Data -->
-                                <ListBox ItemsSource="{Binding HourlyWeather}"
-                                         MaxWidth="500">
+                                            <TextBlock Text="UV Index"
+                                                       Grid.Row="2"
+                                                       Foreground="{StaticResource ControlDimForeground}" />
+                                            <TextBlock Text="{Binding WeatherData.UV}"
+                                                       Grid.Row="2"
+                                                       Grid.Column="1"
+                                                       FontWeight="DemiBold" />
+
+                                            <TextBlock Text="Chance of rain"
+                                                       Grid.Row="3"
+                                                       Foreground="{StaticResource ControlDimForeground}"
+                                                       Visibility="{Binding WeatherData.DailyWillItRain, Converter={StaticResource booleanToVisibilityConverter}}" />
+                                            <TextBlock Text="{Binding WeatherData.DailyChanceOfRain, StringFormat={}{0}%}"
+                                                       Grid.Row="3"
+                                                       Grid.Column="1"
+                                                       FontWeight="DemiBold"
+                                                       Visibility="{Binding WeatherData.DailyWillItRain, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                                            <TextBlock Text="Chance of snow"
+                                                       Grid.Row="4"
+                                                       Foreground="{StaticResource ControlDimForeground}"
+                                                       Visibility="{Binding WeatherData.DailyWillItSnow, Converter={StaticResource booleanToVisibilityConverter}}" />
+                                            <TextBlock Text="{Binding WeatherData.DailyChanceOfSnow, StringFormat={}{0}%}"
+                                                       Grid.Row="4"
+                                                       Grid.Column="1"
+                                                       FontWeight="DemiBold"
+                                                       Visibility="{Binding WeatherData.DailyWillItSnow, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                                            <TextBlock Text="Sunrise/sunset"
+                                                       Grid.Row="5"
+                                                       Foreground="{StaticResource ControlDimForeground}" />
+                                            <TextBlock Grid.Row="5"
+                                                       Grid.Column="1"
+                                                       FontWeight="DemiBold">
+                                    <TextBlock  Text="{Binding AstronomyData.Sunrise, StringFormat={}{0}\,}" />
+                                    <TextBlock Text="{Binding AstronomyData.Sunset}" />
+                                </TextBlock>
+                                        </Grid>
+                                    </Grid>
+                                </Expander.Content>
+                            </Expander>
+                            <resources:HourlyGraph Forecast="{Binding Path=DataContext.Forecast, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                                   Forecastday="{Binding Index}"
+                                                   x:Name="HourlyGraph"
+                                                   DisplaysTomorrowMorning="False"
+                                                   Margin="0,8,0,10" />
+                            <!--<StackPanel>
+                                -->
+                            <!-- Hourly Data -->
+                            <!--
+                                <ListBox ItemsSource="{Binding HourlyWeather}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Margin="2,0"
@@ -97,7 +197,9 @@
                                                        Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </ListBox.ItemsPanel>
-                                    <!-- The below nearly empty ItemContainerStyle does away with the padding of the default style -->
+                                    -->
+                            <!-- The below nearly empty ItemContainerStyle does away with the padding of the default style -->
+                            <!--
                                     <ListBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ListBoxItem}">
                                             <Setter Property="Template">
@@ -110,7 +212,7 @@
                                         </Style>
                                     </ListBox.ItemContainerStyle>
                                 </ListBox>
-                            </StackPanel>
+                            </StackPanel>-->
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
@@ -122,10 +224,12 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                <ContentPresenter Margin="0,0,0,-1" />
+                                <ContentPresenter Margin="0,0,0,0" />
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch"></Setter>
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>

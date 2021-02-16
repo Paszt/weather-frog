@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.IO;
 using System.Text.Json;
+using weatherfrog.Resources;
 
 namespace weatherfrog
 {
@@ -22,6 +23,7 @@ namespace weatherfrog
         //private static OptionsWindow optionsWindow = null;
         private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(10);
         private Timer updateWeatherTimer;
+        private DesktopWallpaper desktopWallpaper;
 
         // Used for Singleton check
 #pragma warning disable IDE0052 // Remove unread private members
@@ -107,11 +109,18 @@ namespace weatherfrog
             sysEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             sysEvents.ResumedFromSuspension += SystemEvents_ResumedFromSuspension;
             sysEvents.AboutToSuspend += SystemEvents_AboutToSuspend;
+
+            desktopWallpaper = new(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
         {
-            if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
+            if (My.Settings.ChangeDesktopBackground)
+            {
+                desktopWallpaper.Width = SystemParameters.WorkArea.Width;
+                desktopWallpaper.Height = SystemParameters.WorkArea.Height;
+                desktopWallpaper?.Update(Forecast);
+            }
         }
 
         // update weather immediately upon waking up from suspension
@@ -120,7 +129,7 @@ namespace weatherfrog
 
         private void SystemEvents_AboutToSuspend(object sender, EventArgs e)
         {
-            if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Offline();
+            if (My.Settings.ChangeDesktopBackground) desktopWallpaper?.Offline();
             notifyIcon.Icon = Utilities.CreateTaskbarIcon("??");
         }
 
@@ -157,11 +166,11 @@ namespace weatherfrog
             {
                 try
                 {
-                    Forecast = await WeatherApi.API.GetForecastAsync(My.Settings.Location);
-                    // TODO: Find out why Forecast is null after resume from suspension. Remove this DEBUG:
+                    Forecast = await WeatherApi.Api.GetForecastAsync(My.Settings.Location);
+                    // TODO: Find out why Forecast is null after resume from suspension. Remove this:
                     if (Forecast == null) throw new ArgumentException("After calling GetForecastAsync, Forecast is Null!");
                     // write Forecast json to file (for debug). Not including #if DEBUG directive here so that
-                    // any beta testers can have acces to the file.
+                    // any alpha/beta testers can have acces to the file.
                     string forecastPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "forecast.json");
                     try
                     {
@@ -170,12 +179,12 @@ namespace weatherfrog
                     catch (Exception) { }
 
                     notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
-                    if (My.Settings.ChangeDesktopBackground) DesktopWallpaper.Update(Forecast);
+                    if (My.Settings.ChangeDesktopBackground) desktopWallpaper.Update(Forecast);
                 }
                 catch (Exception)
                 {
                     Forecast = null;
-                    DesktopWallpaper.NetworkError();
+                    desktopWallpaper.NetworkError();
                     updateWeatherTimer.Change(TimeSpan.FromSeconds(5), UpdateWeatherInterval);
                 }
             }
@@ -193,19 +202,26 @@ namespace weatherfrog
         private RelayCommand showOptionsCommand;
         public RelayCommand ShowOptionsCommand => showOptionsCommand ??= new(() =>
         {
-            if (OptionsWindow.Instance != null && OptionsWindow.Instance.ShowDialog().Value)
+            if (OptionsWindow.Instance.ShowDialog().Value)
                 updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
         });
 
         private RelayCommand showForecastCommand;
         public RelayCommand ShowForecastCommand => showForecastCommand ??= new(() => ForecastWindow.Instance?.Show());
 
+        private RelayCommand showWeatherIconsWindowCommand;
+        public RelayCommand ShowWeatherIconsWindowCommand => showWeatherIconsWindowCommand ??= new(() =>
+            WeatherIconsDisplayWindow.Instance?.Show());
+
+        private RelayCommand showPopupWindowCommand;
+        public RelayCommand ShowPopupWindowCommand => showPopupWindowCommand ??= new(() => Popupwindow.Instance.Show());
+
         #endregion
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             updateWeatherTimer?.Dispose();
-            DesktopWallpaper.Offline();
+            desktopWallpaper?.Offline();
             //TODO: Add option to let user select if they want to see somethingwrong.png or revert back to desktop state 
             //      before Weather Frog was run. Will need to figure out how to read, save, and re-apply that state; 
             //      probably reading/writing from/to the registry.

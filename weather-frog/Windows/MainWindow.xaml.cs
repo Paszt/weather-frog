@@ -23,29 +23,26 @@ namespace weatherfrog
         private static void DoTask()
         {
             //74.196.61.186
-            IpLookup lookup = Task.Run(async () => await API.LookupIpAsync("213.31.76.60")).Result;
+            IpLookup lookup = Task.Run(async () => await Api.LookupIpAsync("213.31.76.60")).Result;
             string IpAddress = lookup.Ip;
 
-            CurrentWeather current = Task.Run(async () => await API.GetCurrentWeatherAsync("Chocowinity, NC")).Result;
+            CurrentWeather current = Task.Run(async () => await Api.GetCurrentWeatherAsync("Chocowinity, NC")).Result;
             double tempc = current.Data.TempC.Value;
 
-            Forecast foreCast = Task.Run(async () => await API.GetForecastAsync("Chocowinity, NC")).Result;
+            Forecast foreCast = Task.Run(async () => await Api.GetForecastAsync("Chocowinity, NC")).Result;
             ForecastDays fsa = foreCast.Days;
 
-            Forecast historical = Task.Run(async () => await API.GetHistoricalWeatherAsync("Christchurch", System.DateTime.Now.AddDays(-2))).Result;
+            Forecast historical = Task.Run(async () => await Api.GetHistoricalWeatherAsync("Christchurch", System.DateTime.Now.AddDays(-2))).Result;
             ForecastDays hds = historical.Days;
 
-            Astronomy astro = Task.Run(async () => await API.GetAtronomyAsync("Christchurch", System.DateTime.Now.AddDays(-2))).Result;
+            Astronomy astro = Task.Run(async () => await Api.GetAtronomyAsync("Christchurch", System.DateTime.Now.AddDays(-2))).Result;
             AstronomyProps data = astro.Data;
 
-            TimeZone timezone = Task.Run(async () => await API.GetTimeZoneAsync("London")).Result;
+            TimeZone timezone = Task.Run(async () => await Api.GetTimeZoneAsync("London")).Result;
             string localTime = timezone.Data.Localtime;
 
         }
 
-        private void LookupButton_Click(object sender, RoutedEventArgs e)
-        {
-            DoTask();
-        }
+        private void LookupButton_Click(object sender, RoutedEventArgs e) => DoTask();
     }
 }

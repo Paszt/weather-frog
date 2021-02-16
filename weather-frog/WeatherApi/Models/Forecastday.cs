@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text.Json.Serialization;
 
 namespace weatherfrog.WeatherApi.Models
@@ -11,21 +12,13 @@ namespace weatherfrog.WeatherApi.Models
         private DailyWeatherData weatherData;
         private AstronomyData astronomyData;
         private List<Hour> hourlyWeather;
+        private int index;
 
         [JsonPropertyName("date")]
         public DateTimeOffset? Date { get => date; set => SetProperty(ref date, value); }
 
-        public string DisplayDate
-        {
-            get
-            {
-                if (Date == DateTime.Today)
-                {
-                    return "Today";
-                }
-                else { return Date.Value.ToString("dddd, MMMM d"); }
-            }
-        }
+        [JsonIgnore]
+        public string DisplayDate => Date == DateTime.Today ? "Today" : Date.Value.ToString("dddd, MMMM d");
 
         [JsonPropertyName("date_epoch")]
         public long? DateEpoch { get => dateEpoch; set => SetProperty(ref dateEpoch, value); }
@@ -39,5 +32,7 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("hour")]
         public List<Hour> HourlyWeather { get => hourlyWeather; set => SetProperty(ref hourlyWeather, value); }
 
+        [JsonIgnore]
+        public int Index { get => index; set => SetProperty(ref index, value); }
     }
 }

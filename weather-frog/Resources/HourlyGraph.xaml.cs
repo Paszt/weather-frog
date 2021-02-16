@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog.Resources
@@ -49,15 +49,35 @@ namespace weatherfrog.Resources
 
         #region Dependency Properties
 
+        public static readonly DependencyProperty ForecastProperty =
+              DependencyProperty.Register("Forecast", typeof(Forecast),
+                typeof(HourlyGraph), new PropertyMetadata(null, OnForecastChanged));
+
         public Forecast Forecast
         {
             get => (Forecast)GetValue(ForecastProperty);
             set => SetValue(ForecastProperty, value);
         }
 
-        public static readonly DependencyProperty ForecastProperty =
-              DependencyProperty.Register("Forecast", typeof(Forecast),
-                typeof(HourlyGraph), new PropertyMetadata(null, OnForecastChanged));
+        public static readonly DependencyProperty ForecastdayProperty =
+            DependencyProperty.Register("Forecastday", typeof(int),
+                typeof(HourlyGraph), new PropertyMetadata(0, OnForecastChanged));
+
+        public int Forecastday
+        {
+            get => (int)GetValue(ForecastdayProperty);
+            set => SetValue(ForecastdayProperty, value);
+        }
+
+        public static readonly DependencyProperty DisplaysTomorrowMorningProperty =
+            DependencyProperty.Register("DisplaysTomorrowMorning", typeof(bool),
+                typeof(HourlyGraph), new PropertyMetadata(true, OnForecastChanged));
+
+        public bool DisplaysTomorrowMorning
+        {
+            get => (bool)GetValue(DisplaysTomorrowMorningProperty);
+            set => SetValue(DisplaysTomorrowMorningProperty, value);
+        }
 
         private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ((HourlyGraph)d).OnForecastChanged();
@@ -76,12 +96,13 @@ namespace weatherfrog.Resources
             {
                 const int lastHourToShow = 10;
                 //Rectangle.Fill = Brushes.Transparent;
-                List<Hour> upcomingHours = null;
+                List<Hour> upcomingHours = new();
                 // Get hourly data from the first day, today, starting with and including the current hour.
-                int localTimeHour = DateTime.Parse(Forecast?.Location?.Localtime).Hour;
-                upcomingHours = Forecast.Days?.Forecastdays[0]?.HourlyWeather?.Where(h => h.Time.Hour > localTimeHour - 1).ToList();
-                // Get the hourly data from the next day, tomorrow, up to 10 AM.
-                upcomingHours.AddRange(Forecast.Days?.Forecastdays[1]?.HourlyWeather?.Where(h => h.Time.Hour <= lastHourToShow).ToList());
+                DateTime localTime = DateTime.Parse(Forecast?.Location?.Localtime);
+                upcomingHours = Forecast.Days?.Forecastdays[Forecastday]?.HourlyWeather?.Where(h => h.Time > localTime.AddHours(-1)).ToList();
+                // Get the hourly data from the next day, up to 10 AM.
+                if (DisplaysTomorrowMorning && Forecastday < Forecast.Days.Forecastdays.Count - 1)
+                    upcomingHours.AddRange(Forecast.Days?.Forecastdays[Forecastday + 1]?.HourlyWeather?.Where(h => h.Time.Hour <= lastHourToShow).ToList());
 
                 DrawingVisual dv = new();
                 using DrawingContext dc = dv.RenderOpen();
@@ -124,10 +145,21 @@ namespace weatherfrog.Resources
                 }
                 dc.Close();
                 // Close graph
-                // final graph point is half way between lastHourToShow.Temp & (lastHourToShow + 1).Temp
-                int lastHourTemp = Forecast.Days.Forecastdays[1].HourlyWeather[lastHourToShow].Temp;
-                int afterLastHourTemp = Forecast.Days.Forecastdays[1].HourlyWeather[lastHourToShow + 1].Temp;
-                int finalTemp = lastHourTemp + ((afterLastHourTemp - lastHourTemp) / 2);
+                int finalTemp = default;
+                if (DisplaysTomorrowMorning && Forecastday < Forecast.Days.Forecastdays.Count - 1)
+                {
+                    // final graph point is half way between lastHourToShow.Temp & (lastHourToShow + 1).Temp
+                    int lastHourTemp = Forecast.Days.Forecastdays[Forecastday + 1].HourlyWeather[lastHourToShow].Temp;
+                    int afterLastHourTemp = Forecast.Days.Forecastdays[Forecastday + 1].HourlyWeather[lastHourToShow + 1].Temp;
+                    finalTemp = lastHourTemp + ((afterLastHourTemp - lastHourTemp) / 2);
+                }
+                else
+                {
+                    //This is the last day and there is no next day to get finalTemp. User last tempurature of today's data.
+                    finalTemp = Forecast.Days.Forecastdays[Forecastday].HourlyWeather.Last().Temp;
+                }
+
+
                 Graph.Points.Add(new Point(leftPoint, CalculateYValue(finalTemp)));
                 Graph.Points.Add(new Point(leftPoint, 150));
 
@@ -146,6 +178,7 @@ namespace weatherfrog.Resources
             dc.DrawText(formattedText, new Point(left + ((HourWidth - formattedText.Width) / 2), y));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0047:Remove unnecessary parentheses", Justification = "Makes it easier to read.")]
         private double CalculateYValue(int temp)
         {
             double minMaxDiff = maxTemp - minTemp;
@@ -184,6 +217,9 @@ namespace weatherfrog.Resources
                 dragOrigin = new Point(rectTranslateTransform.X, rectTranslateTransform.Y);
                 Border.Cursor = Cursors.SizeWE;
                 Border.CaptureMouse();
+                // When placed in a listbox or listview item, the list will release the mouse capture if the event
+                // is allowed to bubble up. Setting e.Handled to true stops the event from bubbling up.
+                e.Handled = true;
             }
         }
         private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -197,17 +233,25 @@ namespace weatherfrog.Resources
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
+            //Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
             if (Border.IsMouseCaptured)
             {
                 Vector v = dragStart - e.GetPosition(this);
                 double newXValue = Math.Min(dragOrigin.X - v.X, 0);
                 double minXValue = Math.Min(RootGrid.ActualWidth - Border.ActualWidth, 0);
-                if (newXValue < minXValue) { newXValue = minXValue; }
+                if (newXValue < minXValue) newXValue = minXValue;
                 rectTranslateTransform.X = newXValue;
             }
+            else
+                Border.Cursor = (Border.Width <= RootGrid.ActualWidth) ? Cursors.Arrow : Cursors.ScrollWE;
         }
-
         #endregion
 
+        private void RootGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // Anchor right side of Border to right side of RootGrid.
+            double minXValue = Math.Min(RootGrid.ActualWidth - Border.ActualWidth, 0);
+            if (rectTranslateTransform.X < minXValue) rectTranslateTransform.X = minXValue;
+        }
     }
 }

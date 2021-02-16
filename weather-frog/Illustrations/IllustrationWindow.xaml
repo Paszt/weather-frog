@@ -28,13 +28,13 @@
         <!-- Toolbar -->
         <DockPanel>
             <DockPanel.Resources>
-                <Style TargetType="Image">
+                <Style TargetType="{x:Type Image}">
                     <Setter Property="Width"
                             Value="28" />
                     <Setter Property="Margin"
                             Value="6" />
                 </Style>
-                <Style TargetType="Button"
+                <Style TargetType="{x:Type Button}"
                        BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
                     <Setter Property="Focusable"
                             Value="False" />
@@ -85,7 +85,7 @@
                            Margin="0,14,0,0" />
                 <Grid Margin="14">
                     <Grid.Resources>
-                        <Style TargetType="Label">
+                        <Style TargetType="{x:Type Label}">
                             <Setter Property="HorizontalAlignment"
                                     Value="Right" />
                             <Setter Property="Foreground"
@@ -151,6 +151,9 @@
             </StackPanel>
             <GridSplitter Grid.Column="1"
                           HorizontalAlignment="Stretch" />
+            <Grid Grid.Column="2">
+                <Image Source="{Binding Wallpaper }" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>

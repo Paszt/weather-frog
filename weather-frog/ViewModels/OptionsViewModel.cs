@@ -163,7 +163,7 @@ namespace weatherfrog.ViewModels
             try
             {
                 LocationSearchMsg = string.Empty;
-                SearchResults = await API.LookupLocationAsync(Location);
+                SearchResults = await Api.LookupLocationAsync(Location);
                 IsSearchResultsVisibile = true;
             }
             catch (System.Net.Http.HttpRequestException httpReqEx)

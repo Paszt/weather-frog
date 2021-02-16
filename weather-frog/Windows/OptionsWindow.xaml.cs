@@ -12,7 +12,8 @@ namespace weatherfrog
         {
             get
             {
-                if (instance == null || (bool)typeof(Window).GetProperty("IsDisposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(instance))
+                if (instance == null || (bool)typeof(Window).GetProperty("IsDisposed", 
+                    BindingFlags.NonPublic | BindingFlags.Instance).GetValue(instance))
                     return instance = new();
 
                 if (instance.IsLoaded)

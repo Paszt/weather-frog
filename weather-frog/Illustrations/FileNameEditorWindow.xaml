@@ -18,7 +18,7 @@
     </Window.DataContext>
     <Grid>
         <Grid.Resources>
-            <Style TargetType="Label">
+            <Style TargetType="{x:Type Label}">
                 <Setter Property="VerticalAlignment"
                         Value="Center" />
                 <Setter Property="Margin"

@@ -10,7 +10,8 @@
              d:DesignHeight="150"
              d:DesignWidth="450">
     <Grid ClipToBounds="True"
-          x:Name="RootGrid">
+          x:Name="RootGrid"
+          SizeChanged="RootGrid_SizeChanged">
         <Border x:Name="Border"
                 Width="700"
                 HorizontalAlignment="Left"
@@ -21,9 +22,7 @@
                 Margin="0,0,-1600,0">
             <Grid>
                 <Polygon x:Name="Graph"
-                         Opacity="0.2"
-                         Stroke="White"
-                         StrokeThickness="1">
+                         Opacity="0.2">
                     <Polygon.Fill>
                         <LinearGradientBrush StartPoint="0.5,0"
                                              EndPoint="0.5,1">

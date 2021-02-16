@@ -14,7 +14,16 @@ namespace weatherfrog.Infrastructure
     {
         private const int weatherIconWidth = 176;
 
-        private static Visual CreateVisual(WeatherApi.Models.Forecast forecast)
+        public double Width { get; set; }
+        public double Height { get; set; }
+
+        public DesktopWallpaper(double width, double height)
+        {
+            Width = width;
+            Height = height;
+        }
+
+        private Visual CreateVisual(WeatherApi.Models.Forecast forecast)
         {
             ContainerVisual container = new()
             {
@@ -27,21 +36,35 @@ namespace weatherfrog.Infrastructure
             return container;
         }
 
-        internal static void Update(WeatherApi.Models.Forecast forecast)
+        public RenderTargetBitmap CreateBitmap(WeatherApi.Models.Forecast forecast)
+        {
+            Visual visual = CreateVisual(forecast);
+            return CreateBitmap(visual);
+        }
+
+        private RenderTargetBitmap CreateBitmap(Visual visual)
+        {
+            RenderTargetBitmap rtbmp = new((int)Width, (int)Height,
+                96.0, 96.0, PixelFormats.Pbgra32);
+            rtbmp.Render(visual);
+            return rtbmp;
+        }
+
+        internal void Update(WeatherApi.Models.Forecast forecast)
         {
             Visual visual = CreateVisual(forecast);
             SetDesktopWallpaper(visual);
         }
 
-        private static void SetDesktopWallpaper(Visual visual) =>
+        private void SetDesktopWallpaper(Visual visual) =>
             _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, SaveBitmap(visual),
                                      SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
 
-        private static DrawingVisual DrawBackground(WeatherApi.Models.Forecast forecast)
+        private DrawingVisual DrawBackground(WeatherApi.Models.Forecast forecast)
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            dc.DrawRectangle(forecast?.CurrentWeather?.BackgroundBrush, null, SystemParameters.WorkArea);
+            dc.DrawRectangle(forecast?.CurrentWeather?.BackgroundBrush, null, new(0, 0, Width, Height));
             dc.Close();
             return dv;
         }
@@ -56,13 +79,14 @@ namespace weatherfrog.Infrastructure
             return dv;
         }
 
-        private static DrawingVisual DrawText(WeatherApi.Models.Forecast forecast)
+        private DrawingVisual DrawText(WeatherApi.Models.Forecast forecast)
         {
+            // TODO: DesktopWallpaper.DrawText(): Instead of hardcoding values (text size, locations, etc), calculate them based on Width & Height properties.
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            double screenWidth = SystemParameters.WorkArea.Width;
-            double screenHeight = SystemParameters.WorkArea.Height;
-            double leftTextLeft = screenWidth * 0.09;
+            //double screenWidth = SystemParameters.WorkArea.Width;
+            //double screenHeight = SystemParameters.WorkArea.Height;
+            double leftTextLeft = Width * 0.09;
 
             Typeface tf = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
             CultureInfo ci = new("en-us");
@@ -90,7 +114,7 @@ namespace weatherfrog.Infrastructure
             dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300));
 
             //Right Side Text
-            double rightTextCenter = (screenWidth * 0.77d) + (weatherIconWidth / 2) - 150.0d;
+            double rightTextCenter = (Width * 0.77d) + (weatherIconWidth / 2) - 150.0d;
 
             // Chance of precipitation (rain or snow)
             string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;
@@ -116,26 +140,18 @@ namespace weatherfrog.Infrastructure
             return dv;
         }
 
-        private static DrawingVisual DrawWeatherIcon(WeatherApi.Models.Forecast forecast)
+        private DrawingVisual DrawWeatherIcon(WeatherApi.Models.Forecast forecast)
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            Rect WeatherIconRect = new(new Point(SystemParameters.WorkArea.Width * 0.77, 97.0),
+            Rect WeatherIconRect = new(new Point(Width * 0.77, 97.0),
                                        new Size(weatherIconWidth, weatherIconWidth));
             dc.DrawImage(forecast.CurrentWeather.WeatherIcon, WeatherIconRect);
             dc.Close();
             return dv;
         }
 
-        private static RenderTargetBitmap CreateBitmap(Visual visual)
-        {
-            RenderTargetBitmap rtbmp = new((int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight,
-                96.0, 96.0, PixelFormats.Pbgra32);
-            rtbmp.Render(visual);
-            return rtbmp;
-        }
-
-        private static string SaveBitmap(Visual visual)
+        private string SaveBitmap(Visual visual)
         {
             RenderTargetBitmap rtbmp = CreateBitmap(visual);
             BmpBitmapEncoder enc = new();
@@ -150,49 +166,49 @@ namespace weatherfrog.Infrastructure
             return filePath;
         }
 
-        internal static void NetworkError()
+        internal void NetworkError()
         {
             BitmapFrame bitmapFrame = BitmapFrame.Create(
                    new Uri("pack://application:,,,/weather-frog;component/Resources/FrogIllustrations/NetworkUnavailable.png"));
             DrawTextAndImage("Network currently unavailable", bitmapFrame);
         }
 
-        internal static void Offline(string message = "Weather Frog Is Offline")
+        internal void Offline(string message = "Weather Frog Is Offline")
         {
             BitmapFrame bitmapFrame = BitmapFrame.Create(
                    new Uri("pack://application:,,,/weather-frog;component/Resources/FrogIllustrations/SomethingWrong.png"));
             DrawTextAndImage(message, bitmapFrame);
         }
 
-        private static void DrawTextAndImage(string textToDraw, ImageSource imageSource)
+        private void DrawTextAndImage(string textToDraw, ImageSource imageSource)
         {
             const double maxTextWidth = 600.0d;
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2")), null, SystemParameters.WorkArea);
+            dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2")), null, new(0, 0, Width, Height));
             FormattedText msgText = new(textToDraw, new CultureInfo("en-us"), FlowDirection.LeftToRight,
                 Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(), 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
-            dc.DrawText(msgText, new Point((SystemParameters.WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
+            dc.DrawText(msgText, new Point((Width / 2) - (maxTextWidth / 2), 120.0d));
             dc.DrawImage(imageSource, GetIllustrationRectangle(imageSource, AlignmentX.Center));
             dc.Close();
             SetDesktopWallpaper(dv);
         }
 
-        private static Rect GetIllustrationRectangle(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
+        private Rect GetIllustrationRectangle(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
         {
-            double y = SystemParameters.WorkArea.Height / 3.0d;
-            double height = SystemParameters.WorkArea.Height * (2.0d / 3.0d);
+            double y = Height / 3.0d;
+            double height = Height * (2.0d / 3.0d);
             double scale = height / imageSource.Height;
             double width = imageSource.Width * scale;
             double x = 0.0d;
             switch (alignmentX)
             {
                 case AlignmentX.Center:
-                    x = (SystemParameters.WorkArea.Width - width) / 2.0d;
+                    x = (Width - width) / 2.0d;
                     break;
                 case AlignmentX.Right:
-                    x = SystemParameters.WorkArea.Width - width;
+                    x = Width - width;
                     break;
             }
             return new Rect(x, y, width, height);
