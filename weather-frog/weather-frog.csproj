@@ -9,6 +9,7 @@
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/Paszt/weather-frog</RepositoryUrl>
     <ApplicationIcon>Resources\Weather-Frog.ico</ApplicationIcon>
+    <Nullable>annotations</Nullable>
     <!--<GenerateAssemblyInfo>true</GenerateAssemblyInfo>-->
   </PropertyGroup>
 

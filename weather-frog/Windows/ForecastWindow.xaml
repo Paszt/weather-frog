@@ -6,7 +6,7 @@
         xmlns:resources="clr-namespace:weatherfrog.Resources"
         xmlns:viewModels="clr-namespace:weatherfrog.ViewModels"
         mc:Ignorable="d"
-        Title="ForecastWindow"
+        Title="Weather Frog Forecast"
         Height="450"
         Width="800"
         Foreground="{StaticResource ControlDefaultForeground}"

@@ -85,18 +85,6 @@ namespace weatherfrog.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ChangeDesktopBackground {
-            get {
-                return ((bool)(this["ChangeDesktopBackground"]));
-            }
-            set {
-                this["ChangeDesktopBackground"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string OptionsWindowPlacement {
             get {

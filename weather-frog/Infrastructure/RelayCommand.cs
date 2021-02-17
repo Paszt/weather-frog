@@ -5,14 +5,8 @@ namespace weatherfrog.Infrastructure
 {
     public class RelayCommand<T> : ICommand
     {
-        #region Fields
-
         readonly Action<T> _execute = null;
         readonly Predicate<T> _canExecute = null;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
@@ -32,10 +26,6 @@ namespace weatherfrog.Infrastructure
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
-
-        #endregion
-
-        #region ICommand Members
 
         ///<summary>
         ///Defines the method that determines whether the command can execute in its current state.
@@ -60,8 +50,6 @@ namespace weatherfrog.Infrastructure
         ///</summary>
         ///<param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
         public void Execute(object parameter) => _execute((T)parameter);
-
-        #endregion
     }
 
     /// <summary>
@@ -69,7 +57,6 @@ namespace weatherfrog.Infrastructure
     /// </summary>
     public partial class RelayCommand : ICommand
     {
-
         private readonly Func<bool> _canExecute;
         private readonly Action _execute;
 
@@ -93,10 +80,8 @@ namespace weatherfrog.Infrastructure
 
         public event EventHandler CanExecuteChanged
         {
-            add
-            { if (_canExecute is object) CommandManager.RequerySuggested += value; }
-            remove
-            { if (_canExecute is object) CommandManager.RequerySuggested -= value; }
+            add { if (_canExecute is object) CommandManager.RequerySuggested += value; }
+            remove { if (_canExecute is object) CommandManager.RequerySuggested -= value; }
         }
 
         void OnCanExecuteChanged(object sender, EventArgs e)
@@ -105,7 +90,6 @@ namespace weatherfrog.Infrastructure
         public bool CanExecute(object parameter) => _canExecute is null || _canExecute();
 
         public void Execute(object parameter) => _execute();
-
     }
 
 }

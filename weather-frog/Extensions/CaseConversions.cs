@@ -49,8 +49,6 @@ namespace weatherfrog.Extensions
         }
 
         // Convert the string to Capitalized-Kebab-Case.
-        // Capitalize the first character and add a space before
-        // each capitalized letter (except the first character).
         public static string ToCapitalizedKebabCase(this string text)
         {
             // If there are 0 or 1 characters, just return the string with the first letter capitalized.

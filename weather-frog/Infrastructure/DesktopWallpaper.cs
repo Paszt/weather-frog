@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,12 +17,17 @@ namespace weatherfrog.Infrastructure
 
         public double Width { get; set; }
         public double Height { get; set; }
+        public Rect WorkArea { get; set; }
 
-        public DesktopWallpaper(double width, double height)
+        public DesktopWallpaper(double width, double height, Rect workArea)
         {
             Width = width;
             Height = height;
+            WorkArea = workArea;
         }
+
+        public static DesktopWallpaper FromSystemParameters() =>
+            new(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height, SystemParameters.WorkArea);
 
         private Visual CreateVisual(WeatherApi.Models.Forecast forecast)
         {
@@ -50,10 +56,24 @@ namespace weatherfrog.Infrastructure
             return rtbmp;
         }
 
-        internal void Update(WeatherApi.Models.Forecast forecast)
+        internal void Update(WeatherApi.Models.Forecast forecast, bool UpdateDimensionsFromSystemParameters = false)
         {
+            if (UpdateDimensionsFromSystemParameters)
+            {
+                Width = SystemParameters.PrimaryScreenWidth;
+                Height = SystemParameters.PrimaryScreenHeight;
+                WorkArea = SystemParameters.WorkArea;
+            }
             Visual visual = CreateVisual(forecast);
             SetDesktopWallpaper(visual);
+        }
+
+        internal void Update(WeatherApi.Models.Forecast forecast, double width, double height, Rect workArea)
+        {
+            Width = width;
+            Height = height;
+            WorkArea = workArea;
+            Update(forecast);
         }
 
         private void SetDesktopWallpaper(Visual visual) =>
@@ -74,19 +94,20 @@ namespace weatherfrog.Infrastructure
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
             //TODO: Draw Frog Illustration on Wallpaper.
-            System.Diagnostics.Debug.WriteLine(forecast);
+            Debug.WriteLine(forecast);
             dc.Close();
             return dv;
         }
 
         private DrawingVisual DrawText(WeatherApi.Models.Forecast forecast)
         {
-            // TODO: DesktopWallpaper.DrawText(): Instead of hardcoding values (text size, locations, etc), calculate them based on Width & Height properties.
+            // TODO: DesktopWallpaper.DrawText(): Instead of hardcoding values (text size, locations, etc), calculate them based on Width, Height & WorkArea properties.
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
+
             //double screenWidth = SystemParameters.WorkArea.Width;
             //double screenHeight = SystemParameters.WorkArea.Height;
-            double leftTextLeft = Width * 0.09;
+            double leftTextLeft = (WorkArea.Width * 0.09) + WorkArea.Left;
 
             Typeface tf = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
             CultureInfo ci = new("en-us");
@@ -94,27 +115,27 @@ namespace weatherfrog.Infrastructure
             // Location
             string location = forecast.Location.DisplayName;
             FormattedText locationText = new(location, ci, FlowDirection.LeftToRight, tf, 30, Brushes.Black, 1.0d);
-            dc.DrawText(locationText, new Point(leftTextLeft + 12, 40));
+            dc.DrawText(locationText, new Point(leftTextLeft + 12, 40.0d + WorkArea.Top));
 
             // Temperature
             string temperature = forecast.CurrentWeather.Temp.ToString();
             FormattedText temperatureText = new(temperature, ci, FlowDirection.LeftToRight, tf, 200,
                 Brushes.White, 1.0d);
-            dc.DrawText(temperatureText, new Point(leftTextLeft, 70));
+            dc.DrawText(temperatureText, new Point(leftTextLeft, 70 + WorkArea.Top));
             //Temp Units
             string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
             FormattedText temperatureUnitsText = new(temperatureUnitsString, ci, FlowDirection.LeftToRight,
                 tf, 80, Brushes.White, 1.0d);
-            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 96));
+            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 96.0d + WorkArea.Top));
 
             // Feels Like
             string feelsLikeTemp = forecast.CurrentWeather.FeelsLike.ToString();
             FormattedText apparentTempText = new("Feels like " + feelsLikeTemp + "°", ci, FlowDirection.LeftToRight,
                 tf, 40, Brushes.White, 1.0d);
-            dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300));
+            dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300.0d + WorkArea.Top));
 
             //Right Side Text
-            double rightTextCenter = (Width * 0.77d) + (weatherIconWidth / 2) - 150.0d;
+            double rightTextCenter = (WorkArea.Width * 0.77d) + WorkArea.Left + (weatherIconWidth / 2) - 150.0d;
 
             // Chance of precipitation (rain or snow)
             string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;
@@ -123,18 +144,17 @@ namespace weatherfrog.Infrastructure
                 FormattedText precipInfoText = new(precipInfo, ci, FlowDirection.LeftToRight,
                     tf, 30, Brushes.Cyan, 1.0d)
                 { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
-                dc.DrawText(precipInfoText, new Point(rightTextCenter + 25, 40));
+                dc.DrawText(precipInfoText, new Point(rightTextCenter + 25, 40.0d + WorkArea.Top));
                 //Umbrella
                 dc.DrawImage((ImageSource)Application.Current.FindResource("Umbrella"),
-                    new Rect(rightTextCenter + (precipInfoText.Width / 2) - 10, 44, 24, 24));
+                    new Rect(rightTextCenter + (precipInfoText.Width / 2) - 10, 44.0d + WorkArea.Top, 24.0d, 24.0d));
             }
 
             // Weather Description
             FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, ci, FlowDirection.LeftToRight,
                 tf, 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
-            dc.DrawText(descriptionText, new Point(rightTextCenter, 300));
-
+            dc.DrawText(descriptionText, new Point(rightTextCenter, 300.0d + WorkArea.Top));
 
             dc.Close();
             return dv;
@@ -144,7 +164,7 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            Rect WeatherIconRect = new(new Point(Width * 0.77, 97.0),
+            Rect WeatherIconRect = new(new Point((WorkArea.Width * 0.77) + WorkArea.Left, 97.0 + WorkArea.Top),
                                        new Size(weatherIconWidth, weatherIconWidth));
             dc.DrawImage(forecast.CurrentWeather.WeatherIcon, WeatherIconRect);
             dc.Close();
@@ -189,7 +209,7 @@ namespace weatherfrog.Infrastructure
             FormattedText msgText = new(textToDraw, new CultureInfo("en-us"), FlowDirection.LeftToRight,
                 Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(), 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
-            dc.DrawText(msgText, new Point((Width / 2) - (maxTextWidth / 2), 120.0d));
+            dc.DrawText(msgText, new Point((WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
             dc.DrawImage(imageSource, GetIllustrationRectangle(imageSource, AlignmentX.Center));
             dc.Close();
             SetDesktopWallpaper(dv);
@@ -197,18 +217,18 @@ namespace weatherfrog.Infrastructure
 
         private Rect GetIllustrationRectangle(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
         {
-            double y = Height / 3.0d;
-            double height = Height * (2.0d / 3.0d);
+            double y = WorkArea.Height / 3.0d;
+            double height = WorkArea.Height * (2.0d / 3.0d);
             double scale = height / imageSource.Height;
             double width = imageSource.Width * scale;
             double x = 0.0d;
             switch (alignmentX)
             {
                 case AlignmentX.Center:
-                    x = (Width - width) / 2.0d;
+                    x = (WorkArea.Width - width) / 2.0d;
                     break;
                 case AlignmentX.Right:
-                    x = Width - width;
+                    x = WorkArea.Width - width;
                     break;
             }
             return new Rect(x, y, width, height);

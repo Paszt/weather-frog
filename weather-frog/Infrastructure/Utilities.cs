@@ -9,7 +9,7 @@ using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog.Infrastructure
 {
-    class Utilities
+    internal class Utilities
     {
         public static Icon CreateTaskbarIcon(Current current) =>
             My.Settings.TaskbarIconStyle == TaskbarIconStyle.Temperature

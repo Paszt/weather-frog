@@ -17,9 +17,6 @@
     <Setting Name="ApiKeyValidated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ChangeDesktopBackground" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="OptionsWindowPlacement" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

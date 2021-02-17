@@ -20,15 +20,13 @@ namespace weatherfrog
     public partial class App : Application, INotifyPropertyChanged
     {
         private static TaskbarIcon notifyIcon;
-        //private static OptionsWindow optionsWindow = null;
         private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(10);
         private Timer updateWeatherTimer;
         private DesktopWallpaper desktopWallpaper;
 
         // Used for Singleton check
-#pragma warning disable IDE0052 // Remove unread private members
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "mutex is used in separate instance")]
         private static Mutex mutex = null;
-#pragma warning restore IDE0052 // Remove unread private members
 
         public new static App Current => (App)Application.Current;
         public static Brush DefaultBackgroundBrush =>
@@ -64,15 +62,6 @@ namespace weatherfrog
                 WeatherApi.Configuration.UserAgent = typeof(App).Assembly.GetName().Name + "/" +
                     typeof(App).Assembly.GetName().Version.ToString() + " (https://github.com/Paszt/weather-frog)";
 
-                //Resources.WeatherIconsDisplayWindow widw = new();
-                //widw.Show();
-
-                //Popupwindow pu = new();
-                //pu.Show();
-
-                //ForecastWindow fs = new();
-                //fs.Show();
-
                 if (My.Settings.ApiKeyValidated) Begin();
                 else
                 {
@@ -91,7 +80,7 @@ namespace weatherfrog
                 Icon = Utilities.CreateIcon(16, 16, (ImageSource)FindResource("FrogHeadDrawingImage")),
                 DataContext = Current,
                 ContextMenu = (System.Windows.Controls.ContextMenu)FindResource("NotifyIconMenu"),
-                TrayPopup = new Resources.TaskbarBalloon(),
+                TrayPopup = new TaskbarBalloon(),
                 //ToolTip = new Resources.TaskbarBalloon(),
             };
             MultiBinding toolTipMultiBinding = new MultiBinding()
@@ -110,18 +99,12 @@ namespace weatherfrog
             sysEvents.ResumedFromSuspension += SystemEvents_ResumedFromSuspension;
             sysEvents.AboutToSuspend += SystemEvents_AboutToSuspend;
 
-            desktopWallpaper = new(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+            if (My.Settings.UpdateDesktop)
+                desktopWallpaper = DesktopWallpaper.FromSystemParameters();
         }
 
-        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
-        {
-            if (My.Settings.ChangeDesktopBackground)
-            {
-                desktopWallpaper.Width = SystemParameters.WorkArea.Width;
-                desktopWallpaper.Height = SystemParameters.WorkArea.Height;
-                desktopWallpaper?.Update(Forecast);
-            }
-        }
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) =>
+            desktopWallpaper?.Update(forecast, true);
 
         // update weather immediately upon waking up from suspension
         private void SystemEvents_ResumedFromSuspension(object sender, EventArgs e) =>
@@ -129,7 +112,7 @@ namespace weatherfrog
 
         private void SystemEvents_AboutToSuspend(object sender, EventArgs e)
         {
-            if (My.Settings.ChangeDesktopBackground) desktopWallpaper?.Offline();
+            desktopWallpaper?.Offline();
             notifyIcon.Icon = Utilities.CreateTaskbarIcon("??");
         }
 
@@ -179,7 +162,18 @@ namespace weatherfrog
                     catch (Exception) { }
 
                     notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
-                    if (My.Settings.ChangeDesktopBackground) desktopWallpaper.Update(Forecast);
+
+                    // This method, UpdateWeather, is called after the options window is closed with changes. 
+                    // Check the state of desktopWallpaper and Settings.UpdateDesktop to determine if 
+                    // the user just changed the setting.
+                    if (desktopWallpaper != null && !My.Settings.UpdateDesktop)
+                    {
+                        desktopWallpaper.Offline("Desktop Updating is turned off.");
+                        desktopWallpaper = null;
+                    }
+                    if (desktopWallpaper == null && My.Settings.UpdateDesktop)
+                        desktopWallpaper = DesktopWallpaper.FromSystemParameters();
+                    desktopWallpaper?.Update(Forecast);
                 }
                 catch (Exception)
                 {

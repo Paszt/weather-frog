@@ -16,7 +16,7 @@ namespace weatherfrog.Illustrations
 
         public IllustrationViewModel()
         {
-            desktopWallpaper = new(Width, Height);
+            desktopWallpaper = new(Width, Height, WorkArea);
             Forecast = new()
             {
                 Location = new()
@@ -116,6 +116,9 @@ namespace weatherfrog.Illustrations
 
         private double height = 900.0d;
         public double Height { get => height; set => SetProperty(ref height, value); }
+
+        private Rect workArea = new(0, 0, 1600, 860);
+        public Rect WorkArea { get => workArea; set => SetProperty(ref workArea, value); }
 
         private Forecast forecast;
         public Forecast Forecast { get => forecast; set => SetProperty(ref forecast, value); }
