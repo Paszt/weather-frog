@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!--Image Button-->
     <Style TargetType="{x:Type Button}"
            x:Key="ImageButton">
         <Setter Property="Cursor"
@@ -9,9 +11,25 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <ContentPresenter HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Name="content" />
+                    <Grid>
+                        <Rectangle x:Name="Rectangle"
+                                   Stroke="Transparent"
+                                   StrokeDashArray="1 2"
+                                   RadiusX="2"
+                                   RadiusY="2">
+                        </Rectangle>
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Name="content" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused"
+                                 Value="True">
+                            <Setter TargetName="Rectangle"
+                                    Property="Stroke"
+                                    Value="{StaticResource ControlSelectedBorderBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:illustrations="clr-namespace:weatherfrog.Illustrations"
-                    xmlns:System="clr-namespace:System;assembly=mscorlib">
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     
     <ObjectDataProvider x:Key="AlignmentXValues"
                         MethodName="GetValues"
@@ -29,6 +30,14 @@
                         ObjectType="{x:Type System:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="illustrations:WeatherCondition" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>    
+    
+    <ObjectDataProvider x:Key="DockValues"
+                        MethodName="GetValues"
+                        ObjectType="{x:Type System:Enum}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="controls:Dock" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 

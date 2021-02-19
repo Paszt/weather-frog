@@ -16,6 +16,9 @@
     <Window.DataContext>
         <illustrations:FileNameEditorViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type Label}">
@@ -69,19 +72,23 @@
                       Grid.Column="1" />
 
             <Label Content="Location: "
-                   Grid.Row="1" />
+                   Grid.Row="1"
+                   Visibility="{Binding IsNotFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}" />
             <ComboBox ItemsSource="{Binding Source={StaticResource IllustrationLocationValues}}"
                       IsEditable="True"
                       Text="{Binding Location}"
                       Grid.Row="1"
-                      Grid.Column="1" />
+                      Grid.Column="1"
+                      Visibility="{Binding IsNotFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}" />
 
             <Label Content="Time of Day: "
-                   Grid.Row="2" />
+                   Grid.Row="2"
+                   Visibility="{Binding IsNotFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}" />
             <ComboBox ItemsSource="{Binding Source={StaticResource TimeOfDayValues}}"
                       SelectedItem="{Binding TimeOfDay}"
                       Grid.Row="2"
-                      Grid.Column="1" />
+                      Grid.Column="1"
+                      Visibility="{Binding IsNotFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}" />
 
             <Label Content="Activity: "
                    Grid.Row="3" />
@@ -90,17 +97,28 @@
                      Text="{Binding Activity, UpdateSourceTrigger=PropertyChanged}" />
 
             <Label Content="Below 45°F: "
-                   Grid.Row="4" />
+                   Grid.Row="4"
+                   Visibility="{Binding IsNotFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}" />
             <StackPanel Orientation="Horizontal"
                         Grid.Row="4"
                         Grid.Column="1"
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsNotFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}">
                 <CheckBox IsChecked="{Binding IsBelow45}"
                           Name="cb" />
                 <Image ToolTip="Check if the illustration is meant to be for temperatures below 45°F. Maybe the frog is wearing a knit hat and sweater, for example."
                        Source="{DynamicResource Help}" />
             </StackPanel>
-
+            <TextBlock TextWrapping="WrapWithOverflow"
+                       Grid.Row="5"
+                       Grid.ColumnSpan="2"
+                       Margin="0,10,0,0"
+                       Text="Fog &amp; Vog are special weather condition illustrations that don't use the typical locations. Location, time of day, and temperature settings are ignored."
+                       MaxWidth="374"
+                       Foreground="Cyan"
+                       Visibility="{Binding IsFogOrVog, Converter={StaticResource booleanToVisibilityConverter}}"
+                       d:Visibility="Visible"
+                       d:Opacity="0.5" />
         </Grid>
     </Grid>
 </Window>

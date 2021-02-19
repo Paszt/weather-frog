@@ -10,7 +10,6 @@ namespace weatherfrog.WeatherApi
 {
     public static class Api
     {
-
         private static readonly object syncObject = new object();
         private static HttpClient clientInstance = null;
 

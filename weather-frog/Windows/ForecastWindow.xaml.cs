@@ -26,7 +26,11 @@ namespace weatherfrog
             }
         }
 
-        public ForecastWindow() => InitializeComponent();
+        public ForecastWindow()
+        {
+            InitializeComponent();
+            Icon = (System.Windows.Media.ImageSource)FindResource("SunDrawingImage");
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) => this.SetPlacement(My.Settings.ForecastWindowPlacement);
 

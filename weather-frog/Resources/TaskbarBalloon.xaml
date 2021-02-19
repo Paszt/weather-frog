@@ -12,10 +12,10 @@
              Background="{Binding BackgroundBrush}"
              d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}"
              Foreground="White">
+    <!-- Datacontext is set in App.Begin while instantiating the TaskbarIcon (notifyIcon) -->
     <UserControl.Resources>
         <infrastructure:NullStringToVisibilityConverter x:Key="NullStringToVisibilityConverter" />
     </UserControl.Resources>
-    <!-- Datacontext is set in App.Begin while instantiating the TaskbarIcon (notifyIcon) -->
     <Grid ClipToBounds="True">
         <!-- Frog Illustration -->
         <Image />

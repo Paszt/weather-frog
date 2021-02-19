@@ -79,6 +79,16 @@ namespace weatherfrog.Resources
             set => SetValue(DisplaysTomorrowMorningProperty, value);
         }
 
+        public static readonly DependencyProperty SwallowMouseLeftButtonDownProperty =
+            DependencyProperty.Register("SwallowMouseLeftButtonDown", typeof(bool),
+                typeof(HourlyGraph), new PropertyMetadata(false));
+
+        public bool SwallowMouseLeftButtonDown
+        {
+            get => (bool)GetValue(SwallowMouseLeftButtonDownProperty);
+            set => SetValue(SwallowMouseLeftButtonDownProperty, value);
+        }
+
         private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ((HourlyGraph)d).OnForecastChanged();
         //HourlyGraph hourlyGraph = d as HourlyGraph;
@@ -126,13 +136,9 @@ namespace weatherfrog.Resources
                         // Temperature
                         DrawTextCentered(dc, hour.Temp.ToString() + "°", Brushes.White, leftPoint, CalculateYValue(hour.Temp) - 24);
                         // Chance of Precip
-                        if (hour.ChanceOfSnow > 0)
-                        { DrawTextCentered(dc, hour.ChanceOfSnow.ToString() + '%', Brushes.Cyan, leftPoint, 62); }
-                        else
-                        {
-                            if (hour.ChanceOfRain > 0)
-                            { DrawTextCentered(dc, hour.ChanceOfRain.ToString() + '%', Brushes.Cyan, leftPoint, 62); }
-                        }
+                        int chanceOfPrecip = Math.Max(hour.ChanceOfSnow.Value, hour.ChanceOfRain.Value);
+                        if (chanceOfPrecip > 0)
+                            DrawTextCentered(dc, chanceOfPrecip.ToString() + '%', Brushes.Cyan, leftPoint, 62);
                         //Weather Icon
                         dc.DrawImage(hour.WeatherIcon, new Rect(leftPoint + 4, 80, HourWidth - 8, HourWidth - 8));
                         // Time
@@ -159,13 +165,12 @@ namespace weatherfrog.Resources
                     finalTemp = Forecast.Days.Forecastdays[Forecastday].HourlyWeather.Last().Temp;
                 }
 
-
                 Graph.Points.Add(new Point(leftPoint, CalculateYValue(finalTemp)));
                 Graph.Points.Add(new Point(leftPoint, 150));
 
                 AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
 
-                Border.Width = Math.Max((double)(upcomingHours.Count * HourWidth), 200);
+                Border.Width = (double)(upcomingHours.Count * HourWidth);
                 Border.Cursor = (Border.Width <= RootGrid.ActualWidth) ? Cursors.Arrow : Cursors.ScrollWE;
                 rectTranslateTransform.X = 0;
                 //Y value of Border =   (rectTranslateTransform.X + Border.ActualWidth)
@@ -193,7 +198,7 @@ namespace weatherfrog.Resources
             }
             double proportionalHeight = (graphHeightDelta / minMaxDiff) * tempDiffFromMin;
             // Y = 64 is minimum, just aboe the precip info location
-            return proportionalHeight + 64 - lowMinMaxDiffAdjustment;
+            return proportionalHeight + 62 - lowMinMaxDiffAdjustment;
         }
 
         //private static Cursor DrawScrollWECursor(Brush brush)
@@ -219,9 +224,11 @@ namespace weatherfrog.Resources
                 Border.CaptureMouse();
                 // When placed in a listbox or listview item, the list will release the mouse capture if the event
                 // is allowed to bubble up. Setting e.Handled to true stops the event from bubbling up.
-                e.Handled = true;
+                if (SwallowMouseLeftButtonDown)
+                    e.Handled = true;
             }
         }
+
         private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (Border.ActualWidth > RootGrid.ActualWidth)

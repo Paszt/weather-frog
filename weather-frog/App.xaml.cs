@@ -126,18 +126,17 @@ namespace weatherfrog
         }
 
         public Brush BackgroundBrush => Forecast?.CurrentWeather?.BackgroundBrush is null
-                    ? DefaultBackgroundBrush
-                    : (Forecast?.CurrentWeather?.BackgroundBrush);
+                   ? DefaultBackgroundBrush
+                   : (Forecast?.CurrentWeather?.BackgroundBrush);
 
         // Used in NotifyIconResources.xaml > NotifyIconMenu
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "#if Directive")]
         public static Visibility IsDebug
         {
 #if DEBUG
-#pragma warning disable IDE0025 // Use expression body for properties
             get => Visibility.Visible;
-#pragma warning restore IDE0025 // Use expression body for properties
 #else
-        get => Visibility.Collapsed;
+            get => Visibility.Collapsed;
 #endif
         }
 

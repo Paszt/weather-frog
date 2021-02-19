@@ -14,20 +14,32 @@ namespace weatherfrog.Infrastructure
     sealed class DesktopWallpaper
     {
         private const int weatherIconWidth = 176;
+        private readonly CultureInfo cultureInfo = new("en-us");
+        private readonly Typeface typeface;
 
         public double Width { get; set; }
         public double Height { get; set; }
         public Rect WorkArea { get; set; }
+        public bool DrawTaskbar { get; set; } = false;
 
         public DesktopWallpaper(double width, double height, Rect workArea)
         {
+            // Design time can't reference the font...
+            try
+            {
+                typeface = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
+            }
+            catch (Exception)
+            {
+                typeface = Fonts.SystemTypefaces.First();
+            }
             Width = width;
             Height = height;
             WorkArea = workArea;
         }
 
         public static DesktopWallpaper FromSystemParameters() =>
-            new(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height, SystemParameters.WorkArea);
+            new(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight, SystemParameters.WorkArea);
 
         private Visual CreateVisual(WeatherApi.Models.Forecast forecast)
         {
@@ -70,10 +82,15 @@ namespace weatherfrog.Infrastructure
 
         internal void Update(WeatherApi.Models.Forecast forecast, double width, double height, Rect workArea)
         {
+            UpdateDimensions(width, height, workArea);
+            Update(forecast);
+        }
+
+        internal void UpdateDimensions(double width, double height, Rect workArea)
+        {
             Width = width;
             Height = height;
             WorkArea = workArea;
-            Update(forecast);
         }
 
         private void SetDesktopWallpaper(Visual visual) =>
@@ -85,6 +102,34 @@ namespace weatherfrog.Infrastructure
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
             dc.DrawRectangle(forecast?.CurrentWeather?.BackgroundBrush, null, new(0, 0, Width, Height));
+            if (DrawTaskbar)
+            {
+                Rect taskbarRect = new();
+                // TODO: Draw Taskbar
+                if (Width == WorkArea.Width)
+                {
+                    taskbarRect.Width = Width;
+                    taskbarRect.Height = Height - WorkArea.Height;
+                    taskbarRect.X = 0;
+                    taskbarRect.Y = 0;
+                    if (WorkArea.Y == 0)
+                    {
+                        taskbarRect.Y = WorkArea.Height;
+                    }
+                }
+                else
+                {
+                    taskbarRect.Width = Width - WorkArea.Width;
+                    taskbarRect.Height = Height;
+                    taskbarRect.Y = 0;
+                    taskbarRect.X = 0;
+                    if (WorkArea.X == 0)
+                    {
+                        taskbarRect.X = WorkArea.Width;
+                    }
+                }
+                dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99000000")), null, taskbarRect);
+            }
             dc.Close();
             return dv;
         }
@@ -109,29 +154,26 @@ namespace weatherfrog.Infrastructure
             //double screenHeight = SystemParameters.WorkArea.Height;
             double leftTextLeft = (WorkArea.Width * 0.09) + WorkArea.Left;
 
-            Typeface tf = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
-            CultureInfo ci = new("en-us");
-
             // Location
             string location = forecast.Location.DisplayName;
-            FormattedText locationText = new(location, ci, FlowDirection.LeftToRight, tf, 30, Brushes.Black, 1.0d);
+            FormattedText locationText = new(location, cultureInfo, FlowDirection.LeftToRight, typeface, 30, Brushes.Black, 1.0d);
             dc.DrawText(locationText, new Point(leftTextLeft + 12, 40.0d + WorkArea.Top));
 
             // Temperature
             string temperature = forecast.CurrentWeather.Temp.ToString();
-            FormattedText temperatureText = new(temperature, ci, FlowDirection.LeftToRight, tf, 200,
+            FormattedText temperatureText = new(temperature, cultureInfo, FlowDirection.LeftToRight, typeface, 200,
                 Brushes.White, 1.0d);
             dc.DrawText(temperatureText, new Point(leftTextLeft, 70 + WorkArea.Top));
             //Temp Units
             string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
-            FormattedText temperatureUnitsText = new(temperatureUnitsString, ci, FlowDirection.LeftToRight,
-                tf, 80, Brushes.White, 1.0d);
+            FormattedText temperatureUnitsText = new(temperatureUnitsString, cultureInfo, FlowDirection.LeftToRight,
+                typeface, 80, Brushes.White, 1.0d);
             dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 96.0d + WorkArea.Top));
 
             // Feels Like
             string feelsLikeTemp = forecast.CurrentWeather.FeelsLike.ToString();
-            FormattedText apparentTempText = new("Feels like " + feelsLikeTemp + "°", ci, FlowDirection.LeftToRight,
-                tf, 40, Brushes.White, 1.0d);
+            FormattedText apparentTempText = new("Feels like " + feelsLikeTemp + "°", cultureInfo,
+                FlowDirection.LeftToRight, typeface, 40, Brushes.White, 1.0d);
             dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300.0d + WorkArea.Top));
 
             //Right Side Text
@@ -141,8 +183,8 @@ namespace weatherfrog.Infrastructure
             string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;
             if (!string.IsNullOrEmpty(precipInfo))
             {
-                FormattedText precipInfoText = new(precipInfo, ci, FlowDirection.LeftToRight,
-                    tf, 30, Brushes.Cyan, 1.0d)
+                FormattedText precipInfoText = new(precipInfo, cultureInfo, FlowDirection.LeftToRight,
+                    typeface, 30, Brushes.Cyan, 1.0d)
                 { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
                 dc.DrawText(precipInfoText, new Point(rightTextCenter + 25, 40.0d + WorkArea.Top));
                 //Umbrella
@@ -151,8 +193,8 @@ namespace weatherfrog.Infrastructure
             }
 
             // Weather Description
-            FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, ci, FlowDirection.LeftToRight,
-                tf, 40, Brushes.White, 1.0d)
+            FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, cultureInfo, FlowDirection.LeftToRight,
+                typeface, 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
             dc.DrawText(descriptionText, new Point(rightTextCenter, 300.0d + WorkArea.Top));
 
@@ -205,9 +247,9 @@ namespace weatherfrog.Infrastructure
             const double maxTextWidth = 600.0d;
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2")), null, new(0, 0, Width, Height));
-            FormattedText msgText = new(textToDraw, new CultureInfo("en-us"), FlowDirection.LeftToRight,
-                Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(), 40, Brushes.White, 1.0d)
+            dc.DrawRectangle(App.DefaultBackgroundBrush, null, new(0, 0, Width, Height));
+            FormattedText msgText = new(textToDraw, cultureInfo, FlowDirection.LeftToRight,
+                typeface, 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
             dc.DrawText(msgText, new Point((WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
             dc.DrawImage(imageSource, GetIllustrationRectangle(imageSource, AlignmentX.Center));

@@ -26,6 +26,10 @@ namespace weatherfrog.Illustrations
 
         public ImageSource Icon => icon ??= (ImageSource)System.Windows.Application.Current.FindResource("BuildStyle");
 
+        public bool IsFogOrVog => weatherCondition == WeatherCondition.Fog || WeatherCondition == WeatherCondition.Vog;
+
+        public bool IsNotFogOrVog => !IsFogOrVog;
+
         private void CreateFilename() =>
             FileName = WeatherConditionPortion() + LocationPortion() + TimeOfDayPortion() + ActivityPortion() + Below45Portion();
 
@@ -64,6 +68,11 @@ namespace weatherfrog.Illustrations
             NotifyPropertyChanged(propertyName);
             if (propertyName != nameof(FileName))
                 CreateFilename();
+            if (propertyName == nameof(WeatherCondition))
+            {
+                NotifyPropertyChanged(nameof(IsFogOrVog));
+                NotifyPropertyChanged(nameof(IsNotFogOrVog));
+            }
             return true;
         }
 
@@ -81,7 +90,7 @@ namespace weatherfrog.Illustrations
 
         public bool HasErrors => errors.Count > 0;
 
-        public void RaiseErrorsChanged(string propertyName) => 
+        public void RaiseErrorsChanged(string propertyName) =>
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
 
         // Adds the specified error to the errors collection if it is not 
