@@ -11,7 +11,7 @@ using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog.Illustrations
 {
-    //TODO: Remove Debug statements.
+    //TODO: Remove Debug statement(s).
     public class IllustrationViewModel : INotifyPropertyChanged
     {
         private readonly DesktopWallpaper desktopWallpaper;
@@ -33,6 +33,7 @@ namespace weatherfrog.Illustrations
                     FeelsLikeF = 65,
                     FeelsLikeC = 19,
                     IsDay = true,
+                    Cloud = 0,
                     Condition = new() { Code = 1087, Text = "Thundery outbreaks possible" }
                 },
                 Days = new()
@@ -56,7 +57,7 @@ namespace weatherfrog.Illustrations
 
         private void CreateWallpaper()
         {
-            System.Diagnostics.Debug.WriteLine("CreateWallpaper Called (calling method: " +
+            System.Diagnostics.Debug.WriteLine("CreateWallpaper invoked (calling method: " +
                 new System.Diagnostics.StackFrame(1).GetMethod().Name + ")");
             Wallpaper = desktopWallpaper.CreateBitmap(Forecast);
         }

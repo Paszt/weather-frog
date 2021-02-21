@@ -11,6 +11,6 @@ Save as:
   32 Colors
   Matte: None
   No Transparency Dither
-  (max width of 3840, height=1070)
+  (max width of 3840, height=1070) (new: Width of 6474, height=1070)
 
 The file "PNG-8 Weather-Frog.irs" (which should be in the same folder as this file) is a File Format preset for Photoshop Save For Web containing the above settings (sans the width which has to be set manually).

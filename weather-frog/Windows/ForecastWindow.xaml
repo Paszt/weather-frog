@@ -14,7 +14,8 @@
         Style="{DynamicResource CustomWindowStyle}"
         Closing="Window_Closing"
         Loaded="Window_Loaded"
-        d:Width="1200">
+        d:Width="1200"
+        d:Height="870">
     <Window.DataContext>
         <viewModels:ForecastViewModel />
     </Window.DataContext>
@@ -175,7 +176,7 @@
                             </Expander>
                             <resources:HourlyGraph Forecast="{Binding Path=DataContext.Forecast, 
                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                                                   Forecastday="{Binding Index}"
+                                                   ForecastdayIndex="{Binding Index}"
                                                    x:Name="HourlyGraph"
                                                    DisplaysTomorrowMorning="False"
                                                    Margin="0,8,0,10"

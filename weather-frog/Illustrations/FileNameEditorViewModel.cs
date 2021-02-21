@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Media;
 using weatherfrog.Extensions;
+using weatherfrog.Infrastructure;
 
 namespace weatherfrog.Illustrations
 {
@@ -52,6 +54,9 @@ namespace weatherfrog.Illustrations
 
         private string Below45Portion() => IsBelow45 ? "_Cold" : string.Empty;
 
+        private RelayCommand copyToClipboardCommand;
+        public RelayCommand CopyToClipboardCommand => copyToClipboardCommand ??= new(
+            () => Clipboard.SetText(FileName), () => !string.IsNullOrEmpty(FileName));
 
         #region INotifyPropertyChanged
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -59,14 +58,14 @@ namespace weatherfrog.Resources
             set => SetValue(ForecastProperty, value);
         }
 
-        public static readonly DependencyProperty ForecastdayProperty =
-            DependencyProperty.Register("Forecastday", typeof(int),
+        public static readonly DependencyProperty ForecastdayIndexProperty =
+            DependencyProperty.Register("ForecastdayIndex", typeof(int),
                 typeof(HourlyGraph), new PropertyMetadata(0, OnForecastChanged));
 
-        public int Forecastday
+        public int ForecastdayIndex
         {
-            get => (int)GetValue(ForecastdayProperty);
-            set => SetValue(ForecastdayProperty, value);
+            get => (int)GetValue(ForecastdayIndexProperty);
+            set => SetValue(ForecastdayIndexProperty, value);
         }
 
         public static readonly DependencyProperty DisplaysTomorrowMorningProperty =
@@ -102,17 +101,16 @@ namespace weatherfrog.Resources
 
         private void Draw()
         {
-            if (!(null == Forecast?.Days))
+            if (null != Forecast?.Days)
             {
                 const int lastHourToShow = 10;
-                //Rectangle.Fill = Brushes.Transparent;
                 List<Hour> upcomingHours = new();
                 // Get hourly data from the first day, today, starting with and including the current hour.
                 DateTime localTime = DateTime.Parse(Forecast?.Location?.Localtime);
-                upcomingHours = Forecast.Days?.Forecastdays[Forecastday]?.HourlyWeather?.Where(h => h.Time > localTime.AddHours(-1)).ToList();
+                upcomingHours = Forecast.Days?.Forecastdays[ForecastdayIndex]?.HourlyWeather?.Where(h => h.Time > localTime.AddHours(-1)).ToList();
                 // Get the hourly data from the next day, up to 10 AM.
-                if (DisplaysTomorrowMorning && Forecastday < Forecast.Days.Forecastdays.Count - 1)
-                    upcomingHours.AddRange(Forecast.Days?.Forecastdays[Forecastday + 1]?.HourlyWeather?.Where(h => h.Time.Hour <= lastHourToShow).ToList());
+                if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
+                    upcomingHours.AddRange(Forecast.Days?.Forecastdays[ForecastdayIndex + 1]?.HourlyWeather?.Where(h => h.Time.Hour <= lastHourToShow).ToList());
 
                 DrawingVisual dv = new();
                 using DrawingContext dc = dv.RenderOpen();
@@ -152,17 +150,17 @@ namespace weatherfrog.Resources
                 dc.Close();
                 // Close graph
                 int finalTemp = default;
-                if (DisplaysTomorrowMorning && Forecastday < Forecast.Days.Forecastdays.Count - 1)
+                if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
                 {
                     // final graph point is half way between lastHourToShow.Temp & (lastHourToShow + 1).Temp
-                    int lastHourTemp = Forecast.Days.Forecastdays[Forecastday + 1].HourlyWeather[lastHourToShow].Temp;
-                    int afterLastHourTemp = Forecast.Days.Forecastdays[Forecastday + 1].HourlyWeather[lastHourToShow + 1].Temp;
+                    int lastHourTemp = Forecast.Days.Forecastdays[ForecastdayIndex + 1].HourlyWeather[lastHourToShow].Temp;
+                    int afterLastHourTemp = Forecast.Days.Forecastdays[ForecastdayIndex + 1].HourlyWeather[lastHourToShow + 1].Temp;
                     finalTemp = lastHourTemp + ((afterLastHourTemp - lastHourTemp) / 2);
                 }
                 else
                 {
                     //This is the last day and there is no next day to get finalTemp. User last tempurature of today's data.
-                    finalTemp = Forecast.Days.Forecastdays[Forecastday].HourlyWeather.Last().Temp;
+                    finalTemp = Forecast.Days.Forecastdays[ForecastdayIndex].HourlyWeather.Last().Temp;
                 }
 
                 Graph.Points.Add(new Point(leftPoint, CalculateYValue(finalTemp)));

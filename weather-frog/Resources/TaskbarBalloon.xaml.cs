@@ -25,7 +25,9 @@ namespace weatherfrog.Resources
             HourlyGraph.Opacity = 0.0;
         }
 
-        private void RootGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void RootGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) => Animate();
+
+        private void Animate()
         {
             double ToYValue = 0.0;
             double ToOpacityValue = 1.0;
@@ -59,7 +61,11 @@ namespace weatherfrog.Resources
             {
                 Vector v = startDrag - e.GetPosition(this);
                 // If the user drags the graph more than 20 down, but not more than 20 left or right, close the graph.
-                if (Math.Abs(v.X) < 20 && v.Y < -20) { RootGrid_MouseLeftButtonUp(null, null); IsTrackingYDelta = false; }
+                if (Math.Abs(v.X) < 20 && v.Y < -20)
+                {
+                    Animate();
+                    IsTrackingYDelta = false;
+                }
                 // A drag to the left or right more than 20 means the user is sliding the graph left/right, 
                 // so stop tracking Y change.
                 if (Math.Abs(v.X) > 20) IsTrackingYDelta = false;

@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.IO;
 using System.Text.Json;
 using weatherfrog.Resources;
+using System.Xaml.Schema;
+using System.Collections.Generic;
 
 namespace weatherfrog
 {
@@ -94,6 +96,8 @@ namespace weatherfrog
             };
             BindingOperations.SetBinding(notifyIcon, TaskbarIcon.ToolTipTextProperty, toolTipMultiBinding);
 
+            Locations = My.Settings.Locations;
+
             SystemEvents sysEvents = new();
             sysEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
             sysEvents.ResumedFromSuspension += SystemEvents_ResumedFromSuspension;
@@ -128,6 +132,10 @@ namespace weatherfrog
         public Brush BackgroundBrush => Forecast?.CurrentWeather?.BackgroundBrush is null
                    ? DefaultBackgroundBrush
                    : (Forecast?.CurrentWeather?.BackgroundBrush);
+
+        private List<string> locations;
+        /// <summary>The taskbar icon Locations context menu is bound to this.</summary>
+        public List<string> Locations { get => locations; set => SetProperty(ref locations, value); }
 
         // Used in NotifyIconResources.xaml > NotifyIconMenu
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "#if Directive")]
@@ -208,6 +216,13 @@ namespace weatherfrog
 
         private RelayCommand showPopupWindowCommand;
         public RelayCommand ShowPopupWindowCommand => showPopupWindowCommand ??= new(() => Popupwindow.Instance.Show());
+
+        private RelayCommand<string> changeLocationCommand;
+        public RelayCommand<string> ChangeLocationCommand => changeLocationCommand ??= 
+            new RelayCommand<string>(value => {
+                My.Settings.Location = value;
+                updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
+            });
 
         #endregion
 

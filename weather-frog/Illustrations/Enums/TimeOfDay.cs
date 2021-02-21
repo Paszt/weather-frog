@@ -5,8 +5,8 @@ namespace weatherfrog.Illustrations
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TimeOfDay
     {
-        Any,
-        Day,
-        Night
+        Any = 0,
+        Day = 1,
+        Night = 2
     }
 }

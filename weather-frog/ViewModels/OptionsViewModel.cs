@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows.Media;
+using System.Xaml.Schema;
 using weatherfrog.Infrastructure;
 using weatherfrog.WeatherApi;
 
@@ -148,9 +149,7 @@ namespace weatherfrog.ViewModels
             {
                 int newLocation = Locations.IndexOf(sortableList[i]);
                 if (newLocation != i)
-                {
                     Locations.Move(Locations.IndexOf(sortableList[i]), i);
-                }
             }
         }
 
@@ -187,7 +186,6 @@ namespace weatherfrog.ViewModels
             My.Settings.Location = Location;
             My.Settings.TaskbarIconStyle = TaskbarIconStyle;
             My.Settings.UpdateDesktop = UpdateDesktop;
-            My.Settings.Locations = new List<string>(Locations);
             My.Settings.Save();
             Configuration.ApiKey = WeatherApiKey;
             // Weather data is updated in App.ShowOptionsCommand
@@ -202,6 +200,7 @@ namespace weatherfrog.ViewModels
         {
             Locations.Add(Location);
             SortLocations();
+            Locations_Changed();
         });
 
         private RelayCommand removeLocationFromFavoritesCommand;
@@ -210,11 +209,22 @@ namespace weatherfrog.ViewModels
             string currentLocation = Location;
             Locations.Remove(Location);
             Location = currentLocation;
+            Locations_Changed();
         });
+
+        private void Locations_Changed()
+        {
+            My.Settings.Locations = new List<string>(Locations);
+            My.Settings.Save();
+#pragma warning disable CA1507 // Use nameof to express symbol names | Reason: can't use nested property for nameof
+            App.Current.NotifyPropertyChanged("Locations");
+#pragma warning restore CA1507 // Use nameof to express symbol names
+        }
 
         private RelayCommand browseToWeatherApiCommand;
         public RelayCommand BrowseToWeatherApiCommand => browseToWeatherApiCommand ??= new RelayCommand(
-            () => Process.Start(new ProcessStartInfo("cmd", $"/c start {"https://www.weatherapi.com/signup.aspx"}") { CreateNoWindow = true }));
+            () => Process.Start(new ProcessStartInfo("cmd", 
+                $"/c start {"https://www.weatherapi.com/signup.aspx"}") { CreateNoWindow = true }));
 
         private RelayCommand cancelLocationSearchCommand;
         public RelayCommand CancelLocationSearchCommand => cancelLocationSearchCommand ??= new RelayCommand(

@@ -47,6 +47,7 @@ namespace weatherfrog.Infrastructure
             {
                 Children = {
                     DrawBackground(forecast),
+                    DrawClouds(forecast),
                     DrawFrogIllustration(forecast),
                     DrawText(forecast),
                     DrawWeatherIcon(forecast)}
@@ -134,14 +135,39 @@ namespace weatherfrog.Infrastructure
             return dv;
         }
 
-        private static DrawingVisual DrawFrogIllustration(WeatherApi.Models.Forecast forecast)
+        private DrawingVisual DrawClouds(WeatherApi.Models.Forecast forecast)
         {
+            if (forecast.CurrentWeather.Cloud == 0) return null;
+            string cloudFilename = "clouds" +
+                ((int)(Math.Round(forecast.CurrentWeather.Cloud.Value / 10.0d, MidpointRounding.ToPositiveInfinity) * 10)).ToString("d3") +
+                ".png";
+            BitmapFrame bitmapFrame;
+            try
+            {
+                bitmapFrame = BitmapFrame.Create(
+                    new Uri("pack://application:,,,/weather-frog;component/Resources/Clouds/" + cloudFilename));
+            }
+            catch (Exception) { return null; }
+
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            //TODO: Draw Frog Illustration on Wallpaper.
-            Debug.WriteLine(forecast);
+            dc.DrawImage(bitmapFrame, GetIllustrationRectangle(bitmapFrame, AlignmentX.Center));
             dc.Close();
             return dv;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Work Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0022:Use expression body for methods", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+        private DrawingVisual DrawFrogIllustration(WeatherApi.Models.Forecast forecast)
+        {
+            //DrawingVisual dv = new();
+            //using DrawingContext dc = dv.RenderOpen();
+            ////TODO: Draw Frog Illustration on Wallpaper.
+            //Debug.WriteLine(forecast);
+            //dc.Close();
+            //return dv;
+            return null;
         }
 
         private DrawingVisual DrawText(WeatherApi.Models.Forecast forecast)

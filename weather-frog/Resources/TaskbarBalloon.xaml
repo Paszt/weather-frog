@@ -100,7 +100,6 @@
                    HorizontalAlignment="Center" />
         </Grid>
         <resources:HourlyGraph Forecast="{Binding Forecast}"
-                               Forecastday="0"
                                x:Name="HourlyGraph"
                                Height="150"
                                MouseLeftButtonDown="HourlyGraph_MouseLeftButtonDown"

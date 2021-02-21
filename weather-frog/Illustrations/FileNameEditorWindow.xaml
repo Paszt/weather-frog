@@ -50,6 +50,13 @@
             <TextBox Width="600"
                      IsReadOnly="True"
                      Text="{Binding FileName}" />
+            <Button Width="40"
+                    Margin="15,0,0,0"
+                    Command="{Binding CopyToClipboardCommand}"
+                    ToolTip="Copy to Clipboard">
+                <Image Source="{DynamicResource CopyToClipboard}"
+                       Margin="4" />
+            </Button>
         </StackPanel>
         <Grid Grid.Row="1"
               HorizontalAlignment="Center">

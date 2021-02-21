@@ -29,7 +29,7 @@ namespace weatherfrog.Illustrations
         /// Boolean value indicating weather the illustration is meant to be for temperatures below 45°F. Maybe
         /// the frog is wearing a knit hat and sweater, for example.
         /// </summary>
-        [JsonPropertyName("is_below_45")]
+        [JsonPropertyName("is_below_45"), DefaultValue(false)]
         public bool IsBelow45 { get => isBelow45; set => SetProperty(ref isBelow45, value); }
 
         [JsonPropertyName("time_of_day")]
@@ -38,8 +38,14 @@ namespace weatherfrog.Illustrations
         [JsonPropertyName("weather_condition")]
         public WeatherCondition WeatherCondition { get => weatherCondition; set => SetProperty(ref weatherCondition, value); }
 
+        public string FileName { get; set; }
+
         [JsonIgnore]
-        public string Json => JsonSerializer.Serialize(this, new() { WriteIndented = true });
+        public string Json => JsonSerializer.Serialize(this, new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+        });
 
         public override bool Equals(object obj) => obj is Illustration illustration && Equals(illustration);
 

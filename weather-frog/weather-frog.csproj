@@ -18,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Clouds\clouds010.png" />
     <None Remove="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <None Remove="Resources\FrogIllustrations\SomethingWrong.png" />
     <None Remove="Resources\Roboto-Regular.ttf" />
@@ -35,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Clouds\clouds010.png" />
     <Resource Include="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <Resource Include="Resources\FrogIllustrations\SomethingWrong.png" />
     <Resource Include="Resources\Roboto-Regular.ttf" />
@@ -53,6 +55,12 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\IllustrationFilenamGenerator.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\MetadataEditor.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

@@ -11,7 +11,7 @@
         Title="Weather Frog Options"
         Height="600"
         MinHeight="600"
-        Width="640"
+        Width="680"
         MinWidth="640"
         Style="{DynamicResource CustomToolWindowStyle}"
         ResizeMode="NoResize"
