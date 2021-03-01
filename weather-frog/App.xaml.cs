@@ -22,7 +22,7 @@ namespace weatherfrog
     public partial class App : Application, INotifyPropertyChanged
     {
         private static TaskbarIcon notifyIcon;
-        private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(10);
+        private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(5);
         private Timer updateWeatherTimer;
         private DesktopWallpaper desktopWallpaper;
 
@@ -87,11 +87,12 @@ namespace weatherfrog
             };
             MultiBinding toolTipMultiBinding = new MultiBinding()
             {
-                StringFormat = "Weather Frog \n{0}° {1}\n{2}",
+                StringFormat = "Weather Frog \n{0}° {1}\n{2}\nLast updated: {3}",
                 Bindings = {
                     new Binding("Forecast.CurrentWeather.Temp") { Source = this },
                     new Binding("Forecast.CurrentWeather.Condition.Text") { Source = this },
                     new Binding("Forecast.Location.DisplayName") { Source = this },
+                    new Binding(nameof(LastUpdatedTimeString)) {Source = this},
                 }
             };
             BindingOperations.SetBinding(notifyIcon, TaskbarIcon.ToolTipTextProperty, toolTipMultiBinding);
@@ -126,12 +127,25 @@ namespace weatherfrog
         public Forecast Forecast
         {
             get => forecast;
-            set { if (SetProperty(ref forecast, value)) NotifyPropertyChanged(nameof(BackgroundBrush)); }
+            set
+            {
+                if (SetProperty(ref forecast, value))
+                {
+                    NotifyPropertyChanged(nameof(BackgroundBrush));
+                    NotifyPropertyChanged(nameof(LastUpdatedTimeString));
+                }
+            }
         }
 
         public Brush BackgroundBrush => Forecast?.CurrentWeather?.BackgroundBrush is null
-                   ? DefaultBackgroundBrush
-                   : (Forecast?.CurrentWeather?.BackgroundBrush);
+            ? DefaultBackgroundBrush
+            : (Forecast?.CurrentWeather?.BackgroundBrush);
+
+        public string LastUpdatedTimeString =>
+            !string.IsNullOrEmpty(Forecast?.CurrentWeather.LastUpdated) &&
+            DateTimeOffset.TryParse(Forecast.CurrentWeather.LastUpdated, out DateTimeOffset dto)
+                ? dto.ToString("t")
+                : null;
 
         private List<string> locations;
         /// <summary>The taskbar icon Locations context menu is bound to this.</summary>
@@ -218,8 +232,9 @@ namespace weatherfrog
         public RelayCommand ShowPopupWindowCommand => showPopupWindowCommand ??= new(() => Popupwindow.Instance.Show());
 
         private RelayCommand<string> changeLocationCommand;
-        public RelayCommand<string> ChangeLocationCommand => changeLocationCommand ??= 
-            new RelayCommand<string>(value => {
+        public RelayCommand<string> ChangeLocationCommand => changeLocationCommand ??=
+            new RelayCommand<string>(value =>
+            {
                 My.Settings.Location = value;
                 updateWeatherTimer.Change(TimeSpan.Zero, UpdateWeatherInterval);
             });

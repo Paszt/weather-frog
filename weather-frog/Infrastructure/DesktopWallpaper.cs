@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -41,30 +40,21 @@ namespace weatherfrog.Infrastructure
         public static DesktopWallpaper FromSystemParameters() =>
             new(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight, SystemParameters.WorkArea);
 
-        private Visual CreateVisual(WeatherApi.Models.Forecast forecast)
+        private Visual CreateVisual(WeatherApi.Models.Forecast forecast) => new ContainerVisual()
         {
-            ContainerVisual container = new()
-            {
-                Children = {
-                    DrawBackground(forecast),
-                    DrawClouds(forecast),
-                    DrawFrogIllustration(forecast),
-                    DrawText(forecast),
-                    DrawWeatherIcon(forecast)}
-            };
-            return container;
-        }
+            Children = {DrawBackground(forecast),
+                        DrawClouds(forecast),
+                        DrawFrogIllustration(forecast),
+                        DrawText(forecast),
+                        DrawWeatherIcon(forecast)}
+        };
 
-        public RenderTargetBitmap CreateBitmap(WeatherApi.Models.Forecast forecast)
-        {
-            Visual visual = CreateVisual(forecast);
-            return CreateBitmap(visual);
-        }
+        public RenderTargetBitmap CreateBitmap(WeatherApi.Models.Forecast forecast) =>
+            CreateBitmap(CreateVisual(forecast));
 
         private RenderTargetBitmap CreateBitmap(Visual visual)
         {
-            RenderTargetBitmap rtbmp = new((int)Width, (int)Height,
-                96.0, 96.0, PixelFormats.Pbgra32);
+            RenderTargetBitmap rtbmp = new((int)Width, (int)Height, 96.0, 96.0, PixelFormats.Pbgra32);
             rtbmp.Render(visual);
             return rtbmp;
         }
@@ -72,13 +62,10 @@ namespace weatherfrog.Infrastructure
         internal void Update(WeatherApi.Models.Forecast forecast, bool UpdateDimensionsFromSystemParameters = false)
         {
             if (UpdateDimensionsFromSystemParameters)
-            {
-                Width = SystemParameters.PrimaryScreenWidth;
-                Height = SystemParameters.PrimaryScreenHeight;
-                WorkArea = SystemParameters.WorkArea;
-            }
-            Visual visual = CreateVisual(forecast);
-            SetDesktopWallpaper(visual);
+                UpdateDimensions(SystemParameters.PrimaryScreenWidth,
+                                 SystemParameters.PrimaryScreenHeight,
+                                 SystemParameters.WorkArea);
+            SetDesktopWallpaper(CreateVisual(forecast));
         }
 
         internal void Update(WeatherApi.Models.Forecast forecast, double width, double height, Rect workArea)
