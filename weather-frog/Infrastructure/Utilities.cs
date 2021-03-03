@@ -24,7 +24,7 @@ namespace weatherfrog.Infrastructure
                  text + "°",
                  new System.Globalization.CultureInfo("en-us"),
                  FlowDirection.LeftToRight,
-                 Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First(),
+                 GetRobotoRegularTypeface(),
                  11,
                  System.Windows.Media.Brushes.White,
                  null,
@@ -34,6 +34,14 @@ namespace weatherfrog.Infrastructure
             dc.Close();
             return CreateIcon(16, 16, dv);
         }
+
+        public static Typeface GetRobotoRegularTypeface() =>
+            new(new System.Windows.Media.FontFamily(new Uri("pack://application:,,,/"), "Resources/#Roboto"),
+                FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+
+        public static Typeface GetCorbenRegularTypeface() =>
+            new(new System.Windows.Media.FontFamily(new Uri("pack://application:,,,/"), "Resources/#Corben"),
+                FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
         /// <summary>
         /// Creates a System.Drawing.Icon from the given visual with dpi X&Y of 96 and a Pixel Format of Pbgra32.

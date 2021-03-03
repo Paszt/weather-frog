@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <None Remove="Resources\Clouds\clouds010.png" />
+    <None Remove="Resources\Corben-Regular.ttf" />
     <None Remove="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <None Remove="Resources\FrogIllustrations\SomethingWrong.png" />
     <None Remove="Resources\Roboto-Regular.ttf" />
@@ -37,6 +38,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\Clouds\clouds010.png" />
+    <Resource Include="Resources\Corben-Regular.ttf" />
     <Resource Include="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <Resource Include="Resources\FrogIllustrations\SomethingWrong.png" />
     <Resource Include="Resources\Roboto-Regular.ttf" />

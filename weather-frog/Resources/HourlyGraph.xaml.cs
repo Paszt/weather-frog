@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using weatherfrog.Infrastructure;
 using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog.Resources
@@ -37,7 +38,7 @@ namespace weatherfrog.Resources
             // Design time can't reference the font...
             try
             {
-                typeFace = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
+                typeFace = Utilities.GetRobotoRegularTypeface();
             }
             catch (Exception)
             {

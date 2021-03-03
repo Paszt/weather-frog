@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -26,7 +27,7 @@ namespace weatherfrog.Infrastructure
             // Design time can't reference the font...
             try
             {
-                typeface = Fonts.GetTypefaces(new Uri("pack://application:,,,/"), "./resources/").First();
+                typeface = Utilities.GetRobotoRegularTypeface();
             }
             catch (Exception)
             {
@@ -176,18 +177,18 @@ namespace weatherfrog.Infrastructure
             string temperature = forecast.CurrentWeather.Temp.ToString();
             FormattedText temperatureText = new(temperature, cultureInfo, FlowDirection.LeftToRight, typeface, 200,
                 Brushes.White, 1.0d);
-            dc.DrawText(temperatureText, new Point(leftTextLeft, 70 + WorkArea.Top));
+            dc.DrawText(temperatureText, new Point(leftTextLeft, 65 + WorkArea.Top));
             //Temp Units
             string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
             FormattedText temperatureUnitsText = new(temperatureUnitsString, cultureInfo, FlowDirection.LeftToRight,
                 typeface, 80, Brushes.White, 1.0d);
-            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 96.0d + WorkArea.Top));
+            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 91 + WorkArea.Top));
 
             // Feels Like
             string feelsLikeTemp = forecast.CurrentWeather.FeelsLike.ToString();
             FormattedText apparentTempText = new("Feels like " + feelsLikeTemp + "°", cultureInfo,
                 FlowDirection.LeftToRight, typeface, 40, Brushes.White, 1.0d);
-            dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 300.0d + WorkArea.Top));
+            dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 290 + WorkArea.Top));
 
             //Right Side Text
             double rightTextCenter = (WorkArea.Width * 0.77d) + WorkArea.Left + (weatherIconWidth / 2) - 150.0d;
@@ -209,7 +210,7 @@ namespace weatherfrog.Infrastructure
             FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, cultureInfo, FlowDirection.LeftToRight,
                 typeface, 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
-            dc.DrawText(descriptionText, new Point(rightTextCenter, 300.0d + WorkArea.Top));
+            dc.DrawText(descriptionText, new Point(rightTextCenter, 290 + WorkArea.Top));
 
             dc.Close();
             return dv;
@@ -219,7 +220,7 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            Rect WeatherIconRect = new(new Point((WorkArea.Width * 0.77) + WorkArea.Left, 97.0 + WorkArea.Top),
+            Rect WeatherIconRect = new(new Point((WorkArea.Width * 0.77) + WorkArea.Left, 92 + WorkArea.Top),
                                        new Size(weatherIconWidth, weatherIconWidth));
             dc.DrawImage(forecast.CurrentWeather.WeatherIcon, WeatherIconRect);
             dc.Close();
@@ -262,7 +263,7 @@ namespace weatherfrog.Infrastructure
             using DrawingContext dc = dv.RenderOpen();
             dc.DrawRectangle(App.DefaultBackgroundBrush, null, new(0, 0, Width, Height));
             FormattedText msgText = new(textToDraw, cultureInfo, FlowDirection.LeftToRight,
-                typeface, 40, Brushes.White, 1.0d)
+                Utilities.GetCorbenRegularTypeface(), 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
             dc.DrawText(msgText, new Point((WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
             dc.DrawImage(imageSource, GetIllustrationRectangle(imageSource, AlignmentX.Center));

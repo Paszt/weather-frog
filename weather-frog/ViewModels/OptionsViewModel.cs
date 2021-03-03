@@ -181,7 +181,7 @@ namespace weatherfrog.ViewModels
         public RelayCommand SaveCommand => saveCommand ??= new RelayCommand(() =>
         {
             My.Settings.ApiKeyValidated = true;
-            My.Settings.WeatherApiKey = weatherApiKey;
+            My.Settings.WeatherApiKey = WeatherApiKey;
             My.Settings.UnitSystem = UnitSystem;
             My.Settings.Location = Location;
             My.Settings.TaskbarIconStyle = TaskbarIconStyle;
@@ -216,9 +216,7 @@ namespace weatherfrog.ViewModels
         {
             My.Settings.Locations = new List<string>(Locations);
             My.Settings.Save();
-#pragma warning disable CA1507 // Use nameof to express symbol names | Reason: can't use nested property for nameof
-            App.Current.NotifyPropertyChanged("Locations");
-#pragma warning restore CA1507 // Use nameof to express symbol names
+            App.Current.Locations = My.Settings.Locations;
         }
 
         private RelayCommand browseToWeatherApiCommand;
