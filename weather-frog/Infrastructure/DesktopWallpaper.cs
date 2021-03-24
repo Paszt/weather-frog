@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -25,14 +24,8 @@ namespace weatherfrog.Infrastructure
         public DesktopWallpaper(double width, double height, Rect workArea)
         {
             // Design time can't reference the font...
-            try
-            {
-                typeface = Utilities.GetRobotoRegularTypeface();
-            }
-            catch (Exception)
-            {
-                typeface = Fonts.SystemTypefaces.First();
-            }
+            try { typeface = Utilities.GetRobotoRegularTypeface(); }
+            catch (Exception) { typeface = Fonts.SystemTypefaces.First(); }
             Width = width;
             Height = height;
             WorkArea = workArea;
@@ -191,7 +184,7 @@ namespace weatherfrog.Infrastructure
             dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 290 + WorkArea.Top));
 
             //Right Side Text
-            double rightTextCenter = (WorkArea.Width * 0.77d) + WorkArea.Left + (weatherIconWidth / 2) - 150.0d;
+            double rightTextCenter = (WorkArea.Width * 0.77d) + WorkArea.Left + (weatherIconWidth / 2) - 200.0d;
 
             // Chance of precipitation (rain or snow)
             string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;
@@ -199,17 +192,17 @@ namespace weatherfrog.Infrastructure
             {
                 FormattedText precipInfoText = new(precipInfo, cultureInfo, FlowDirection.LeftToRight,
                     typeface, 30, Brushes.Cyan, 1.0d)
-                { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
+                { TextAlignment = TextAlignment.Center, MaxTextWidth = 400.0d };
                 dc.DrawText(precipInfoText, new Point(rightTextCenter + 25, 40.0d + WorkArea.Top));
                 //Umbrella
                 dc.DrawImage((ImageSource)Application.Current.FindResource("Umbrella"),
-                    new Rect(rightTextCenter + (precipInfoText.Width / 2) - 10, 44.0d + WorkArea.Top, 24.0d, 24.0d));
+                    new Rect(rightTextCenter + precipInfoText.Width - 30, 44.0d + WorkArea.Top, 24.0d, 24.0d));
             }
 
             // Weather Description
             FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, cultureInfo, FlowDirection.LeftToRight,
                 typeface, 40, Brushes.White, 1.0d)
-            { TextAlignment = TextAlignment.Center, MaxTextWidth = 300.0d };
+            { TextAlignment = TextAlignment.Center, MaxTextWidth = 400.0d };
             dc.DrawText(descriptionText, new Point(rightTextCenter, 290 + WorkArea.Top));
 
             dc.Close();
@@ -265,7 +258,7 @@ namespace weatherfrog.Infrastructure
             FormattedText msgText = new(textToDraw, cultureInfo, FlowDirection.LeftToRight,
                 Utilities.GetCorbenRegularTypeface(), 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
-            dc.DrawText(msgText, new Point((WorkArea.Width / 2) - (maxTextWidth / 2), 120.0d));
+            dc.DrawText(msgText, new Point((WorkArea.Width / 2) - (maxTextWidth / 2) + WorkArea.Left, 120.0d + WorkArea.Top));
             dc.DrawImage(imageSource, GetIllustrationRectangle(imageSource, AlignmentX.Center));
             dc.Close();
             SetDesktopWallpaper(dv);
@@ -273,21 +266,21 @@ namespace weatherfrog.Infrastructure
 
         private Rect GetIllustrationRectangle(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
         {
-            double y = WorkArea.Height / 3.0d;
-            double height = WorkArea.Height * (2.0d / 3.0d);
-            double scale = height / imageSource.Height;
-            double width = imageSource.Width * scale;
-            double x = 0.0d;
+            double illustrationRectTop = (WorkArea.Height * 0.4d) + WorkArea.Top;
+            double illustrationRectHeight = WorkArea.Height * 0.6d;
+            double scale = illustrationRectHeight / imageSource.Height;
+            double imgWidthScaled = imageSource.Width * scale;
+            double illustrationRectLeft = WorkArea.Left;
             switch (alignmentX)
             {
                 case AlignmentX.Center:
-                    x = (WorkArea.Width - width) / 2.0d;
+                    illustrationRectLeft = ((WorkArea.Width - imgWidthScaled) / 2.0d) + WorkArea.Left;
                     break;
                 case AlignmentX.Right:
-                    x = WorkArea.Width - width;
+                    illustrationRectLeft = WorkArea.Width - imgWidthScaled + WorkArea.Left;
                     break;
             }
-            return new Rect(x, y, width, height);
+            return new Rect(illustrationRectLeft, illustrationRectTop, imgWidthScaled, illustrationRectHeight);
         }
 
         #region Win32

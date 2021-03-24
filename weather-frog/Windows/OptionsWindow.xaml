@@ -158,9 +158,18 @@
             <!-- Desktop Wallpaper Options -->
             <TabItem Header="Desktop Wallpaper">
                 <StackPanel d:DataContext="{d:DesignInstance resources:ForecastDesignData, IsDesignTimeCreatable=True}">
-                    <CheckBox Content="Update Desktop Wallpaper"
-                              Margin="10"
-                              IsChecked="{Binding UpdateDesktop}" />
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Content="Update Desktop Wallpaper"
+                                  IsChecked="{Binding UpdateDesktop}"
+                                  Margin="10" />
+                        <CheckBox Content="Disable Wallpaper Compression"
+                                  IsChecked="{Binding DisableWallpaperCompression}"
+                                  IsEnabled="{Binding UpdateDesktop}"
+                                  Margin="40,0,0,0" />
+                        <Image Source="{DynamicResource Help}"
+                               Margin="7,0,0,0"
+                               ToolTip="Windows compresses wallpaper images by default. Select this to disalbe. This creates an entry in your local registry." />
+                    </StackPanel>
                     <Grid Background="{Binding Forecast.CurrentWeather.BackgroundBrush}"
                           IsEnabled="{Binding UpdateDesktop}"
                           Height="380"

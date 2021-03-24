@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -18,11 +19,10 @@ namespace weatherfrog.ViewModels
             TestPassed = My.Settings.ApiKeyValidated;
             UnitSystem = My.Settings.UnitSystem;
             UpdateDesktop = My.Settings.UpdateDesktop;
+            DisableWallpaperCompression = My.Settings.DisableWallpaperCompression;
             WeatherApiKey = My.Settings.WeatherApiKey;
             if (My.Settings.Locations is null)
-            {
                 Locations = new ObservableCollection<string>();
-            }
             else
             {
                 Locations = new ObservableCollection<string>(My.Settings.Locations);
@@ -61,21 +61,28 @@ namespace weatherfrog.ViewModels
         public TaskbarIconStyle TaskbarIconStyle
         {
             get => taskbarIconStyle;
-            set { if (SetProperty(ref taskbarIconStyle, value)) { OnSettingChanged(); } }
+            set { if (SetProperty(ref taskbarIconStyle, value)) OnSettingChanged(); }
         }
 
         private WeatherApi.Models.UnitSystem unitSystem = WeatherApi.Models.UnitSystem.Imperial;
         public WeatherApi.Models.UnitSystem UnitSystem
         {
             get => unitSystem;
-            set { if (SetProperty(ref unitSystem, value)) { OnSettingChanged(); } }
+            set { if (SetProperty(ref unitSystem, value)) OnSettingChanged(); }
         }
 
         private bool updateDesktop;
         public bool UpdateDesktop
         {
             get => updateDesktop;
-            set { if (SetProperty(ref updateDesktop, value)) { OnSettingChanged(); } }
+            set { if (SetProperty(ref updateDesktop, value)) OnSettingChanged(); }
+        }
+
+        private bool disableWallpaperCompression;
+        public bool DisableWallpaperCompression
+        {
+            get => disableWallpaperCompression;
+            set { if (SetProperty(ref disableWallpaperCompression, value)) OnSettingChanged(); }
         }
 
         private string weatherApiKey;
@@ -132,27 +139,6 @@ namespace weatherfrog.ViewModels
 
         #endregion
 
-        private bool isDirty = false;
-        private void OnSettingChanged() =>
-            isDirty = !(My.Settings.Location == Location &&
-                        My.Settings.TaskbarIconStyle == TaskbarIconStyle &&
-                        My.Settings.UnitSystem == UnitSystem &&
-                        My.Settings.UpdateDesktop == UpdateDesktop &&
-                        My.Settings.WeatherApiKey == WeatherApiKey);
-
-        private void SortLocations()
-        {
-            List<string> sortableList = new(Locations);
-            sortableList.Sort();
-
-            for (int i = 0; i < sortableList.Count; i++)
-            {
-                int newLocation = Locations.IndexOf(sortableList[i]);
-                if (newLocation != i)
-                    Locations.Move(Locations.IndexOf(sortableList[i]), i);
-            }
-        }
-
         #region Commands
 
         private RelayCommand testCommand;
@@ -180,12 +166,15 @@ namespace weatherfrog.ViewModels
         private RelayCommand saveCommand;
         public RelayCommand SaveCommand => saveCommand ??= new RelayCommand(() =>
         {
+            if (disableWallpaperCompression == true)
+                DisableDesktopCompression();
             My.Settings.ApiKeyValidated = true;
             My.Settings.WeatherApiKey = WeatherApiKey;
             My.Settings.UnitSystem = UnitSystem;
             My.Settings.Location = Location;
             My.Settings.TaskbarIconStyle = TaskbarIconStyle;
             My.Settings.UpdateDesktop = UpdateDesktop;
+            My.Settings.DisableWallpaperCompression = DisableWallpaperCompression;
             My.Settings.Save();
             Configuration.ApiKey = WeatherApiKey;
             // Weather data is updated in App.ShowOptionsCommand
@@ -221,8 +210,9 @@ namespace weatherfrog.ViewModels
 
         private RelayCommand browseToWeatherApiCommand;
         public RelayCommand BrowseToWeatherApiCommand => browseToWeatherApiCommand ??= new RelayCommand(
-            () => Process.Start(new ProcessStartInfo("cmd", 
-                $"/c start {"https://www.weatherapi.com/signup.aspx"}") { CreateNoWindow = true }));
+            () => Process.Start(new ProcessStartInfo("cmd",
+                $"/c start {"https://www.weatherapi.com/signup.aspx"}")
+            { CreateNoWindow = true }));
 
         private RelayCommand cancelLocationSearchCommand;
         public RelayCommand CancelLocationSearchCommand => cancelLocationSearchCommand ??= new RelayCommand(
@@ -238,5 +228,39 @@ namespace weatherfrog.ViewModels
 
         #endregion
 
+        private bool isDirty = false;
+        private void OnSettingChanged() =>
+            isDirty = !(My.Settings.Location == Location &&
+                        My.Settings.TaskbarIconStyle == TaskbarIconStyle &&
+                        My.Settings.UnitSystem == UnitSystem &&
+                        My.Settings.UpdateDesktop == UpdateDesktop &&
+                        My.Settings.DisableWallpaperCompression == DisableWallpaperCompression &&
+                        My.Settings.WeatherApiKey == WeatherApiKey);
+
+        private void SortLocations()
+        {
+            List<string> sortableList = new(Locations);
+            sortableList.Sort();
+
+            for (int i = 0; i < sortableList.Count; i++)
+            {
+                int newLocation = Locations.IndexOf(sortableList[i]);
+                if (newLocation != i)
+                    Locations.Move(Locations.IndexOf(sortableList[i]), i);
+            }
+        }
+
+        private static void DisableDesktopCompression()
+        {
+            using RegistryKey deskTopKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+            object? jpegImportQualityValue = deskTopKey.GetValue("JPEGImportQuality", null);
+            if (jpegImportQualityValue is null or not 0x64)
+                deskTopKey.SetValue("JPEGImportQuality", 0x64, RegistryValueKind.DWord);
+            //if (Registry.CurrentUser.GetValue(@"Control Panel\Desktop\JPEGImportQuality", null) == null)
+            //{
+            //    using RegistryKey deskTopKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+            //    deskTopKey.SetValue("JPEGImportQuality", 0x64, RegistryValueKind.DWord);
+            //}
+        }
     }
 }

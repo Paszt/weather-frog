@@ -153,5 +153,17 @@ namespace weatherfrog.Properties {
                 this["FileNameEditorWindowPlacement"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DisableWallpaperCompression {
+            get {
+                return ((bool)(this["DisableWallpaperCompression"]));
+            }
+            set {
+                this["DisableWallpaperCompression"] = value;
+            }
+        }
     }
 }
