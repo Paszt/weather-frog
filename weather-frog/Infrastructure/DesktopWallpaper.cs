@@ -48,9 +48,9 @@ namespace weatherfrog.Infrastructure
 
         private RenderTargetBitmap CreateBitmap(Visual visual)
         {
-            RenderTargetBitmap rtbmp = new((int)Width, (int)Height, 96.0, 96.0, PixelFormats.Pbgra32);
-            rtbmp.Render(visual);
-            return rtbmp;
+            RenderTargetBitmap renderTargetBitmap = new((int)Width, (int)Height, 96.0, 96.0, PixelFormats.Pbgra32);
+            renderTargetBitmap.Render(visual);
+            return renderTargetBitmap;
         }
 
         internal void Update(WeatherApi.Models.Forecast forecast, bool UpdateDimensionsFromSystemParameters = false)
@@ -87,30 +87,25 @@ namespace weatherfrog.Infrastructure
             if (DrawTaskbar)
             {
                 Rect taskbarRect = new();
-                // TODO: Draw Taskbar
+                // Top or Bottom
                 if (Width == WorkArea.Width)
                 {
                     taskbarRect.Width = Width;
                     taskbarRect.Height = Height - WorkArea.Height;
                     taskbarRect.X = 0;
                     taskbarRect.Y = 0;
-                    if (WorkArea.Y == 0)
-                    {
-                        taskbarRect.Y = WorkArea.Height;
-                    }
+                    if (WorkArea.Y == 0) taskbarRect.Y = WorkArea.Height;
                 }
-                else
+                else // Left or Right
                 {
                     taskbarRect.Width = Width - WorkArea.Width;
                     taskbarRect.Height = Height;
                     taskbarRect.Y = 0;
                     taskbarRect.X = 0;
-                    if (WorkArea.X == 0)
-                    {
-                        taskbarRect.X = WorkArea.Width;
-                    }
+                    if (WorkArea.X == 0) taskbarRect.X = WorkArea.Width;
                 }
-                dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99000000")), null, taskbarRect);
+                dc.DrawRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99000000")),
+                    null, taskbarRect);
             }
             dc.Close();
             return dv;
@@ -120,8 +115,8 @@ namespace weatherfrog.Infrastructure
         {
             if (forecast.CurrentWeather.Cloud == 0) return null;
             string cloudFilename = "clouds" +
-                ((int)(Math.Round(forecast.CurrentWeather.Cloud.Value / 10.0d, MidpointRounding.ToPositiveInfinity) * 10)).ToString("d3") +
-                ".png";
+                ((int)(Math.Round(forecast.CurrentWeather.Cloud.Value / 10.0d, MidpointRounding.ToPositiveInfinity) * 10))
+                .ToString("d3") + ".png";
             BitmapFrame bitmapFrame;
             try
             {
@@ -132,7 +127,7 @@ namespace weatherfrog.Infrastructure
 
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            dc.DrawImage(bitmapFrame, GetIllustrationRectangle(bitmapFrame, AlignmentX.Center));
+            dc.DrawImage(bitmapFrame, GetIllustrationRect(bitmapFrame, AlignmentX.Center));
             dc.Close();
             return dv;
         }
@@ -157,8 +152,6 @@ namespace weatherfrog.Infrastructure
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
 
-            //double screenWidth = SystemParameters.WorkArea.Width;
-            //double screenHeight = SystemParameters.WorkArea.Height;
             double leftTextLeft = (WorkArea.Width * 0.09) + WorkArea.Left;
 
             // Location
@@ -175,7 +168,7 @@ namespace weatherfrog.Infrastructure
             string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
             FormattedText temperatureUnitsText = new(temperatureUnitsString, cultureInfo, FlowDirection.LeftToRight,
                 typeface, 80, Brushes.White, 1.0d);
-            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 91 + WorkArea.Top));
+            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 95 + WorkArea.Top));
 
             // Feels Like
             string feelsLikeTemp = forecast.CurrentWeather.FeelsLike.ToString();
@@ -213,7 +206,7 @@ namespace weatherfrog.Infrastructure
         {
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
-            Rect WeatherIconRect = new(new Point((WorkArea.Width * 0.77) + WorkArea.Left, 92 + WorkArea.Top),
+            Rect WeatherIconRect = new(new Point((WorkArea.Width * 0.77) + WorkArea.Left, 96 + WorkArea.Top),
                                        new Size(weatherIconWidth, weatherIconWidth));
             dc.DrawImage(forecast.CurrentWeather.WeatherIcon, WeatherIconRect);
             dc.Close();
@@ -259,12 +252,12 @@ namespace weatherfrog.Infrastructure
                 Utilities.GetCorbenRegularTypeface(), 40, Brushes.White, 1.0d)
             { TextAlignment = TextAlignment.Center, MaxTextWidth = maxTextWidth };
             dc.DrawText(msgText, new Point((WorkArea.Width / 2) - (maxTextWidth / 2) + WorkArea.Left, 120.0d + WorkArea.Top));
-            dc.DrawImage(imageSource, GetIllustrationRectangle(imageSource, AlignmentX.Center));
+            dc.DrawImage(imageSource, GetIllustrationRect(imageSource, AlignmentX.Center));
             dc.Close();
             SetDesktopWallpaper(dv);
         }
 
-        private Rect GetIllustrationRectangle(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
+        private Rect GetIllustrationRect(ImageSource imageSource, AlignmentX alignmentX = AlignmentX.Left)
         {
             double illustrationRectTop = (WorkArea.Height * 0.4d) + WorkArea.Top;
             double illustrationRectHeight = WorkArea.Height * 0.6d;

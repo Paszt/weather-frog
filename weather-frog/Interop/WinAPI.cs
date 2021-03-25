@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace weatherfrog.Interop
 {
-    class WinAPI
+    internal class WinAPI
     {
         /// <summary>
         ///     Retrieves the show state and the restored, minimized, and maximized positions of the specified window.
@@ -42,7 +42,7 @@ namespace weatherfrog.Interop
         ///     </para>
         /// </returns>
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        public static extern int RegisterWindowMessage(string msg);
+        internal static extern int RegisterWindowMessage(string msg);
 
         /// <summary>
         ///     Sends an appbar message to the system.
@@ -54,7 +54,7 @@ namespace weatherfrog.Interop
         /// </param>
         /// <returns>This function returns a message-dependent value.</returns>
         [DllImport("SHELL32", CallingConvention = CallingConvention.StdCall)]
-        public static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
+        internal static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
 
         /// <summary>
         ///     Sets the show state and the restored, minimized, and maximized positions of the specified window.
@@ -74,7 +74,7 @@ namespace weatherfrog.Interop
         /// </returns>
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
+        internal static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
 
     }
 
@@ -192,7 +192,7 @@ namespace weatherfrog.Interop
             set { Width = value.Width; Height = value.Height; }
         }
 
-        public static implicit operator System.Drawing.Rectangle(RECT r) => 
+        public static implicit operator System.Drawing.Rectangle(RECT r) =>
             new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
 
         public static implicit operator RECT(System.Drawing.Rectangle r) => new RECT(r);
@@ -214,7 +214,7 @@ namespace weatherfrog.Interop
 
         public override int GetHashCode() => ((System.Drawing.Rectangle)this).GetHashCode();
 
-        public override string ToString() => 
+        public override string ToString() =>
             string.Format(System.Globalization.CultureInfo.CurrentCulture, "{{Left={0},Top={1},Right={2},Bottom={3}}}", Left, Top, Right, Bottom);
     }
 
