@@ -5,7 +5,7 @@ namespace weatherfrog.WeatherApi.Models
     public partial class Forecast : BaseModel
     {
         private Location location;
-        private Current current;
+        private Current currentWeather;
         private ForecastDays days;
         private Alert alert;
 
@@ -13,7 +13,7 @@ namespace weatherfrog.WeatherApi.Models
         public Location Location { get => location; set => SetProperty(ref location, value); }
 
         [JsonPropertyName("current")]
-        public Current CurrentWeather { get => current; set => SetProperty(ref current, value); }
+        public Current CurrentWeather { get => currentWeather; set => SetProperty(ref currentWeather, value); }
 
         [JsonPropertyName("forecast")]
         public ForecastDays Days { get => days; set => SetProperty(ref days, value); }

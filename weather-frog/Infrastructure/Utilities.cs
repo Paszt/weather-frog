@@ -11,9 +11,9 @@ namespace weatherfrog.Infrastructure
 {
     internal class Utilities
     {
-        public static Icon CreateTaskbarIcon(Current current) =>
+        public static Icon CreateTaskbarIcon(Current currentWeather) =>
             My.Settings.TaskbarIconStyle == TaskbarIconStyle.Temperature
-                ? CreateTaskbarIcon(current.Temp.ToString())
+                ? CreateTaskbarIcon(currentWeather?.Temp.ToString())
                 : CreateIcon(16, 16, App.Current.Forecast.CurrentWeather.WeatherIcon);
 
         public static Icon CreateTaskbarIcon(string text)
@@ -21,7 +21,7 @@ namespace weatherfrog.Infrastructure
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
             FormattedText temperatureFormattedText = new(
-                 text + "°",
+                 (text != null) ? text + "°" : "??",
                  new System.Globalization.CultureInfo("en-us"),
                  FlowDirection.LeftToRight,
                  GetRobotoRegularTypeface(),

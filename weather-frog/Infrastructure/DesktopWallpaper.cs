@@ -228,11 +228,11 @@ namespace weatherfrog.Infrastructure
             return filePath;
         }
 
-        internal void NetworkError()
+        internal void NetworkError(string message = "Network currently unavailable")
         {
             BitmapFrame bitmapFrame = BitmapFrame.Create(
                    new Uri("pack://application:,,,/weather-frog;component/Resources/FrogIllustrations/NetworkUnavailable.png"));
-            DrawTextAndImage("Network currently unavailable", bitmapFrame);
+            DrawTextAndImage(message, bitmapFrame);
         }
 
         internal void Offline(string message = "Weather Frog Is Offline")
@@ -244,7 +244,7 @@ namespace weatherfrog.Infrastructure
 
         private void DrawTextAndImage(string textToDraw, ImageSource imageSource)
         {
-            const double maxTextWidth = 600.0d;
+            const double maxTextWidth = 800.0d;
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
             dc.DrawRectangle(App.DefaultBackgroundBrush, null, new(0, 0, Width, Height));

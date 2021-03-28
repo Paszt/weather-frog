@@ -76,7 +76,6 @@ namespace weatherfrog
         private void Begin()
         {
             WeatherApi.Configuration.ApiKey = My.Settings.WeatherApiKey;
-            updateWeatherTimer = new((e) => UpdateWeather(), null, TimeSpan.Zero, UpdateWeatherInterval);
             notifyIcon = new()
             {
                 Icon = Utilities.CreateIcon(16, 16, (ImageSource)FindResource("FrogHeadDrawingImage")),
@@ -85,6 +84,7 @@ namespace weatherfrog
                 TrayPopup = new TaskbarBalloon(),
                 //ToolTip = new Resources.TaskbarBalloon(),
             };
+            // Add bindings to notifyicon
             MultiBinding toolTipMultiBinding = new MultiBinding()
             {
                 StringFormat = "Weather Frog \n{0}° {1}\n{2}\nLast updated: {3}",
@@ -106,6 +106,8 @@ namespace weatherfrog
 
             if (My.Settings.UpdateDesktop)
                 desktopWallpaper = DesktopWallpaper.FromSystemParameters();
+
+            updateWeatherTimer = new((e) => UpdateWeather(), null, TimeSpan.Zero, UpdateWeatherInterval);
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) =>
@@ -142,8 +144,8 @@ namespace weatherfrog
             : (Forecast?.CurrentWeather?.BackgroundBrush);
 
         public string LastUpdatedTimeString =>
-            !string.IsNullOrEmpty(Forecast?.CurrentWeather.LastUpdated) &&
-            DateTimeOffset.TryParse(Forecast.CurrentWeather.LastUpdated, out DateTimeOffset dto)
+            !string.IsNullOrEmpty(Forecast?.CurrentWeather?.LastUpdated) &&
+            DateTimeOffset.TryParse(Forecast.CurrentWeather?.LastUpdated, out DateTimeOffset dto)
                 ? dto.ToString("t")
                 : null;
 
@@ -192,9 +194,11 @@ namespace weatherfrog
                         desktopWallpaper.Offline("Desktop Updating is turned off.");
                         desktopWallpaper = null;
                     }
-                    if (desktopWallpaper == null && My.Settings.UpdateDesktop)
+                    else if (desktopWallpaper == null && My.Settings.UpdateDesktop)
                         desktopWallpaper = DesktopWallpaper.FromSystemParameters();
-                    desktopWallpaper?.Update(Forecast);
+
+                    if (forecast?.CurrentWeather != null) desktopWallpaper?.Update(Forecast);
+                    else desktopWallpaper?.Offline("Something went wrong.\nCurrent weather is not available.");
                 }
                 catch (Exception)
                 {

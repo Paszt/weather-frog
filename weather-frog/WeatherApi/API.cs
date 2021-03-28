@@ -52,6 +52,7 @@ namespace weatherfrog.WeatherApi
         public static async Task<Models.Forecast> GetForecastAsync(string q, int days = 10)
         {
             Models.Forecast forecast = await ClientInstance.GetFromJsonAsync<Models.Forecast>(Urls.Forecast(q, days));
+            // Manually add index property, needed to display list of HourlyGraph in ForecastWindow
             for (int i = 0; i < forecast.Days.Forecastdays.Count; i++)
                 forecast.Days.Forecastdays[i].Index = i;
             return forecast;
