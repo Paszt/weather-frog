@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows.Media;
-using System.Xaml.Schema;
 using weatherfrog.Infrastructure;
 using weatherfrog.WeatherApi;
 

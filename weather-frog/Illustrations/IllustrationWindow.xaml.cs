@@ -16,7 +16,7 @@ namespace weatherfrog.Illustrations
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (DataContext is IllustrationViewModel ivm)
-                if (!await ivm.HandleIsDirty()) e.Cancel = true;
+                if (!await ivm.HandleIsDirtyAsync()) e.Cancel = true;
             My.Settings.IllustrationWindowPlacement = this.GetPlacement();
             My.Settings.Save();
         }

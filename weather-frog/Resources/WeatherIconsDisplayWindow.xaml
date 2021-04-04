@@ -8,7 +8,8 @@
         Title="WeatherIconsDisplayWindow"
         Style="{DynamicResource CustomWindowStyle}"
         Height="3000"
-        Width="1300">
+        Width="1300"
+        WindowState="Maximized">
     <Window.DataContext>
         <local:WeatherIconsDisplayViewModel />
     </Window.DataContext>
@@ -37,6 +38,12 @@
                                     Value="White" />
                             <Setter Property="Margin"
                                     Value="6" />
+                            <Setter Property="MaxWidth"
+                                    Value="180" />
+                            <Setter Property="TextWrapping"
+                                    Value="WrapWithOverflow" />
+                            <Setter Property="TextAlignment"
+                                    Value="Center" />
                         </Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Height"
@@ -49,11 +56,13 @@
                     </DataTemplate.Resources>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <StackPanel Background="{Binding DayBrush}">
+                            <StackPanel Background="{Binding DayBrush}"
+                                        Height="160">
                                 <Image Source="{Binding DayIcon}" />
                                 <TextBlock Text="{Binding Day}" />
                             </StackPanel>
-                            <StackPanel Background="{Binding NightBrush }">
+                            <StackPanel Background="{Binding NightBrush }"
+                                        Height="160">
                                 <Image Source="{Binding NightIcon}" />
                                 <TextBlock Text="{Binding Night}" />
                             </StackPanel>

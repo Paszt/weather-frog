@@ -2,27 +2,26 @@
 
 using Hardcodet.Wpf.TaskbarNotification;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Windows;
-using weatherfrog.WeatherApi.Models;
-using weatherfrog.Infrastructure;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.IO;
-using System.Text.Json;
+using weatherfrog.Infrastructure;
 using weatherfrog.Resources;
-using System.Xaml.Schema;
-using System.Collections.Generic;
+using weatherfrog.WeatherApi;
+using weatherfrog.WeatherApi.Models;
 
 namespace weatherfrog
 {
     public partial class App : Application, INotifyPropertyChanged
     {
         private static TaskbarIcon notifyIcon;
-        private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(10);
         private Timer updateWeatherTimer;
         private DesktopWallpaper desktopWallpaper;
 
@@ -55,10 +54,11 @@ namespace weatherfrog
                 mutex = new Mutex(true, appName, out bool createdNew);
                 if (!createdNew)
                 {
-                    //app is already running! Exiting the application  
+                    //app is already running! Exiting the application
                     MessageBox.Show("Weather Frog is already running. Check the system tray in the task bar.",
                         "Weather Frog Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
                     Current.Shutdown();
+                    return;
                 }
 
                 WeatherApi.Configuration.UserAgent = typeof(App).Assembly.GetName().Name + "/" +
@@ -75,7 +75,7 @@ namespace weatherfrog
 
         private void Begin()
         {
-            WeatherApi.Configuration.ApiKey = My.Settings.WeatherApiKey;
+            Configuration.ApiKey = My.Settings.WeatherApiKey;
             notifyIcon = new()
             {
                 Icon = Utilities.CreateIcon(16, 16, (ImageSource)FindResource("FrogHeadDrawingImage")),
@@ -172,16 +172,13 @@ namespace weatherfrog
             {
                 try
                 {
-                    Forecast = await WeatherApi.Api.GetForecastAsync(My.Settings.Location);
+                    Forecast = await Api.GetForecastAsync(My.Settings.Location).ConfigureAwait(false);
                     // TODO: Find out why Forecast is null after resume from suspension. Remove this:
                     if (Forecast == null) throw new ArgumentException("After calling GetForecastAsync, Forecast is Null!");
                     // write Forecast json to file (for debug). Not including #if DEBUG directive here so that
                     // any alpha/beta testers can have acces to the file.
                     string forecastPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "forecast.json");
-                    try
-                    {
-                        File.WriteAllText(forecastPath, JsonSerializer.Serialize(Forecast, new() { WriteIndented = true }));
-                    }
+                    try { File.WriteAllText(forecastPath, JsonSerializer.Serialize(Forecast, new() { WriteIndented = true })); }
                     catch (Exception) { }
 
                     notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);
@@ -249,6 +246,7 @@ namespace weatherfrog
         {
             updateWeatherTimer?.Dispose();
             desktopWallpaper?.Offline();
+            Api.Dispose();
             //TODO: Add option to let user select if they want to see somethingwrong.png or revert back to desktop state 
             //      before Weather Frog was run. Will need to figure out how to read, save, and re-apply that state; 
             //      probably reading/writing from/to the registry.

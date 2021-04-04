@@ -11,14 +11,15 @@
         Title="Weather Frog Options"
         Height="600"
         MinHeight="600"
-        Width="680"
-        MinWidth="640"
+        Width="700"
+        MinWidth="700"
         Style="{DynamicResource CustomToolWindowStyle}"
         ResizeMode="NoResize"
         Icon="{Binding Icon}"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        FontSize="14">
     <Window.DataContext>
         <viewModels:OptionsViewModel />
     </Window.DataContext>
@@ -256,8 +257,9 @@
                     Margin="0,20">
             <Button Content="_Cancel"
                     Command="{Binding CancelCommand}"
+                    IsCancel="True"
                     Margin="0,0,20,0"
-                    IsCancel="True" />
+                    Click="CancelButton_Click" />
             <Button Content="_Save"
                     Command="{Binding SaveCommand}"
                     IsDefault="True"

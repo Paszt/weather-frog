@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using weatherfrog.Infrastructure;
+using System.Threading;
 
 namespace weatherfrog.Resources
 {
@@ -46,9 +37,17 @@ namespace weatherfrog.Resources
             //WeatherConditions = JsonSerializer.Deserialize<List<WeatherCondition>>(jsonString);
 
             //using HttpClient clientInstance = new(new WeatherApi.Utilities.RetryHandler(new SocketsHttpHandler()), false);
-            using HttpClient clientInstance = new();
-            weatherConditions = clientInstance.GetFromJsonAsync<List<WeatherCondition>>
-                ("https://www.weatherapi.com/docs/weather_conditions.json").Result;
+            //using HttpClient clientInstance = new();
+            //weatherConditions = clientInstance.GetFromJsonAsync<List<WeatherCondition>>
+            //    ("https://www.weatherapi.com/docs/weather_conditions.json").Result;
+
+            Thread downloadThread = new Thread(async () =>
+            {
+                using HttpClient clientInstance = new();
+                WeatherConditions = await clientInstance.GetFromJsonAsync<List<WeatherCondition>>
+                    ("https://www.weatherapi.com/docs/weather_conditions.json");
+            });
+            downloadThread.Start();
         }
     }
 

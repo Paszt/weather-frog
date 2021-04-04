@@ -231,7 +231,7 @@ namespace weatherfrog.Illustrations
         private RelayCommand loadImageCommand;
         public RelayCommand LoadImageCommand => loadImageCommand ??= new(async () =>
         {
-            if (!await HandleIsDirty()) return;
+            if (!await HandleIsDirtyAsync()) return;
 
             OpenFileDialog openDlg = new() { Title = "Open Illustration", DefaultExt = ".png", Filter = "PNG Files|*.png" };
             if (openDlg.ShowDialog() == true)
@@ -239,7 +239,7 @@ namespace weatherfrog.Illustrations
                 string jsonFilePath = openDlg.FileName.Replace(Path.GetExtension(openDlg.FileName), ".json");
                 if (File.Exists(@jsonFilePath))
                 {
-                    await LoadImageAsync(@jsonFilePath);
+                    await LoadImageAsync(@jsonFilePath).ConfigureAwait(false);
                 }
                 else
                 {
@@ -261,14 +261,14 @@ namespace weatherfrog.Illustrations
         /// False if the user cancels.</para>
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> HandleIsDirty()
+        public async Task<bool> HandleIsDirtyAsync()
         {
             if (IsDirty)
             {
                 switch (Windows.SaveMessageBox.Show(FileName))
                 {
                     case MessageBoxResult.Yes:
-                        await SaveToFileAsync(Path.GetDirectoryName(ImageFilePath));
+                        await SaveToFileAsync(Path.GetDirectoryName(ImageFilePath)).ConfigureAwait(false);
                         return true;
                     case MessageBoxResult.No:
                         return true;
@@ -283,7 +283,7 @@ namespace weatherfrog.Illustrations
         private async Task LoadImageAsync(string path)
         {
             using FileStream openStream = File.OpenRead(path);
-            Illustration = await JsonSerializer.DeserializeAsync<Illustration>(openStream);
+            Illustration = await JsonSerializer.DeserializeAsync<Illustration>(openStream).ConfigureAwait(false);
             illustrationClean = new(Illustration);
             ImageFilePath = @path;
             IsDirty = false;
@@ -296,19 +296,20 @@ namespace weatherfrog.Illustrations
         {
             SaveFileDialog dlg = new() { DefaultExt = ".json", Filter = "JSON (.json)|*.json", FileName = FileName };
             bool? result = dlg.ShowDialog();
-            if (result == true) await SaveToFileAsync(Path.GetDirectoryName(dlg.FileName));
+            if (result == true) await SaveToFileAsync(Path.GetDirectoryName(dlg.FileName)).ConfigureAwait(false);
         }, () => !string.IsNullOrEmpty(ImageFilePath) && IsDirty);
 
         public async Task SaveToFileAsync(string path)
         {
             using FileStream createStream = File.Create(Path.Combine(@path, FileName + ".json"));
-            await JsonSerializer.SerializeAsync(createStream, Illustration, new() { WriteIndented = true });
+            await JsonSerializer.SerializeAsync(createStream, Illustration, new() { WriteIndented = true })
+                .ConfigureAwait(false);
         }
 
         private void UpdateIsDirty() =>
             IsDirty = isNewFile ||
-            Path.GetFileNameWithoutExtension(ImageFilePath) != FileName ||
-            !Illustration.Equals(illustrationClean);
+                      Path.GetFileNameWithoutExtension(ImageFilePath) != FileName ||
+                      !Illustration.Equals(illustrationClean);
 
         #region INotifyPropertyChanged
 

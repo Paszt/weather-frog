@@ -75,9 +75,15 @@ namespace weatherfrog.Infrastructure
             WorkArea = workArea;
         }
 
-        private void SetDesktopWallpaper(Visual visual) =>
-            _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, SaveBitmap(visual),
-                                     SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+        private void SetDesktopWallpaper(Visual visual)
+        {
+            try
+            {
+                string wallpaperPath = SaveBitmap(visual);
+                _ = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, wallpaperPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+            }
+            catch (Exception) { } // TODO: Log error for SetDesktopWallpaper
+        }
 
         private DrawingVisual DrawBackground(WeatherApi.Models.Forecast forecast)
         {
@@ -157,7 +163,7 @@ namespace weatherfrog.Infrastructure
             // Location
             string location = forecast.Location.DisplayName;
             FormattedText locationText = new(location, cultureInfo, FlowDirection.LeftToRight, typeface, 30, Brushes.Black, 1.0d);
-            dc.DrawText(locationText, new Point(leftTextLeft + 12, 40.0d + WorkArea.Top));
+            dc.DrawText(locationText, new Point(leftTextLeft + 4, 40.0d + WorkArea.Top));
 
             // Temperature
             string temperature = forecast.CurrentWeather.Temp.ToString();

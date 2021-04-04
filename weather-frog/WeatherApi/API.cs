@@ -4,8 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-//custom converters: https://github.com/dotnet/runtime/issues/29960#issuecomment-535166692
-
 namespace weatherfrog.WeatherApi
 {
     public static class Api
@@ -23,7 +21,7 @@ namespace weatherfrog.WeatherApi
                     {
                         // Retyrhandler retries on transient errors, 
                         // SocketsHttpHandler handles reusing sockets to avoid socket exhaustion and any DNS changes.
-                        clientInstance = new(new Utilities.RetryHandler(new SocketsHttpHandler()), false);
+                        clientInstance = new(new Utilities.RetryHandler(new SocketsHttpHandler()));
                         clientInstance.DefaultRequestHeaders.Add("User-Agent", Configuration.UserAgent);
                     }
                     return clientInstance;
@@ -36,7 +34,7 @@ namespace weatherfrog.WeatherApi
         /// </summary>
         /// <param name="q">Location query which can be US Zipcode, UK Postcode, Canada Postalcode, IP address, 
         /// Latitude/Longitude (decimal degree) or city name.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Models.CurrentWeather"/> object containing realtime weather information.</returns>
         public static async Task<Models.CurrentWeather> GetCurrentWeatherAsync(string q) =>
             await ClientInstance.GetFromJsonAsync<Models.CurrentWeather>(string.Format(Urls.Current(q)));
 
@@ -100,5 +98,7 @@ namespace weatherfrog.WeatherApi
 
         public static async Task<List<Models.SearchResult>> LookupLocationAsync(string q) =>
             await ClientInstance.GetFromJsonAsync<List<Models.SearchResult>>(Urls.LocationLookup(q));
+
+        public static void Dispose() => ClientInstance?.Dispose();
     }
 }

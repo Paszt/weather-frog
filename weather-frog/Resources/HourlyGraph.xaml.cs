@@ -36,14 +36,8 @@ namespace weatherfrog.Resources
             //scrollWELightCursor = DrawScrollWECursor(Brushes.White);
 
             // Design time can't reference the font...
-            try
-            {
-                typeFace = Utilities.GetRobotoRegularTypeface();
-            }
-            catch (Exception)
-            {
-                typeFace = Fonts.SystemTypefaces.First();
-            }
+            try { typeFace = Utilities.GetRobotoRegularTypeface(); }
+            catch (Exception) { typeFace = Fonts.SystemTypefaces.First(); }
             Draw();
         }
 
@@ -91,8 +85,6 @@ namespace weatherfrog.Resources
 
         private static void OnForecastChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ((HourlyGraph)d).OnForecastChanged();
-        //HourlyGraph hourlyGraph = d as HourlyGraph;
-        //hourlyGraph.OnForecastChanged();
 
         private void OnForecastChanged() => Draw();
 
@@ -108,10 +100,12 @@ namespace weatherfrog.Resources
                 List<Hour> upcomingHours = new();
                 // Get hourly data from the first day, today, starting with and including the current hour.
                 DateTime localTime = DateTime.Parse(Forecast?.Location?.Localtime);
-                upcomingHours = Forecast.Days?.Forecastdays[ForecastdayIndex]?.HourlyWeather?.Where(h => h.Time > localTime.AddHours(-1)).ToList();
+                upcomingHours = Forecast.Days?.Forecastdays[ForecastdayIndex]?.HourlyWeather?
+                    .Where(h => h.Time > localTime.AddHours(-1)).ToList();
                 // Get the hourly data from the next day, up to 10 AM.
                 if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
-                    upcomingHours.AddRange(Forecast.Days?.Forecastdays[ForecastdayIndex + 1]?.HourlyWeather?.Where(h => h.Time.Hour <= lastHourToShow).ToList());
+                    upcomingHours.AddRange(Forecast.Days?.Forecastdays[ForecastdayIndex + 1]?.HourlyWeather?
+                        .Where(h => h.Time.Hour <= lastHourToShow).ToList());
 
                 DrawingVisual dv = new();
                 using DrawingContext dc = dv.RenderOpen();
@@ -160,7 +154,7 @@ namespace weatherfrog.Resources
                 }
                 else
                 {
-                    //This is the last day and there is no next day to get finalTemp. User last tempurature of today's data.
+                    //This is the last day and there is no next day to get finalTemp. Use last tempurature of today's data.
                     finalTemp = Forecast.Days.Forecastdays[ForecastdayIndex].HourlyWeather.Last().Temp;
                 }
 
@@ -172,17 +166,19 @@ namespace weatherfrog.Resources
                 Border.Width = (double)(upcomingHours.Count * HourWidth);
                 Border.Cursor = (Border.Width <= RootGrid.ActualWidth) ? Cursors.Arrow : Cursors.ScrollWE;
                 rectTranslateTransform.X = 0;
-                //Y value of Border =   (rectTranslateTransform.X + Border.ActualWidth)
+                //Y value of Border = (rectTranslateTransform.X + Border.ActualWidth)
             }
         }
 
         private void DrawTextCentered(DrawingContext dc, string TextToDraw, Brush brush, double left, double y)
         {
-            FormattedText formattedText = new(TextToDraw, cultureInfo, FlowDirection.LeftToRight, typeFace, 12, brush, 1.0d);
+            FormattedText formattedText = new(TextToDraw, cultureInfo, FlowDirection.LeftToRight, typeFace, 12, 
+                brush, 1.0d);
             dc.DrawText(formattedText, new Point(left + ((HourWidth - formattedText.Width) / 2), y));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0047:Remove unnecessary parentheses", Justification = "Makes it easier to read.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0047:Remove unnecessary parentheses", 
+            Justification = "Makes it more clear & easier to read.")]
         private double CalculateYValue(int temp)
         {
             double minMaxDiff = maxTemp - minTemp;
@@ -196,7 +192,7 @@ namespace weatherfrog.Resources
                 lowMinMaxDiffAdjustment = 14;
             }
             double proportionalHeight = (graphHeightDelta / minMaxDiff) * tempDiffFromMin;
-            // Y = 64 is minimum, just aboe the precip info location
+            // Y = 62 is minimum, just aboe the precip info location
             return proportionalHeight + 62 - lowMinMaxDiffAdjustment;
         }
 

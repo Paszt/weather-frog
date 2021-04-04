@@ -12,7 +12,7 @@ namespace weatherfrog
         {
             get
             {
-                if (instance == null || (bool)typeof(Window).GetProperty("IsDisposed", 
+                if (instance == null || (bool)typeof(Window).GetProperty("IsDisposed",
                     BindingFlags.NonPublic | BindingFlags.Instance).GetValue(instance))
                     return instance = new();
 
@@ -28,6 +28,8 @@ namespace weatherfrog
         public OptionsWindow() => InitializeComponent();
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) => DialogResult = true;
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e) => DialogResult = false;
 
         private void Window_Loaded(object sender, RoutedEventArgs e) => this.SetPlacement(My.Settings.OptionsWindowPlacement);
 
