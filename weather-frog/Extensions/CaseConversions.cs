@@ -75,7 +75,7 @@ namespace weatherfrog.Extensions
 
         private static string MakeValid(this string identifier)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             for (int i = 0; i < identifier.Length; i++)
             {
                 char c = identifier[i];

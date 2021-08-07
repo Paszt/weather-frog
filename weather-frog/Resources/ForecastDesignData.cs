@@ -13,6 +13,8 @@ namespace weatherfrog.Resources
                     ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9EABA2"))
                     : (Forecast?.CurrentWeather?.BackgroundBrush);
 
+        public bool IsNetworkUnavailable { get; set; } = true;
+
         public ForecastDesignData()
         {
             Forecast = JsonSerializer.Deserialize<Forecast>(forecastJson2);

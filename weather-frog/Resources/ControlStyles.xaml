@@ -3,6 +3,9 @@
                     xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <SolidColorBrush x:Key="DefaultWeatherBackground"
+                     Color="#FF9EABA2" />
+
     <!--Image Button-->
     <Style TargetType="{x:Type Button}"
            x:Key="ImageButton">

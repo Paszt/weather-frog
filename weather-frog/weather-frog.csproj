@@ -7,6 +7,7 @@
     <StartupObject>weatherfrog.App</StartupObject>
     <RootNamespace>weatherfrog</RootNamespace>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <AssemblyTitle>Weather Frog</AssemblyTitle>
     <RepositoryUrl>https://github.com/Paszt/weather-frog</RepositoryUrl>
     <ApplicationIcon>Resources\Weather-Frog.ico</ApplicationIcon>
     <Nullable>annotations</Nullable>
@@ -22,6 +23,7 @@
     <None Remove="Resources\Corben-Regular.ttf" />
     <None Remove="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <None Remove="Resources\FrogIllustrations\SomethingWrong.png" />
+    <None Remove="Resources\NetworkUnavailable.png" />
     <None Remove="Resources\Roboto-Regular.ttf" />
     <None Remove="Resources\weather_conditions.json" />
   </ItemGroup>
@@ -41,6 +43,7 @@
     <Resource Include="Resources\Corben-Regular.ttf" />
     <Resource Include="Resources\FrogIllustrations\NetworkUnavailable.png" />
     <Resource Include="Resources\FrogIllustrations\SomethingWrong.png" />
+    <Resource Include="Resources\NetworkUnavailable.png" />
     <Resource Include="Resources\Roboto-Regular.ttf" />
     <Resource Include="Resources\weather_conditions.json" />
   </ItemGroup>

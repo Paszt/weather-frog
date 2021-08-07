@@ -9,7 +9,7 @@
         Title="Weather Frog Metadata Editor"
         ShowInTaskbar="False"
         Topmost="True"
-        SizeToContent="WidthAndHeight"
+        Height="175"
         MinHeight="175"
         MaxWidth="520"
         MinWidth="200"

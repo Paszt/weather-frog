@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -8,14 +9,14 @@ namespace weatherfrog.WeatherApi
 {
     public static class Api
     {
-        private static readonly object syncObject = new object();
+        private static readonly object syncClientObject = new();
         private static HttpClient clientInstance = null;
 
         private static HttpClient ClientInstance
         {
             get
             {
-                lock (syncObject)
+                lock (syncClientObject)
                 {
                     if (null == clientInstance)
                     {

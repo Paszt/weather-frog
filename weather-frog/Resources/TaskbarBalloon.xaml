@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:infrastructure="clr-namespace:weatherfrog.Infrastructure"
+             xmlns:local="clr-namespace:weatherfrog"
              xmlns:resources="clr-namespace:weatherfrog.Resources"
              mc:Ignorable="d"
              FontFamily="/Resources/Roboto-Regular.ttf#Roboto"
@@ -15,95 +16,112 @@
     <!-- Datacontext is set in App.Begin while instantiating the TaskbarIcon (notifyIcon) -->
     <UserControl.Resources>
         <infrastructure:NullStringToVisibilityConverter x:Key="NullStringToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
     </UserControl.Resources>
-    <Grid ClipToBounds="True">
-        <!-- Frog Illustration -->
-        <Image />
-        <!--Current Weather Info-->
-        <Grid Margin="12"
-              MouseLeftButtonUp="RootGrid_MouseLeftButtonUp"
-              Background="Transparent">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="30" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100" />
-            </Grid.ColumnDefinitions>
-            <!-- Row 1: Location-->
-            <TextBlock Margin="0,0,0,14"
-                       FontSize="16"
-                       Grid.ColumnSpan="4"
-                       Text="{Binding Forecast.Location.DisplayName}"
-                       Foreground="Black" />
-
-            <!--Row 2: High Low, Precip Info-->
-            <TextBlock FontSize="16"
-                       Grid.Row="1"
-                       Grid.ColumnSpan="3">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="Day {0}°↑ • Night {1}°↓">
-                        <Binding Path="Forecast.Days.Forecastdays[0].WeatherData.MaxTemp" />
-                        <Binding Path="Forecast.Days.Forecastdays[0].WeatherData.MinTemp" />
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-            <!--Umbrella & Precip Info-->
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="1"
-                        Grid.Column="3"
-                        HorizontalAlignment="Center">
-                <Image Source="{DynamicResource Umbrella}"
-                       Width="16"
-                       Margin="0,0,3,0"
-                       Visibility="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo, Converter={StaticResource NullStringToVisibilityConverter}}" />
-                <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo}"
+    <Grid>
+        <Grid ClipToBounds="True">
+            <!-- Frog Illustration -->
+            <Image />
+            <!--Current Weather Info-->
+            <Grid Margin="12"
+                  MouseLeftButtonUp="RootGrid_MouseLeftButtonUp"
+                  Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <!-- Row 1: Location-->
+                <TextBlock Margin="0,0,0,14"
                            FontSize="16"
-                           Foreground="Cyan" />
-            </StackPanel>
+                           Grid.ColumnSpan="4"
+                           Text="{Binding Forecast.Location.DisplayName}"
+                           Foreground="Black" />
 
-            <!--Row 3: Temp, Condition, Icon, etc-->
-            <!--Temperature-->
-            <TextBlock Text="{Binding Forecast.CurrentWeather.Temp}"
-                       FontSize="50"
-                       Grid.Row="2" />
-            <!--°F-->
-            <Grid Grid.Row="2"
-                  Grid.Column="1"
-                  HorizontalAlignment="Left">
-                <TextBlock Text="°"
-                           FontSize="50" />
-                <TextBlock Text="F"
-                           FontSize="20"
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="center"
-                           Margin="0,0,0,7" />
+                <!--Row 2: High Low, Precip Info-->
+                <TextBlock FontSize="16"
+                           Grid.Row="1"
+                           Grid.ColumnSpan="3">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Day {0}°↑ • Night {1}°↓">
+                            <Binding Path="Forecast.Days.Forecastdays[0].WeatherData.MaxTemp" />
+                            <Binding Path="Forecast.Days.Forecastdays[0].WeatherData.MinTemp" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <!--Umbrella & Precip Info-->
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            HorizontalAlignment="Center">
+                    <Image Source="{DynamicResource Umbrella}"
+                           Width="16"
+                           Margin="0,0,3,0"
+                           Visibility="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo, Converter={StaticResource NullStringToVisibilityConverter}}" />
+                    <TextBlock Text="{Binding Forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo}"
+                               FontSize="16"
+                               Foreground="Cyan" />
+                </StackPanel>
+
+                <!--Row 3: Temp, Condition, Icon, etc-->
+                <!--Temperature-->
+                <TextBlock Text="{Binding Forecast.CurrentWeather.Temp}"
+                           FontSize="50"
+                           Grid.Row="2" />
+                <!--°F-->
+                <Grid Grid.Row="2"
+                      Grid.Column="1"
+                      HorizontalAlignment="Left">
+                    <TextBlock Text="°"
+                               FontSize="50" />
+                    <TextBlock Text="F"
+                               FontSize="20"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="center"
+                               Margin="0,0,0,7" />
+                </Grid>
+                <!--Condition & Feels Like-->
+                <StackPanel VerticalAlignment="Center"
+                            Grid.Row="2"
+                            Grid.Column="2">
+                    <TextBlock Text="{Binding Forecast.CurrentWeather.Condition.Text}"
+                               FontSize="18" />
+                    <TextBlock Text="{Binding Forecast.CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}°}"
+                               FontSize="18" />
+                </StackPanel>
+                <!--Weather Icon-->
+                <Image Source="{Binding Forecast.CurrentWeather.WeatherIcon}"
+                       Height="50"
+                       Grid.Row="2"
+                       Grid.Column="3"
+                       HorizontalAlignment="Center" />
             </Grid>
-            <!--Condition & Feels Like-->
-            <StackPanel VerticalAlignment="Center"
-                        Grid.Row="2"
-                        Grid.Column="2">
-                <TextBlock Text="{Binding Forecast.CurrentWeather.Condition.Text}"
-                           FontSize="18" />
-                <TextBlock Text="{Binding Forecast.CurrentWeather.FeelsLike, StringFormat={}Feels Like {0}°}"
-                           FontSize="18" />
-            </StackPanel>
-            <!--Weather Icon-->
-            <Image Source="{Binding Forecast.CurrentWeather.WeatherIcon}"
-                   Height="50"
-                   Grid.Row="2"
-                   Grid.Column="3"
-                   HorizontalAlignment="Center" />
+            <resources:HourlyGraph Forecast="{Binding Forecast}"
+                                   x:Name="HourlyGraph"
+                                   Height="150"
+                                   MouseLeftButtonDown="HourlyGraph_MouseLeftButtonDown"
+                                   MouseLeftButtonUp="HourlyGraph_MouseLeftButtonUp"
+                                   MouseMove="HourlyGraph_MouseMove" />
         </Grid>
-        <resources:HourlyGraph Forecast="{Binding Forecast}"
-                               x:Name="HourlyGraph"
-                               Height="150"
-                               MouseLeftButtonDown="HourlyGraph_MouseLeftButtonDown"
-                               MouseLeftButtonUp="HourlyGraph_MouseLeftButtonUp"
-                               MouseMove="HourlyGraph_MouseMove" />
+        <Grid Background="{StaticResource DefaultWeatherBackground}"
+              d:Visibility="Collapsed"
+              Visibility="{Binding IsNetworkUnavailable, Converter={StaticResource booleanToVisibilityConverter}}">
+            <TextBlock Text="Network Currently Unavailable"
+                       FontFamily="pack://application:,,,/weather-frog;component/Resources/#Corben"
+                       FontSize="18"
+                       HorizontalAlignment="Center"
+                       Margin="35" />
+            <Image VerticalAlignment="Bottom"
+                   Height="280"
+                   Margin="0,0,0,-55"
+                   HorizontalAlignment="Center"
+                   Source="/Resources/NetworkUnavailable.png" />
+        </Grid>
     </Grid>
 </UserControl>

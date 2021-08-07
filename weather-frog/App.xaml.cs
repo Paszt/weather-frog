@@ -26,7 +26,8 @@ namespace weatherfrog
         private DesktopWallpaper desktopWallpaper;
 
         // Used for Singleton check
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "mutex is used in separate instance")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members",
+            Justification = "mutex is used in separate instance")]
         private static Mutex mutex = null;
 
         public new static App Current => (App)Application.Current;
@@ -61,9 +62,6 @@ namespace weatherfrog
                     return;
                 }
 
-                WeatherApi.Configuration.UserAgent = typeof(App).Assembly.GetName().Name + "/" +
-                    typeof(App).Assembly.GetName().Version.ToString() + " (https://github.com/Paszt/weather-frog)";
-
                 if (My.Settings.ApiKeyValidated) Begin();
                 else
                 {
@@ -75,6 +73,8 @@ namespace weatherfrog
 
         private void Begin()
         {
+            Configuration.UserAgent = typeof(App).Assembly.GetName().Name + "/" +
+                typeof(App).Assembly.GetName().Version.ToString() + " (https://github.com/Paszt/weather-frog)";
             Configuration.ApiKey = My.Settings.WeatherApiKey;
             notifyIcon = new()
             {
@@ -85,7 +85,7 @@ namespace weatherfrog
                 //ToolTip = new Resources.TaskbarBalloon(),
             };
             // Add bindings to notifyicon
-            MultiBinding toolTipMultiBinding = new MultiBinding()
+            MultiBinding toolTipMultiBinding = new()
             {
                 StringFormat = "Weather Frog \n{0}° {1}\n{2}\nLast updated: {3}",
                 Bindings = {
@@ -107,7 +107,7 @@ namespace weatherfrog
             if (My.Settings.UpdateDesktop)
                 desktopWallpaper = DesktopWallpaper.FromSystemParameters();
 
-            updateWeatherTimer = new((e) => UpdateWeather(), null, TimeSpan.Zero, UpdateWeatherInterval);
+            updateWeatherTimer = new(e => UpdateWeather(), null, TimeSpan.Zero, UpdateWeatherInterval);
         }
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) =>
@@ -153,6 +153,13 @@ namespace weatherfrog
         /// <summary>The taskbar icon Locations context menu is bound to this.</summary>
         public List<string> Locations { get => locations; set => SetProperty(ref locations, value); }
 
+        private bool isNetworkUnavailable = true;
+        public bool IsNetworkUnavailable
+        {
+            get => isNetworkUnavailable;
+            set { if (SetProperty(ref isNetworkUnavailable, value) && value) desktopWallpaper?.NetworkError(); }
+        }
+
         // Used in NotifyIconResources.xaml > NotifyIconMenu
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "#if Directive")]
         public static Visibility IsDebug
@@ -173,6 +180,7 @@ namespace weatherfrog
                 try
                 {
                     Forecast = await Api.GetForecastAsync(My.Settings.Location).ConfigureAwait(false);
+                    IsNetworkUnavailable = false;
                     // TODO: Find out why Forecast is null after resume from suspension. Remove this:
                     if (Forecast == null) throw new ArgumentException("After calling GetForecastAsync, Forecast is Null!");
                     // write Forecast json to file (for debug). Not including #if DEBUG directive here so that
@@ -197,10 +205,10 @@ namespace weatherfrog
                     if (forecast?.CurrentWeather != null) desktopWallpaper?.Update(Forecast);
                     else desktopWallpaper?.Offline("Something went wrong.\nCurrent weather is not available.");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Forecast = null;
-                    desktopWallpaper.NetworkError();
+                    IsNetworkUnavailable = true;
                     updateWeatherTimer.Change(TimeSpan.FromSeconds(5), UpdateWeatherInterval);
                 }
             }

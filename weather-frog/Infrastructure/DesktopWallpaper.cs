@@ -119,13 +119,13 @@ namespace weatherfrog.Infrastructure
 
         private DrawingVisual DrawClouds(WeatherApi.Models.Forecast forecast)
         {
-            if (forecast.CurrentWeather.Cloud == 0) return null;
-            string cloudFilename = "clouds" +
-                ((int)(Math.Round(forecast.CurrentWeather.Cloud.Value / 10.0d, MidpointRounding.ToPositiveInfinity) * 10))
-                .ToString("d3") + ".png";
             BitmapFrame bitmapFrame;
             try
             {
+                if (forecast.CurrentWeather.Cloud == 0) return null;
+                string cloudFilename = "clouds" +
+                    ((int)(Math.Round(forecast.CurrentWeather.Cloud.Value / 10.0d, MidpointRounding.ToPositiveInfinity) * 10))
+                    .ToString("d3") + ".png";
                 bitmapFrame = BitmapFrame.Create(
                     new Uri("pack://application:,,,/weather-frog;component/Resources/Clouds/" + cloudFilename));
             }
@@ -161,48 +161,64 @@ namespace weatherfrog.Infrastructure
             double leftTextLeft = (WorkArea.Width * 0.09) + WorkArea.Left;
 
             // Location
-            string location = forecast.Location.DisplayName;
-            FormattedText locationText = new(location, cultureInfo, FlowDirection.LeftToRight, typeface, 30, Brushes.Black, 1.0d);
-            dc.DrawText(locationText, new Point(leftTextLeft + 4, 40.0d + WorkArea.Top));
+            string location = forecast?.Location?.DisplayName;
+            if (location != null)
+            {
+                FormattedText locationText = new(location, cultureInfo, FlowDirection.LeftToRight, typeface, 30, Brushes.Black, 1.0d);
+                dc.DrawText(locationText, new Point(leftTextLeft + 4, 40.0d + WorkArea.Top));
+            }
 
             // Temperature
-            string temperature = forecast.CurrentWeather.Temp.ToString();
-            FormattedText temperatureText = new(temperature, cultureInfo, FlowDirection.LeftToRight, typeface, 200,
-                Brushes.White, 1.0d);
-            dc.DrawText(temperatureText, new Point(leftTextLeft, 65 + WorkArea.Top));
-            //Temp Units
-            string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
-            FormattedText temperatureUnitsText = new(temperatureUnitsString, cultureInfo, FlowDirection.LeftToRight,
-                typeface, 80, Brushes.White, 1.0d);
-            dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 95 + WorkArea.Top));
+            string temperature = forecast?.CurrentWeather?.Temp.ToString();
+            if (temperature != null)
+            {
+                FormattedText temperatureText = new(temperature, cultureInfo, FlowDirection.LeftToRight, typeface, 200,
+                    Brushes.White, 1.0d);
+                dc.DrawText(temperatureText, new Point(leftTextLeft, 65 + WorkArea.Top));
+                //Temp Units
+                string temperatureUnitsString = "°" + WeatherApi.Models.Forecast.TempUnitAbbreviated;
+                FormattedText temperatureUnitsText = new(temperatureUnitsString, cultureInfo, FlowDirection.LeftToRight,
+                    typeface, 80, Brushes.White, 1.0d);
+                dc.DrawText(temperatureUnitsText, new Point(leftTextLeft + temperatureText.Width + 10, 95 + WorkArea.Top));
+            }
 
             // Feels Like
-            string feelsLikeTemp = forecast.CurrentWeather.FeelsLike.ToString();
-            FormattedText apparentTempText = new("Feels like " + feelsLikeTemp + "°", cultureInfo,
-                FlowDirection.LeftToRight, typeface, 40, Brushes.White, 1.0d);
-            dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 290 + WorkArea.Top));
+            string feelsLikeTemp = forecast?.CurrentWeather?.FeelsLike.ToString();
+            if (feelsLikeTemp != null)
+            {
+                FormattedText apparentTempText = new("Feels like " + feelsLikeTemp + "°", cultureInfo,
+                    FlowDirection.LeftToRight, typeface, 40, Brushes.White, 1.0d);
+                dc.DrawText(apparentTempText, new Point(leftTextLeft + 10, 290 + WorkArea.Top));
+            }
 
             //Right Side Text
             double rightTextCenter = (WorkArea.Width * 0.77d) + WorkArea.Left + (weatherIconWidth / 2) - 200.0d;
 
             // Chance of precipitation (rain or snow)
-            string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;
-            if (!string.IsNullOrEmpty(precipInfo))
+            if (forecast?.Days?.Forecastdays != null && forecast.Days.Forecastdays.Count > 0)
             {
-                FormattedText precipInfoText = new(precipInfo, cultureInfo, FlowDirection.LeftToRight,
-                    typeface, 30, Brushes.Cyan, 1.0d)
-                { TextAlignment = TextAlignment.Center, MaxTextWidth = 400.0d };
-                dc.DrawText(precipInfoText, new Point(rightTextCenter + 25, 40.0d + WorkArea.Top));
-                //Umbrella
-                dc.DrawImage((ImageSource)Application.Current.FindResource("Umbrella"),
-                    new Rect(rightTextCenter + precipInfoText.Width - 30, 44.0d + WorkArea.Top, 24.0d, 24.0d));
+                string precipInfo = forecast.Days.Forecastdays[0].WeatherData.PrecipitationInfo;
+                if (!string.IsNullOrEmpty(precipInfo))
+                {
+                    FormattedText precipInfoText = new(precipInfo, cultureInfo, FlowDirection.LeftToRight,
+                        typeface, 30, Brushes.Cyan, 1.0d)
+                    { TextAlignment = TextAlignment.Center, MaxTextWidth = 400.0d };
+                    dc.DrawText(precipInfoText, new Point(rightTextCenter + 25, 40.0d + WorkArea.Top));
+                    //Umbrella
+                    dc.DrawImage((ImageSource)Application.Current.FindResource("Umbrella"),
+                        new Rect(rightTextCenter + precipInfoText.Width - 30, 44.0d + WorkArea.Top, 24.0d, 24.0d));
+                }
             }
 
             // Weather Description
-            FormattedText descriptionText = new(forecast.CurrentWeather.Condition.Text, cultureInfo, FlowDirection.LeftToRight,
-                typeface, 40, Brushes.White, 1.0d)
-            { TextAlignment = TextAlignment.Center, MaxTextWidth = 400.0d };
-            dc.DrawText(descriptionText, new Point(rightTextCenter, 290 + WorkArea.Top));
+            string weatherCondition = forecast?.CurrentWeather?.Condition?.Text;
+            if (weatherCondition != null)
+            {
+                FormattedText descriptionText = new(weatherCondition, cultureInfo, FlowDirection.LeftToRight,
+                    typeface, 40, Brushes.White, 1.0d)
+                { TextAlignment = TextAlignment.Center, MaxTextWidth = 400.0d };
+                dc.DrawText(descriptionText, new Point(rightTextCenter, 290 + WorkArea.Top));
+            }
 
             dc.Close();
             return dv;

@@ -41,7 +41,7 @@ namespace weatherfrog.Resources
             //weatherConditions = clientInstance.GetFromJsonAsync<List<WeatherCondition>>
             //    ("https://www.weatherapi.com/docs/weather_conditions.json").Result;
 
-            Thread downloadThread = new Thread(async () =>
+            Thread downloadThread = new(async () =>
             {
                 using HttpClient clientInstance = new();
                 WeatherConditions = await clientInstance.GetFromJsonAsync<List<WeatherCondition>>

@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace weatherfrog.WeatherApi.Models
 {
+    public partial class Alerts
+    {
+        [JsonPropertyName("alert")]
+        public List<Alert> Alert { get; set; }
+    }
+
     public class Alert : BaseModel
     {
         private string headline;

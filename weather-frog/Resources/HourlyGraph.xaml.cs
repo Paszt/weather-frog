@@ -94,90 +94,92 @@ namespace weatherfrog.Resources
 
         private void Draw()
         {
-            if (null != Forecast?.Days)
+            if (null == Forecast?.Days ||
+                Forecast?.Days.Forecastdays.Count == 0 ||
+                Forecast.Days?.Forecastdays?.Count < ForecastdayIndex)
+                return;
+            const int lastHourToShow = 10;
+            List<Hour> upcomingHours = new();
+            // Get hourly data from the first day, today, starting with and including the current hour.
+            DateTime localTime = DateTime.Parse(Forecast?.Location?.Localtime);
+            if (Forecast.Days?.Forecastdays?.Count < ForecastdayIndex) return;
+            upcomingHours = Forecast.Days?.Forecastdays[ForecastdayIndex]?.HourlyWeather?
+                .Where(h => h.Time > localTime.AddHours(-1)).ToList();
+            // Get the hourly data from the next day, up to 10 AM.
+            if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
+                upcomingHours.AddRange(Forecast.Days?.Forecastdays[ForecastdayIndex + 1]?.HourlyWeather?
+                    .Where(h => h.Time.Hour <= lastHourToShow).ToList());
+
+            DrawingVisual dv = new();
+            using DrawingContext dc = dv.RenderOpen();
+
+            //Calcualte High/Low Temperatures
+            maxTemp = upcomingHours.Max(h => h.Temp);
+            minTemp = upcomingHours.Min(h => h.Temp);
+
+            double leftPoint = 0.0;
+
+            // Create the Graph
+            Graph.Points.Clear();
+            Graph.Points.Add(new Point(0, 150));
+            Graph.Points.Add(new Point(0, CalculateYValue(upcomingHours[0].Temp)));
+
+            //leftPoint = 0.0;
+            if (!(null == upcomingHours))
             {
-                const int lastHourToShow = 10;
-                List<Hour> upcomingHours = new();
-                // Get hourly data from the first day, today, starting with and including the current hour.
-                DateTime localTime = DateTime.Parse(Forecast?.Location?.Localtime);
-                upcomingHours = Forecast.Days?.Forecastdays[ForecastdayIndex]?.HourlyWeather?
-                    .Where(h => h.Time > localTime.AddHours(-1)).ToList();
-                // Get the hourly data from the next day, up to 10 AM.
-                if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
-                    upcomingHours.AddRange(Forecast.Days?.Forecastdays[ForecastdayIndex + 1]?.HourlyWeather?
-                        .Where(h => h.Time.Hour <= lastHourToShow).ToList());
-
-                DrawingVisual dv = new();
-                using DrawingContext dc = dv.RenderOpen();
-
-                //Calcualte High/Low Temperatures
-                maxTemp = upcomingHours.Max(h => h.Temp);
-                minTemp = upcomingHours.Min(h => h.Temp);
-
-                double leftPoint = 0.0;
-
-                // Create the Graph
-                Graph.Points.Clear();
-                Graph.Points.Add(new Point(0, 150));
-                Graph.Points.Add(new Point(0, CalculateYValue(upcomingHours[0].Temp)));
-
-                //leftPoint = 0.0;
-                if (!(null == upcomingHours))
+                foreach (Hour hour in upcomingHours)
                 {
-                    foreach (Hour hour in upcomingHours)
-                    {
-                        // Temperature
-                        DrawTextCentered(dc, hour.Temp.ToString() + "°", Brushes.White, leftPoint, CalculateYValue(hour.Temp) - 24);
-                        // Chance of Precip
-                        int chanceOfPrecip = Math.Max(hour.ChanceOfSnow.Value, hour.ChanceOfRain.Value);
-                        if (chanceOfPrecip > 0)
-                            DrawTextCentered(dc, chanceOfPrecip.ToString() + '%', Brushes.Cyan, leftPoint, 62);
-                        //Weather Icon
-                        dc.DrawImage(hour.WeatherIcon, new Rect(leftPoint + 4, 80, HourWidth - 8, HourWidth - 8));
-                        // Time
-                        DrawTextCentered(dc, hour.Time.ToString("h tt"), Brushes.Black, leftPoint, 80 + HourWidth + 6);
-                        // Draw Graph
-                        Graph.Points.Add(new Point(leftPoint + (HourWidth / 2), CalculateYValue(hour.Temp)));
+                    // Temperature
+                    DrawTextCentered(dc, hour.Temp.ToString() + "°", Brushes.White, leftPoint, CalculateYValue(hour.Temp) - 24);
+                    // Chance of Precip
+                    int chanceOfPrecip = Math.Max(hour.ChanceOfSnow.Value, hour.ChanceOfRain.Value);
+                    if (chanceOfPrecip > 0)
+                        DrawTextCentered(dc, chanceOfPrecip.ToString() + '%', Brushes.Cyan, leftPoint, 62);
+                    //Weather Icon
+                    dc.DrawImage(hour.WeatherIcon, new Rect(leftPoint + 4, 80, HourWidth - 8, HourWidth - 8));
+                    // Time
+                    DrawTextCentered(dc, hour.Time.ToString("h tt"), Brushes.Black, leftPoint, 80 + HourWidth + 6);
+                    // Draw Graph
+                    Graph.Points.Add(new Point(leftPoint + (HourWidth / 2), CalculateYValue(hour.Temp)));
 
-                        leftPoint += HourWidth;
-                    }
+                    leftPoint += HourWidth;
                 }
-                dc.Close();
-                // Close graph
-                int finalTemp = default;
-                if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
-                {
-                    // final graph point is half way between lastHourToShow.Temp & (lastHourToShow + 1).Temp
-                    int lastHourTemp = Forecast.Days.Forecastdays[ForecastdayIndex + 1].HourlyWeather[lastHourToShow].Temp;
-                    int afterLastHourTemp = Forecast.Days.Forecastdays[ForecastdayIndex + 1].HourlyWeather[lastHourToShow + 1].Temp;
-                    finalTemp = lastHourTemp + ((afterLastHourTemp - lastHourTemp) / 2);
-                }
-                else
-                {
-                    //This is the last day and there is no next day to get finalTemp. Use last tempurature of today's data.
-                    finalTemp = Forecast.Days.Forecastdays[ForecastdayIndex].HourlyWeather.Last().Temp;
-                }
-
-                Graph.Points.Add(new Point(leftPoint, CalculateYValue(finalTemp)));
-                Graph.Points.Add(new Point(leftPoint, 150));
-
-                AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
-
-                Border.Width = (double)(upcomingHours.Count * HourWidth);
-                Border.Cursor = (Border.Width <= RootGrid.ActualWidth) ? Cursors.Arrow : Cursors.ScrollWE;
-                rectTranslateTransform.X = 0;
-                //Y value of Border = (rectTranslateTransform.X + Border.ActualWidth)
             }
+            dc.Close();
+            // Close graph
+            int finalTemp = default;
+            if (DisplaysTomorrowMorning && ForecastdayIndex < Forecast.Days.Forecastdays.Count - 1)
+            {
+                // final graph point is half way between lastHourToShow.Temp & (lastHourToShow + 1).Temp
+                int lastHourTemp = Forecast.Days.Forecastdays[ForecastdayIndex + 1].HourlyWeather[lastHourToShow].Temp;
+                int afterLastHourTemp = Forecast.Days.Forecastdays[ForecastdayIndex + 1].HourlyWeather[lastHourToShow + 1].Temp;
+                finalTemp = lastHourTemp + ((afterLastHourTemp - lastHourTemp) / 2);
+            }
+            else
+            {
+                //This is the last day and there is no next day to get finalTemp. Use last tempurature of today's data.
+                finalTemp = Forecast.Days.Forecastdays[ForecastdayIndex].HourlyWeather.Last().Temp;
+            }
+
+            Graph.Points.Add(new Point(leftPoint, CalculateYValue(finalTemp)));
+            Graph.Points.Add(new Point(leftPoint, 150));
+
+            AdornerRectangle.Fill = new VisualBrush(dv) { Stretch = Stretch.None };
+
+            Border.Width = (double)(upcomingHours.Count * HourWidth);
+            Border.Cursor = (Border.Width <= RootGrid.ActualWidth) ? Cursors.Arrow : Cursors.ScrollWE;
+            rectTranslateTransform.X = 0;
+            //Y value of Border = (rectTranslateTransform.X + Border.ActualWidth)
         }
 
         private void DrawTextCentered(DrawingContext dc, string TextToDraw, Brush brush, double left, double y)
         {
-            FormattedText formattedText = new(TextToDraw, cultureInfo, FlowDirection.LeftToRight, typeFace, 12, 
+            FormattedText formattedText = new(TextToDraw, cultureInfo, FlowDirection.LeftToRight, typeFace, 12,
                 brush, 1.0d);
             dc.DrawText(formattedText, new Point(left + ((HourWidth - formattedText.Width) / 2), y));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0047:Remove unnecessary parentheses", 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0047:Remove unnecessary parentheses",
             Justification = "Makes it more clear & easier to read.")]
         private double CalculateYValue(int temp)
         {

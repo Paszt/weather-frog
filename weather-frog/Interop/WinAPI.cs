@@ -134,9 +134,9 @@ namespace weatherfrog.Interop
             Y = y;
         }
 
-        public static implicit operator System.Drawing.Point(POINT p) => new System.Drawing.Point(p.X, p.Y);
+        public static implicit operator System.Drawing.Point(POINT p) => new(p.X, p.Y);
 
-        public static implicit operator POINT(System.Drawing.Point p) => new POINT(p.X, p.Y);
+        public static implicit operator POINT(System.Drawing.Point p) => new(p.X, p.Y);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -181,21 +181,20 @@ namespace weatherfrog.Interop
         [JsonIgnore]
         public System.Drawing.Point Location
         {
-            get => new System.Drawing.Point(Left, Top);
+            get => new(Left, Top);
             set { X = value.X; Y = value.Y; }
         }
 
         [JsonIgnore]
         public System.Drawing.Size Size
         {
-            get => new System.Drawing.Size(Width, Height);
+            get => new(Width, Height);
             set { Width = value.Width; Height = value.Height; }
         }
 
-        public static implicit operator System.Drawing.Rectangle(RECT r) =>
-            new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
+        public static implicit operator System.Drawing.Rectangle(RECT r) => new(r.Left, r.Top, r.Width, r.Height);
 
-        public static implicit operator RECT(System.Drawing.Rectangle r) => new RECT(r);
+        public static implicit operator RECT(System.Drawing.Rectangle r) => new(r);
 
         public static bool operator ==(RECT r1, RECT r2) => r1.Equals(r2);
 

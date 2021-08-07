@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace weatherfrog.WeatherApi.Models
 {
@@ -7,7 +8,7 @@ namespace weatherfrog.WeatherApi.Models
         private Location location;
         private Current currentWeather;
         private ForecastDays days;
-        private Alert alert;
+        private Alerts alerts;
 
         [JsonPropertyName("location")]
         public Location Location { get => location; set => SetProperty(ref location, value); }
@@ -18,8 +19,8 @@ namespace weatherfrog.WeatherApi.Models
         [JsonPropertyName("forecast")]
         public ForecastDays Days { get => days; set => SetProperty(ref days, value); }
 
-        [JsonPropertyName("alert")]
-        public Alert Alert { get => alert; set => SetProperty(ref alert, value); }
+        [JsonPropertyName("alerts")]
+        public Alerts Alerts { get => alerts; set => SetProperty(ref alerts, value); }
 
         [JsonIgnore]
         public static string TempUnitAbbreviated => (My.Settings.UnitSystem == UnitSystem.Imperial) ? "F" : "C";
