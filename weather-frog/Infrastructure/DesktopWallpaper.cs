@@ -226,6 +226,7 @@ namespace weatherfrog.Infrastructure
 
         private DrawingVisual DrawWeatherIcon(WeatherApi.Models.Forecast forecast)
         {
+            if (forecast?.CurrentWeather?.WeatherIcon == null) return null;
             DrawingVisual dv = new();
             using DrawingContext dc = dv.RenderOpen();
             Rect WeatherIconRect = new(new Point((WorkArea.Width * 0.77) + WorkArea.Left, 96 + WorkArea.Top),
