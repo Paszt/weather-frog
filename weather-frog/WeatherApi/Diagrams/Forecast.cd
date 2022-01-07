@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="weatherfrog.WeatherApi.Models.Forecast">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAIAAAACgAAAAAAAQAAAAkABAAI=</HashCode>
+      <HashCode>AAECAAAAAAAAAAAAAAIAAAACAAAAAAAAQAAAAkABAEI=</HashCode>
       <FileName>WeatherApi\Models\Forecast.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Location" />
       <Property Name="CurrentWeather" />
       <Property Name="Days" />
-      <Property Name="Alert" />
     </ShowAsAssociation>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.ForecastDays">
@@ -30,12 +29,12 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.Forecastday">
-    <Position X="8.5" Y="1.5" Width="2" />
+    <Position X="9.25" Y="1.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIgAAACAAAgAAAAIAAAAAAAJAAAACQAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAIgAAACAAAgAAAIIAAAAAAAJAAEACQABAAA=</HashCode>
       <FileName>WeatherApi\Models\Forecastday.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -47,7 +46,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.AstronomyData">
-    <Position X="15.25" Y="1.75" Width="2.25" />
+    <Position X="16" Y="1.75" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -57,37 +56,37 @@
     </TypeIdentifier>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.Hour">
-    <Position X="12.75" Y="2.25" Width="2" />
+    <Position X="13.5" Y="2.25" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAhBBMIITICKgQqBSJMyAWgQEAAiAAIAagLhAQgAQQQ=</HashCode>
+      <HashCode>AAhBBMIITICKgQqBSJMyAWgQMAAiAAIAagLhgQgAQQQ=</HashCode>
       <FileName>WeatherApi\Models\Hour.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.DailyWeatherData">
-    <Position X="9" Y="3.75" Width="2" />
+    <Position X="9" Y="4" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIABAIAIgQCAKJABASAQQQABAAAEAQAARYYCGECGAhg=</HashCode>
+      <HashCode>AoABAIAIgSCQKIABQSQAQYABIAAEgQEABYYHmACGAhg=</HashCode>
       <FileName>WeatherApi\Models\DailyWeatherData.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.Current">
-    <Position X="4" Y="1" Width="2" />
+    <Position X="4.25" Y="1.75" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AABAAMIAQICKgQKBCZmSAWkQEAAiACIAKoCBAAgAAwA=</HashCode>
+      <HashCode>AEhAAMIIZICKgQaBSZkSAWEQMAQiACJAKoABgggAAwA=</HashCode>
       <FileName>WeatherApi\Models\Current.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.Location">
-    <Position X="1.5" Y="2" Width="2" />
+    <Position X="1.5" Y="2.75" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -97,7 +96,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="weatherfrog.WeatherApi.Models.Alert">
-    <Position X="0.75" Y="5.25" Width="2.25" />
+    <Position X="0.75" Y="6" Width="2.25" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>

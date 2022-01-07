@@ -205,7 +205,7 @@ namespace weatherfrog
                     if (forecast?.CurrentWeather != null) desktopWallpaper?.Update(Forecast);
                     else desktopWallpaper?.Offline("Something went wrong.\nCurrent weather is not available.");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Forecast = null;
                     IsNetworkUnavailable = true;
