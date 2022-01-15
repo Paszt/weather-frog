@@ -19,9 +19,9 @@
                      Color="#FF2D2D2D" />
     <SolidColorBrush x:Key="ControlDefaultBorderBrush"
                      Color="#FF323232" />
-    <SolidColorBrush x:Key="ControlGlythColor"
+    <SolidColorBrush x:Key="ControlGlyphColor"
                      Color="#FFEBEBEB" />
-    <SolidColorBrush x:Key="ControlDisabledGlythColor"
+    <SolidColorBrush x:Key="ControlDisabledGlyphColor"
                      Color="#FFA0A0A0" />
     <SolidColorBrush x:Key="ControlMouseOverBackground"
                      Color="#FF54545C" />
@@ -156,7 +156,7 @@
                                     Value="{StaticResource ControlBrightDefaultBorderBrush}" />
                             <Setter Property="TextElement.Foreground"
                                     TargetName="contentPresenter"
-                                    Value="{StaticResource ControlDisabledGlythColor}" />
+                                    Value="{StaticResource ControlDisabledGlyphColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -304,12 +304,12 @@
                         <Rectangle x:Name="invalidUnfocused"
                                    Opacity="0"
                                    Stroke="{StaticResource CheckBoxInvalidUnfocusedBorderBrush}"
-                                   Fill="{StaticResource ControlGlythColor}"
+                                   Fill="{StaticResource ControlGlyphColor}"
                                    Style="{StaticResource StandardRectangle}" />
                         <Rectangle x:Name="invalidFocused"
                                    Opacity="0"
                                    Stroke="{StaticResource CheckBoxInvalidFocusedBorderBrush}"
-                                   Fill="{StaticResource ControlGlythColor}"
+                                   Fill="{StaticResource ControlGlyphColor}"
                                    Style="{StaticResource StandardRectangle}" />
                         <Path x:Name="checkBox"
                               Height="10"
@@ -324,7 +324,7 @@
                               438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 
                               1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
                         <Rectangle x:Name="IndeterminateCheck"
-                                   Fill="{StaticResource ControlDisabledGlythColor}"
+                                   Fill="{StaticResource ControlDisabledGlyphColor}"
                                    Height="3"
                                    Width="8"
                                    Opacity="0" />
@@ -557,70 +557,246 @@
         </Setter>
     </Style>
 
-    <!--MenuItem-->
-    <Style TargetType="{x:Type MenuItem}">
-        <Setter Property="Background"
-                Value="{StaticResource ControlDefaultBackground}" />
-        <Setter Property="Foreground"
-                Value="{StaticResource ControlDefaultForeground}" />
-        <Setter Property="BorderBrush"
-                Value="{StaticResource ControlDefaultBorderBrush}" />
-        <Setter Property="SnapsToDevicePixels"
-                Value="True" />
-        <Setter Property="Grid.IsSharedSizeScope"
-                Value="true" />
-        <Style.Triggers>
-            <Trigger Property="IsHighlighted"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource ControlSelectedBackground}" />
-                <Setter Property="BorderBrush"
-                        Value="{StaticResource ControlSelectedBorderBrush }" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <!-- ContextMenu -->
-    <Style TargetType="{x:Type ContextMenu}">
-        <Setter Property="Background"
-                Value="{StaticResource ControlDefaultBackground}" />
-        <Setter Property="Foreground"
-                Value="{StaticResource ControlDefaultForeground}" />
-        <Setter Property="BorderBrush"
-                Value="{StaticResource ControlDefaultBorderBrush}" />
-        <Setter Property="SnapsToDevicePixels"
-                Value="True" />
-        <Setter Property="OverridesDefaultStyle"
-                Value="True" />
-        <Setter Property="Grid.IsSharedSizeScope"
-                Value="True" />
-        <Setter Property="HasDropShadow"
-                Value="True" />
-        <Setter Property="TextOptions.TextFormattingMode"
-                Value="Ideal" />
-        <Setter Property="VerticalContentAlignment"
-                Value="Center" />
+    <!-- MenuItems -->
+    <system:Double x:Key="MenuItemIconHeight">16</system:Double>
+    <!--MenuScrollButton-->
+    <Style x:Key="MenuScrollButton"
+           BasedOn="{x:Null}"
+           TargetType="{x:Type RepeatButton}">
+        <Setter Property="ClickMode"
+                Value="Hover" />
+        <Setter Property="MinWidth"
+                Value="0" />
+        <Setter Property="MinHeight"
+                Value="0" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContextMenu}">
-                    <Border x:Name="Border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="2">
-                        <ScrollViewer x:Name="ScrollViewer"
-                                      VerticalScrollBarVisibility="Hidden">
-                            <ItemsPresenter />
-                        </ScrollViewer>
-                    </Border>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <DockPanel Background="Transparent"
+                               SnapsToDevicePixels="true">
+                        <Rectangle x:Name="R1"
+                                   DockPanel.Dock="Right"
+                                   Fill="Transparent"
+                                   Width="1" />
+                        <Rectangle x:Name="B1"
+                                   DockPanel.Dock="Bottom"
+                                   Fill="Transparent"
+                                   Height="1" />
+                        <Rectangle x:Name="L1"
+                                   DockPanel.Dock="Left"
+                                   Fill="Transparent"
+                                   Width="1" />
+                        <Rectangle x:Name="T1"
+                                   DockPanel.Dock="Top"
+                                   Fill="Transparent"
+                                   Height="1" />
+                        <ContentPresenter x:Name="ContentContainer"
+                                          HorizontalAlignment="Center"
+                                          Margin="2,2,2,2"
+                                          VerticalAlignment="Center" />
+                    </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed"
+                                 Value="true">
+                            <Setter Property="Fill"
+                                    TargetName="R1"
+                                    Value="{DynamicResource ControlSelectedBackground}" />
+                            <Setter Property="Fill"
+                                    TargetName="B1"
+                                    Value="{DynamicResource ControlSelectedBackground}" />
+                            <Setter Property="Fill"
+                                    TargetName="L1"
+                                    Value="{DynamicResource ControlSelectedBackground}" />
+                            <Setter Property="Fill"
+                                    TargetName="T1"
+                                    Value="{DynamicResource ControlSelectedBackground}" />
+                            <Setter Property="Margin"
+                                    TargetName="ContentContainer"
+                                    Value="3,3,1,1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <!--<ControlTemplate x:Key="{x:Static MenuItem.SubmenuItemTemplateKey}"
+    <!--ScrollViewer for a MenuItem-->
+    <MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter" />
+    <Geometry x:Key="DownArrow">M 0,0 L 3.5,4 L 7,0 Z</Geometry>
+    <Geometry x:Key="UpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>
+
+    <Style x:Key="MenuScrollViewer"
+           TargetType="{x:Type ScrollViewer}"
+           BasedOn="{x:Null}">
+        <Setter Property="HorizontalScrollBarVisibility"
+                Value="Hidden" />
+        <Setter Property="VerticalScrollBarVisibility"
+                Value="Auto" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="1"
+                                Grid.Column="0">
+                            <ScrollContentPresenter Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <RepeatButton Style="{StaticResource MenuScrollButton}"
+                                      Grid.Row="0"
+                                      Grid.Column="0"
+                                      Command="{x:Static ScrollBar.LineUpCommand}"
+                                      CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                      Focusable="False">
+                            <RepeatButton.Visibility>
+                                <MultiBinding FallbackValue="Visibility.Collapsed"
+                                              Converter="{StaticResource MenuScrollingVisibilityConverter}"
+                                              ConverterParameter="0">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="ComputedVerticalScrollBarVisibility" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="VerticalOffset" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="ExtentHeight" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="ViewportHeight" />
+                                </MultiBinding>
+                            </RepeatButton.Visibility>
+                            <Path Fill="{DynamicResource ControlDimForeground}"
+                                  Data="{StaticResource UpArrow}" />
+                        </RepeatButton>
+                        <RepeatButton Style="{StaticResource MenuScrollButton}"
+                                      Grid.Row="2"
+                                      Grid.Column="0"
+                                      Command="{x:Static ScrollBar.LineDownCommand}"
+                                      CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                      Focusable="False">
+                            <RepeatButton.Visibility>
+                                <MultiBinding FallbackValue="Visibility.Collapsed"
+                                              Converter="{StaticResource MenuScrollingVisibilityConverter}"
+                                              ConverterParameter="100">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="ComputedVerticalScrollBarVisibility" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="VerticalOffset" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="ExtentHeight" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                             Path="ViewportHeight" />
+                                </MultiBinding>
+                            </RepeatButton.Visibility>
+                            <Path Fill="{DynamicResource ControlDimForeground}"
+                                  Data="{StaticResource DownArrow}" />
+                        </RepeatButton>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- MenuItem.TopLevelHeader -->
+    <ControlTemplate x:Key="{x:Static MenuItem.TopLevelHeaderTemplateKey}"
                      TargetType="{x:Type MenuItem}">
-        <Border Name="Border">
-            <Grid>
+        <Border x:Name="Border"
+                Background="Transparent">
+            <Grid Margin="1">
+                <ContentPresenter Margin="6,3,6,3"
+                                  ContentSource="Header"
+                                  RecognizesAccessKey="True" />
+                <Popup x:Name="Popup"
+                       Placement="Bottom"
+                       IsOpen="{TemplateBinding IsSubmenuOpen}"
+                       AllowsTransparency="True"
+                       Focusable="False"
+                       PopupAnimation="Fade">
+                    <Border x:Name="SubmenuBorder"
+                            SnapsToDevicePixels="True"
+                            BorderThickness="1"
+                            Background="{DynamicResource ControlDefaultBackground}">
+                        <!--<Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource BorderMediumColor}" />
+                        </Border.BorderBrush>-->
+                        <ScrollViewer CanContentScroll="True"
+                                      Style="{StaticResource MenuScrollViewer}">
+                            <StackPanel IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </ScrollViewer>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSuspendingPopupAnimation"
+                     Value="true">
+                <Setter TargetName="Popup"
+                        Property="PopupAnimation"
+                        Value="None" />
+            </Trigger>
+            <Trigger Property="IsHighlighted"
+                     Value="true">
+                <Setter TargetName="Border"
+                        Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="Background"
+                        TargetName="Border"
+                        Value="{StaticResource ControlSelectedBackground}" />
+            </Trigger>
+            <Trigger SourceName="Popup"
+                     Property="AllowsTransparency"
+                     Value="True">
+                <Setter TargetName="SubmenuBorder"
+                        Property="CornerRadius"
+                        Value="0,0,4,4" />
+                <Setter TargetName="SubmenuBorder"
+                        Property="Padding"
+                        Value="0,0,0,3" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Foreground"
+                        Value="{StaticResource ControlDisabledGlyphColor}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- MenuItem.TopLevelItem -->
+    <ControlTemplate x:Key="{x:Static MenuItem.TopLevelItemTemplateKey}"
+                     TargetType="{x:Type MenuItem}">
+        <Border x:Name="Border"
+                Background="Transparent">
+            <Grid Margin="1">
+                <ContentPresenter Margin="6,3,6,3"
+                                  ContentSource="Header"
+                                  RecognizesAccessKey="True" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted"
+                     Value="true">
+                <Setter Property="Background"
+                        TargetName="Border"
+                        Value="{StaticResource ControlSelectedBackground}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Foreground"
+                        Value="{StaticResource ControlDisabledGlyphColor}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- MenuItem.SubmenuItem -->
+    <ControlTemplate x:Key="{x:Static MenuItem.SubmenuItemTemplateKey}"
+                     TargetType="{x:Type MenuItem}">
+        <Border x:Name="Border"
+                Background="Transparent">
+            <Grid Margin="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"
                                       SharedSizeGroup="Icon" />
@@ -629,31 +805,31 @@
                                       SharedSizeGroup="Shortcut" />
                     <ColumnDefinition Width="13" />
                 </Grid.ColumnDefinitions>
-                <ContentPresenter Name="Icon"
+                <ContentPresenter x:Name="Icon"
                                   Margin="6,0,6,0"
-                                  MaxWidth="28"
                                   VerticalAlignment="Center"
-                                  ContentSource="Icon" />
-                <Border Name="Check"
+                                  ContentSource="Icon"
+                                  Height="{StaticResource MenuItemIconHeight}"
+                                  Width="{StaticResource MenuItemIconHeight}" />
+                <Border x:Name="Check"
                         Width="13"
                         Height="13"
                         Visibility="Collapsed"
                         Margin="6,0,6,0"
-                        Background="#0f3c5a"
                         BorderThickness="1"
-                        BorderBrush="#5082a4">
-                    <Path Name="CheckMark"
+                        Background="{StaticResource ControlBrightDefaultBackground}">
+                    <Path x:Name="CheckMark"
                           Width="7"
                           Height="7"
                           Visibility="Hidden"
                           SnapsToDevicePixels="False"
-                          Stroke="#5082a4"
                           StrokeThickness="2"
-                          Data="M 0 0 L 7 7 M 0 7 L 7 0" />
+                          Data="M 0 0 L 7 7 M 0 7 L 7 0"
+                          Stroke="{StaticResource ControlDimForeground}">
+                    </Path>
                 </Border>
-                <ContentPresenter Name="HeaderHost"
+                <ContentPresenter x:Name="HeaderHost"
                                   Grid.Column="1"
-                                  VerticalAlignment="Center"
                                   ContentSource="Header"
                                   RecognizesAccessKey="True" />
                 <TextBlock x:Name="InputGestureText"
@@ -664,6 +840,8 @@
             </Grid>
         </Border>
         <ControlTemplate.Triggers>
+            <Trigger Property="ButtonBase.Command"
+                     Value="{x:Null}" />
             <Trigger Property="Icon"
                      Value="{x:Null}">
                 <Setter TargetName="Icon"
@@ -687,22 +865,24 @@
             </Trigger>
             <Trigger Property="IsHighlighted"
                      Value="true">
-                <Setter TargetName="Border"
-                        Property="Background"
-                        Value="#5082a4" />
+                <Setter Property="Background"
+                        TargetName="Border"
+                        Value="{StaticResource ControlSelectedBackground}" />
             </Trigger>
             <Trigger Property="IsEnabled"
                      Value="false">
                 <Setter Property="Foreground"
-                        Value="#0f3c5a" />
+                        Value="{StaticResource ControlDisabledGlyphColor}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <!-- MenuItem.SubmenuHeader -->
     <ControlTemplate x:Key="{x:Static MenuItem.SubmenuHeaderTemplateKey}"
                      TargetType="{x:Type MenuItem}">
-        <Border Name="Border">
-            <Grid>
+        <Border x:Name="Border"
+                Background="Transparent">
+            <Grid Margin="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"
                                       SharedSizeGroup="Icon" />
@@ -711,12 +891,13 @@
                                       SharedSizeGroup="Shortcut" />
                     <ColumnDefinition Width="13" />
                 </Grid.ColumnDefinitions>
-                <ContentPresenter Name="Icon"
+                <ContentPresenter x:Name="Icon"
                                   Margin="6,0,6,0"
-                                  MaxWidth="32"
                                   VerticalAlignment="Center"
-                                  ContentSource="Icon" />
-                <ContentPresenter Name="HeaderHost"
+                                  ContentSource="Icon"
+                                  Height="{StaticResource MenuItemIconHeight}"
+                                  Width="{StaticResource MenuItemIconHeight}" />
+                <ContentPresenter x:Name="HeaderHost"
                                   Grid.Column="1"
                                   ContentSource="Header"
                                   RecognizesAccessKey="True" />
@@ -729,19 +910,17 @@
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"
                       Data="M 0 0 L 0 7 L 4 3.5 Z"
-                      Fill="#0f3c5a" />
-
-                --><!--Placement="Right" HorizontalOffset="-4"--><!--
-                <Popup Name="Popup"
+                      Fill="{StaticResource ControlDimForeground}" />
+                <Popup x:Name="Popup"
+                       Placement="Right"
+                       HorizontalOffset="-4"
                        IsOpen="{TemplateBinding IsSubmenuOpen}"
                        AllowsTransparency="True"
-                       Placement="Right"
                        Focusable="False"
                        PopupAnimation="Fade">
-                    <Border Name="SubmenuBorder"
+                    <Border x:Name="SubmenuBorder"
                             SnapsToDevicePixels="True"
-                            Background="{StaticResource ControlDefaultBackground}"
-                            BorderBrush="{StaticResource ControlDefaultBorderBrush}"
+                            Background="{DynamicResource ControlDefaultBackground}"
                             BorderThickness="1">
                         <ScrollViewer CanContentScroll="True"
                                       Style="{StaticResource MenuScrollViewer}">
@@ -761,12 +940,12 @@
             </Trigger>
             <Trigger Property="IsHighlighted"
                      Value="true">
-                <Setter TargetName="Border"
-                        Property="Background"
-                        Value="#5082a4" />
+                <Setter Property="Background"
+                        TargetName="Border"
+                        Value="{StaticResource ControlSelectedBackground}" />
             </Trigger>
             <Trigger SourceName="Popup"
-                     Property="Popup.AllowsTransparency"
+                     Property="AllowsTransparency"
                      Value="True">
                 <Setter TargetName="SubmenuBorder"
                         Property="CornerRadius"
@@ -778,10 +957,78 @@
             <Trigger Property="IsEnabled"
                      Value="false">
                 <Setter Property="Foreground"
-                        Value="#0f3c5a" />
+                        Value="{StaticResource ControlDisabledGlyphColor}" />
             </Trigger>
         </ControlTemplate.Triggers>
-    </ControlTemplate>-->
+    </ControlTemplate>
+
+    <!-- MenuItem Style -->
+    <Style x:Key="{x:Type MenuItem}"
+           TargetType="{x:Type MenuItem}">
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
+        <Style.Triggers>
+            <Trigger Property="Role"
+                     Value="TopLevelHeader">
+                <Setter Property="Template"
+                        Value="{StaticResource {x:Static MenuItem.TopLevelHeaderTemplateKey}}" />
+                <Setter Property="Grid.IsSharedSizeScope"
+                        Value="true" />
+            </Trigger>
+            <Trigger Property="Role"
+                     Value="TopLevelItem">
+                <Setter Property="Template"
+                        Value="{StaticResource {x:Static MenuItem.TopLevelItemTemplateKey}}" />
+            </Trigger>
+            <Trigger Property="Role"
+                     Value="SubmenuHeader">
+                <Setter Property="Template"
+                        Value="{StaticResource {x:Static MenuItem.SubmenuHeaderTemplateKey}}" />
+            </Trigger>
+            <Trigger Property="Role"
+                     Value="SubmenuItem">
+                <Setter Property="Template"
+                        Value="{StaticResource {x:Static MenuItem.SubmenuItemTemplateKey}}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ContextMenu -->
+    <Style x:Key="DarkContextMenu"
+           TargetType="{x:Type ContextMenu}">
+        <Setter Property="Background"
+                Value="{StaticResource ControlDefaultBackground}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource ControlDefaultForeground}" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource ControlDefaultBorderBrush}" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
+        <Setter Property="Grid.IsSharedSizeScope"
+                Value="True" />
+        <Setter Property="HasDropShadow"
+                Value="True" />
+        <Setter Property="TextOptions.TextFormattingMode"
+                Value="Ideal" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <ScrollViewer x:Name="ScrollViewer"
+                                      VerticalScrollBarVisibility="Hidden">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!--GridSplitter-->
     <Style TargetType="{x:Type GridSplitter}">
@@ -1697,7 +1944,7 @@
                                Value="false" />
                 </MultiTrigger.Conditions>
                 <Setter Property="SelectionBrush"
-                        Value="{StaticResource ControlDisabledGlythColor}" />
+                        Value="{StaticResource ControlDisabledGlyphColor}" />
             </MultiTrigger>
         </Style.Triggers>
     </Style>
@@ -1863,7 +2110,7 @@
                                             <Rectangle Width="10"
                                                        VerticalAlignment="Center"
                                                        Margin="1 1 0 0"
-                                                       Stroke="{StaticResource ControlGlythColor}"
+                                                       Stroke="{StaticResource ControlGlyphColor}"
                                                        StrokeThickness="1" />
                                         </Button>
 
@@ -1877,11 +2124,11 @@
                                             <Grid Width="12"
                                                   Height="12">
                                                 <Rectangle StrokeThickness="1"
-                                                           Stroke="{StaticResource ControlGlythColor}"
+                                                           Stroke="{StaticResource ControlGlyphColor}"
                                                            Margin="3,0,0,3" />
                                                 <Rectangle StrokeThickness="1"
                                                            Fill="{TemplateBinding BorderBrush}"
-                                                           Stroke="{StaticResource ControlGlythColor}"
+                                                           Stroke="{StaticResource ControlGlyphColor}"
                                                            Margin="0 3 3 0" />
                                             </Grid>
                                         </Button>
@@ -1898,13 +2145,13 @@
                                                       Y1="0"
                                                       X2="11"
                                                       Y2="11"
-                                                      Stroke="{StaticResource ControlGlythColor}"
+                                                      Stroke="{StaticResource ControlGlyphColor}"
                                                       StrokeThickness="1" />
                                                 <Line X1="0"
                                                       Y2="0"
                                                       Y1="11"
                                                       X2="11"
-                                                      Stroke="{StaticResource ControlGlythColor}"
+                                                      Stroke="{StaticResource ControlGlyphColor}"
                                                       StrokeThickness="1" />
                                             </Grid>
                                         </Button>
@@ -2000,7 +2247,7 @@
                                             <Rectangle Width="10"
                                                        VerticalAlignment="Center"
                                                        Margin="1 1 0 0"
-                                                       Stroke="{StaticResource ControlGlythColor}"
+                                                       Stroke="{StaticResource ControlGlyphColor}"
                                                        StrokeThickness="2" />
                                         </Button>-->
                                         <Button x:Name="btnClose"
@@ -2016,13 +2263,13 @@
                                                       Y1="0"
                                                       X2="11"
                                                       Y2="11"
-                                                      Stroke="{StaticResource ControlGlythColor}"
+                                                      Stroke="{StaticResource ControlGlyphColor}"
                                                       StrokeThickness="2" />
                                                 <Line X1="0"
                                                       Y2="0"
                                                       Y1="11"
                                                       X2="11"
-                                                      Stroke="{StaticResource ControlGlythColor}"
+                                                      Stroke="{StaticResource ControlGlyphColor}"
                                                       StrokeThickness="2" />
                                             </Grid>
                                         </Button>
@@ -2100,7 +2347,7 @@
                         Value="{StaticResource ControlBrightDefaultBorderBrush}" />
                 <Setter Property="TextElement.Foreground"
                         TargetName="contentPresenter"
-                        Value="{StaticResource ControlDisabledGlythColor}" />
+                        Value="{StaticResource ControlDisabledGlyphColor}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2108,5 +2355,7 @@
     <!--********************** Implicit Styles *********************** -->
     <Style TargetType="{x:Type ComboBox}"
            BasedOn="{StaticResource ComboboxStyle}" />
+    <Style TargetType="{x:Type ContextMenu}"
+           BasedOn="{StaticResource DarkContextMenu}" />
 
 </ResourceDictionary>
