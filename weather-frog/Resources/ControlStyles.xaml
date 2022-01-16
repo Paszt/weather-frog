@@ -265,12 +265,12 @@
                         <Rectangle x:Name="invalidUnfocused"
                                    Opacity="0"
                                    Stroke="{StaticResource CheckBoxInvalidUnfocusedBorderBrush}"
-                                   Fill="{StaticResource ControlGlythColor}"
+                                   Fill="{StaticResource ControlGlyphColor}"
                                    Style="{StaticResource StandardRectangle}" />
                         <Rectangle x:Name="invalidFocused"
                                    Opacity="0"
                                    Stroke="{StaticResource CheckBoxInvalidFocusedBorderBrush}"
-                                   Fill="{StaticResource ControlGlythColor}"
+                                   Fill="{StaticResource ControlGlyphColor}"
                                    Style="{StaticResource StandardRectangle}" />
                         <Path x:Name="checkMarkPath"
                               Height="10"
@@ -286,7 +286,7 @@
                               438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 
                               1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" />
                         <Rectangle x:Name="IndeterminateCheck"
-                                   Fill="{StaticResource ControlDisabledGlythColor}"
+                                   Fill="{StaticResource ControlDisabledGlyphColor}"
                                    Height="3"
                                    Width="8"
                                    Grid.Column="1"
