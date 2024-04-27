@@ -10,13 +10,18 @@ namespace weatherfrog.Extensions
 {
     public static class Windows
     {
+        private static readonly JsonSerializerOptions placementSerializerOptions = new()
+        {
+            WriteIndented = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
         public static void SetPlacement(this Window window, string placementJson)
         {
             if (string.IsNullOrEmpty(placementJson)) return;
             try
             {
-                WINDOWPLACEMENT placement = JsonSerializer.Deserialize<WINDOWPLACEMENT>(placementJson,
-                    new JsonSerializerOptions() { Converters = { new JsonStringEnumConverter() } });
+                WINDOWPLACEMENT placement = JsonSerializer.Deserialize<WINDOWPLACEMENT>(placementJson, placementSerializerOptions);
                 placement.Length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
                 placement.Flags = 0;
                 if (placement.ShowCmd == ShowWindowCommands.ShowMinimized) placement.ShowCmd = ShowWindowCommands.Normal;
@@ -30,8 +35,7 @@ namespace weatherfrog.Extensions
         {
             WINDOWPLACEMENT placement = WINDOWPLACEMENT.Default;
             WinAPI.GetWindowPlacement(new WindowInteropHelper(window).Handle, ref placement);
-            JsonSerializerOptions options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
-            return JsonSerializer.Serialize(placement, options);
+            return JsonSerializer.Serialize(placement, placementSerializerOptions);
         }
     }
 }

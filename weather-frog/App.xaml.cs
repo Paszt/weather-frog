@@ -20,15 +20,16 @@ namespace weatherfrog
 {
     public partial class App : Application, INotifyPropertyChanged
     {
+        private DesktopWallpaper desktopWallpaper;
+        private readonly JsonSerializerOptions forecastSerializerOptions = new() { WriteIndented = true };
         private static TaskbarIcon notifyIcon;
         private static readonly TimeSpan UpdateWeatherInterval = TimeSpan.FromMinutes(10);
         private Timer updateWeatherTimer;
-        private DesktopWallpaper desktopWallpaper;
 
         // Used for Singleton check
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members",
-            Justification = "mutex is used in separate instance")]
+#pragma warning disable IDE0052 // Remove unread private members
         private static Mutex mutex = null;
+#pragma warning restore IDE0052 // Remove unread private members
 
         public new static App Current => (App)Application.Current;
         public static Brush DefaultBackgroundBrush =>
@@ -107,6 +108,7 @@ namespace weatherfrog
             if (My.Settings.UpdateDesktop)
                 desktopWallpaper = DesktopWallpaper.FromSystemParameters();
 
+            desktopWallpaper?.Offline("Weather Frog is starting...");
             updateWeatherTimer = new(e => UpdateWeather(), null, TimeSpan.Zero, UpdateWeatherInterval);
         }
 
@@ -153,11 +155,21 @@ namespace weatherfrog
         /// <summary>The taskbar icon Locations context menu is bound to this.</summary>
         public List<string> Locations { get => locations; set => SetProperty(ref locations, value); }
 
-        private bool isNetworkUnavailable = true;
+        private bool isNetworkUnavailable = false;
         public bool IsNetworkUnavailable
         {
             get => isNetworkUnavailable;
-            set { if (SetProperty(ref isNetworkUnavailable, value) && value) desktopWallpaper?.NetworkError(); }
+            set
+            {
+                if (SetProperty(ref isNetworkUnavailable, value) && value)
+                {
+                    if (value == true)
+                    {
+                        desktopWallpaper?.NetworkError();
+                        notifyIcon.Icon = Utilities.CreateTaskbarIcon("??");
+                    }
+                }
+            }
         }
 
         // Used in NotifyIconResources.xaml > NotifyIconMenu
@@ -184,9 +196,9 @@ namespace weatherfrog
                     // TODO: Find out why Forecast is null after resume from suspension. Remove this:
                     if (Forecast == null) throw new ArgumentException("After calling GetForecastAsync, Forecast is Null!");
                     // write Forecast json to file (for debug). Not including #if DEBUG directive here so that
-                    // any alpha/beta testers can have acces to the file.
+                    // anyone can have access to the file.
                     string forecastPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "forecast.json");
-                    try { File.WriteAllText(forecastPath, JsonSerializer.Serialize(Forecast, new() { WriteIndented = true })); }
+                    try { File.WriteAllText(forecastPath, JsonSerializer.Serialize(Forecast, forecastSerializerOptions)); }
                     catch (Exception) { }
 
                     notifyIcon.Icon = Utilities.CreateTaskbarIcon(forecast.CurrentWeather);

@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace weatherfrog.WeatherApi.Utilities
 {
-    public class RetryHandler : DelegatingHandler
+    public class RetryHandler(HttpMessageHandler innerHandler) : DelegatingHandler(innerHandler)
     {
         private const int MaxRetries = 3;
-
-        public RetryHandler(HttpMessageHandler innerHandler) : base(innerHandler) { }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
                                                                      CancellationToken cancellationToken)

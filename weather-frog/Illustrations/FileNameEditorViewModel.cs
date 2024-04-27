@@ -85,13 +85,13 @@ namespace weatherfrog.Illustrations
 
         #region INotifyDataErrorInfo
 
-        private readonly Dictionary<string, List<string>> errors = new();
+        private readonly Dictionary<string, List<string>> errors = [];
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         public System.Collections.IEnumerable GetErrors(string propertyName) =>
-            string.IsNullOrEmpty(propertyName) || !errors.ContainsKey(propertyName)
+            string.IsNullOrEmpty(propertyName) || !errors.TryGetValue(propertyName, out List<string>? value)
                 ? null
-                : (System.Collections.IEnumerable)errors[propertyName];
+                : (System.Collections.IEnumerable)value;
 
         public bool HasErrors => errors.Count > 0;
 
@@ -104,7 +104,7 @@ namespace weatherfrog.Illustrations
         public void AddError(string propertyName, string error, bool isWarning)
         {
             if (!errors.ContainsKey(propertyName))
-                errors[propertyName] = new List<string>();
+                errors[propertyName] = [];
 
             if (!errors[propertyName].Contains(error))
             {
@@ -118,16 +118,13 @@ namespace weatherfrog.Illustrations
         // present. Raises the ErrorsChanged event if the collection changes.
         public void RemoveError(string propertyName, string error)
         {
-            if (errors.ContainsKey(propertyName) && errors[propertyName].Contains(error))
+            if (errors.TryGetValue(propertyName, out List<string>? value) && value.Contains(error))
             {
-                errors[propertyName].Remove(error);
-                if (errors[propertyName].Count == 0) errors.Remove(propertyName);
+                value.Remove(error);
+                if (value.Count == 0) errors.Remove(propertyName);
                 RaiseErrorsChanged(propertyName);
             }
         }
-
-
-
 
         #endregion
     }

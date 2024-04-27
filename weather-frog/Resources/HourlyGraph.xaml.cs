@@ -99,7 +99,7 @@ namespace weatherfrog.Resources
                 Forecast.Days?.Forecastdays?.Count < ForecastdayIndex)
                 return;
             const int lastHourToShow = 10;
-            List<Hour> upcomingHours = new();
+            List<Hour> upcomingHours = [];
             // Get hourly data from the first day, today, starting with and including the current hour.
             DateTime localTime = DateTime.Parse(Forecast?.Location?.Localtime);
             if (Forecast.Days?.Forecastdays?.Count < ForecastdayIndex) return;

@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace weatherfrog.Infrastructure
 {
-    sealed class DesktopWallpaper
+    sealed partial class DesktopWallpaper
     {
         private const int weatherIconWidth = 176;
         private readonly CultureInfo cultureInfo = new("en-us");
@@ -34,7 +34,7 @@ namespace weatherfrog.Infrastructure
         public static DesktopWallpaper FromSystemParameters() =>
             new(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight, SystemParameters.WorkArea);
 
-        private Visual CreateVisual(WeatherApi.Models.Forecast forecast) => new ContainerVisual()
+        private ContainerVisual CreateVisual(WeatherApi.Models.Forecast forecast) => new()
         {
             Children = {DrawBackground(forecast),
                         DrawClouds(forecast),
@@ -251,7 +251,7 @@ namespace weatherfrog.Infrastructure
             return filePath;
         }
 
-        internal void NetworkError(string message = "Network currently unavailable")
+        internal void NetworkError(string message = "Internet currently unavailable")
         {
             BitmapFrame bitmapFrame = BitmapFrame.Create(
                    new Uri("pack://application:,,,/weather-frog;component/Resources/FrogIllustrations/NetworkUnavailable.png"));
@@ -305,8 +305,8 @@ namespace weatherfrog.Infrastructure
         const int SPIF_UPDATEINIFILE = 0x01;
         const int SPIF_SENDWININICHANGE = 0x02;
 
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+        [LibraryImport("user32.dll", EntryPoint = "SystemParametersInfoW", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
         #endregion 
 

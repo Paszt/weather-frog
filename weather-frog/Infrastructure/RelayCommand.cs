@@ -3,10 +3,15 @@ using System.Windows.Input;
 
 namespace weatherfrog.Infrastructure
 {
-    public class RelayCommand<T> : ICommand
+    /// <summary>
+    /// Creates a new command.
+    /// </summary>
+    /// <param name="execute">The execution logic.</param>
+    /// <param name="canExecute">The execution status logic.</param>
+    public class RelayCommand<T>(Action<T> execute, Predicate<T> canExecute) : ICommand
     {
-        readonly Action<T> _execute = null;
-        readonly Predicate<T> _canExecute = null;
+        readonly Action<T> _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+        readonly Predicate<T> _canExecute = canExecute;
 
         /// <summary>
         /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
@@ -15,17 +20,6 @@ namespace weatherfrog.Infrastructure
         /// This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
         public RelayCommand(Action<T> execute) : this(execute, null) { }
-
-        /// <summary>
-        /// Creates a new command.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<T> execute, Predicate<T> canExecute)
-        {
-            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            _canExecute = canExecute;
-        }
 
         ///<summary>
         ///Defines the method that determines whether the command can execute in its current state.
@@ -41,8 +35,8 @@ namespace weatherfrog.Infrastructure
         ///</summary>
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
 
         ///<summary>
@@ -73,19 +67,19 @@ namespace weatherfrog.Infrastructure
         /// <param name="canExecute">The execution status logic.</param>
         public RelayCommand(Action execute, Func<bool> canExecute)
         {
-            if (execute is null) throw new ArgumentNullException(nameof(execute));
+            ArgumentNullException.ThrowIfNull(execute);
             _execute = execute;
             _canExecute = canExecute;
         }
 
         public event EventHandler CanExecuteChanged
         {
-            add { if (_canExecute is object) CommandManager.RequerySuggested += value; }
-            remove { if (_canExecute is object) CommandManager.RequerySuggested -= value; }
+            add { if (_canExecute is not null) CommandManager.RequerySuggested += value; }
+            remove { if (_canExecute is not null) CommandManager.RequerySuggested -= value; }
         }
 
         void OnCanExecuteChanged(object sender, EventArgs e)
-        { if (_canExecute is object) CommandManager.InvalidateRequerySuggested(); }
+        { if (_canExecute is not null) CommandManager.InvalidateRequerySuggested(); }
 
         public bool CanExecute(object parameter) => _canExecute is null || _canExecute();
 

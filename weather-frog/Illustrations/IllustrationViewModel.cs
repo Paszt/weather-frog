@@ -15,6 +15,7 @@ namespace weatherfrog.Illustrations
     public class IllustrationViewModel : INotifyPropertyChanged
     {
         private readonly DesktopWallpaper desktopWallpaper;
+        private readonly JsonSerializerOptions jsonSerializerOptions = new() { WriteIndented = true };
 
         public IllustrationViewModel()
         {
@@ -38,8 +39,8 @@ namespace weatherfrog.Illustrations
                 },
                 Days = new()
                 {
-                    Forecastdays = new()
-                    {
+                    Forecastdays =
+                    [
                         new()
                         {
                             WeatherData = new()
@@ -49,7 +50,7 @@ namespace weatherfrog.Illustrations
                                 DailyChanceOfRain = 88,
                             }
                         }
-                    }
+                    ]
                 },
             };
             //CreateWallpaper();
@@ -302,7 +303,7 @@ namespace weatherfrog.Illustrations
         public async Task SaveToFileAsync(string path)
         {
             using FileStream createStream = File.Create(Path.Combine(@path, FileName + ".json"));
-            await JsonSerializer.SerializeAsync(createStream, Illustration, new() { WriteIndented = true })
+            await JsonSerializer.SerializeAsync(createStream, Illustration, jsonSerializerOptions)
                 .ConfigureAwait(false);
         }
 

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace weatherfrog.Interop
 {
-    internal class WinAPI
+    internal partial class WinAPI
     {
         /// <summary>
         ///     Retrieves the show state and the restored, minimized, and maximized positions of the specified window.
@@ -123,16 +123,10 @@ namespace weatherfrog.Interop
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct POINT
+    public struct POINT(int x, int y)
     {
         [JsonInclude]
-        public int X, Y;
-
-        public POINT(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
+        public int X = x, Y = y;
 
         public static implicit operator System.Drawing.Point(POINT p) => new(p.X, p.Y);
 
@@ -140,55 +134,47 @@ namespace weatherfrog.Interop
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct RECT
+    public struct RECT(int left, int top, int right, int bottom)
     {
-        public int Left, Top, Right, Bottom;
-
-        public RECT(int left, int top, int right, int bottom)
-        {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
-        }
+        public int Left = left, Top = top, Right = right, Bottom = bottom;
 
         public RECT(System.Drawing.Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom) { }
 
         public int X
         {
-            get => Left;
+            readonly get => Left;
             set { Right -= (Left - value); Left = value; }
         }
 
         public int Y
         {
-            get => Top;
+            readonly get => Top;
             set { Bottom -= (Top - value); Top = value; }
         }
 
         public int Height
-        {
-            get => Bottom - Top;
+        { 
+            readonly get => Bottom - Top;
             set => Bottom = value + Top;
         }
 
         public int Width
-        {
-            get => Right - Left;
+        { 
+            readonly get => Right - Left;
             set => Right = value + Left;
         }
 
         [JsonIgnore]
         public System.Drawing.Point Location
         {
-            get => new(Left, Top);
+            readonly get => new(Left, Top);
             set { X = value.X; Y = value.Y; }
         }
 
         [JsonIgnore]
         public System.Drawing.Size Size
         {
-            get => new(Width, Height);
+            readonly get => new(Width, Height);
             set { Width = value.Width; Height = value.Height; }
         }
 
@@ -200,9 +186,9 @@ namespace weatherfrog.Interop
 
         public static bool operator !=(RECT r1, RECT r2) => !r1.Equals(r2);
 
-        public bool Equals(RECT r) => r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
+        public readonly bool Equals(RECT r) => r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj is RECT rECT)
                 return Equals(rECT);
@@ -211,9 +197,9 @@ namespace weatherfrog.Interop
             return false;
         }
 
-        public override int GetHashCode() => ((System.Drawing.Rectangle)this).GetHashCode();
+        public override readonly int GetHashCode() => ((System.Drawing.Rectangle)this).GetHashCode();
 
-        public override string ToString() =>
+        public override readonly string ToString() =>
             string.Format(System.Globalization.CultureInfo.CurrentCulture, "{{Left={0},Top={1},Right={2},Bottom={3}}}", Left, Top, Right, Bottom);
     }
 

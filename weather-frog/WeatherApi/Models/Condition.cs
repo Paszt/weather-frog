@@ -82,7 +82,7 @@ namespace weatherfrog.WeatherApi.Models
             {
                 iconName += (isDay ? "Day" : "Night");
                 imgSource = (ImageSource)Application.Current.TryFindResource(iconName);
-                if (imgSource == null) { imgSource = (ImageSource)Application.Current.FindResource("Unknown"); }
+                imgSource ??= (ImageSource)Application.Current.FindResource("Unknown");
             }
             return imgSource;
         }

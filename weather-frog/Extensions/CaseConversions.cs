@@ -21,7 +21,7 @@ namespace weatherfrog.Extensions
             string result = "";
             foreach (string word in words)
             {
-                result += word.Substring(0, 1).ToUpper() + word[1..];
+                result += word[..1].ToUpper() + word[1..];
             }
             return result;
         }
@@ -43,7 +43,7 @@ namespace weatherfrog.Extensions
             string result = words[0].ToLower();
             for (int i = 1; i < words.Length; i++)
             {
-                result += words[i].Substring(0, 1).ToUpper() + words[i][1..];
+                result += words[i][..1].ToUpper() + words[i][1..];
             }
             return result;
         }
@@ -68,7 +68,7 @@ namespace weatherfrog.Extensions
             foreach (string word in words)
             {
                 if (!string.IsNullOrEmpty(result)) result += "-";
-                result += word.Substring(0, 1).ToUpper() + word[1..].ToLower();
+                result += word[..1].ToUpper() + word[1..].ToLower();
             }
             return result;
         }

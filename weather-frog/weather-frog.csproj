@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>weatherfrog.App</StartupObject>
     <RootNamespace>weatherfrog</RootNamespace>
@@ -11,6 +11,7 @@
     <RepositoryUrl>https://github.com/Paszt/weather-frog</RepositoryUrl>
     <ApplicationIcon>Resources\Weather-Frog.ico</ApplicationIcon>
     <Nullable>annotations</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!--<GenerateAssemblyInfo>true</GenerateAssemblyInfo>-->
   </PropertyGroup>
 
@@ -29,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>

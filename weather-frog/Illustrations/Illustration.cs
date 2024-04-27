@@ -9,6 +9,11 @@ namespace weatherfrog.Illustrations
     public class Illustration : INotifyPropertyChanged
     {
         private AlignmentX alignmentX;
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+        };
         private bool isBelow45;
         private TimeOfDay timeOfDay;
         private WeatherCondition weatherCondition;
@@ -41,11 +46,7 @@ namespace weatherfrog.Illustrations
         public string FileName { get; set; }
 
         [JsonIgnore]
-        public string Json => JsonSerializer.Serialize(this, new()
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-        });
+        public string Json => JsonSerializer.Serialize(this, jsonSerializerOptions);
 
         public override bool Equals(object obj) => obj is Illustration illustration && Equals(illustration);
 

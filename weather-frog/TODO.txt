@@ -6,4 +6,6 @@ Add feature to save & load Locations
 
 Figure out why Notify Icon isn't updated after resume from suspension.
 
+Change "Network currently unavailable" to something like "Internet currently unavailable" or "No internet"
+
 == Issues ==

@@ -21,7 +21,7 @@ namespace weatherfrog.ViewModels
             DisableWallpaperCompression = My.Settings.DisableWallpaperCompression;
             WeatherApiKey = My.Settings.WeatherApiKey;
             if (My.Settings.Locations is null)
-                Locations = new ObservableCollection<string>();
+                Locations = [];
             else
             {
                 Locations = new ObservableCollection<string>(My.Settings.Locations);
